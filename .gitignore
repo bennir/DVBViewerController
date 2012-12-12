@@ -1,0 +1,10 @@
+/.idea
+/assets
+/bin
+/gen
+/ant.properties
+/build.xml
+/DVBViewerController.iml
+/local.properties
+/proguard-project.txt
+/project.properties
