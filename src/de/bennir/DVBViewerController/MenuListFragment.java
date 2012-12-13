@@ -21,27 +21,27 @@ public class MenuListFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		SampleAdapter adapter = new SampleAdapter(getActivity());
+		MenuAdapter adapter = new MenuAdapter(getActivity());
 		for (int i = 0; i < 20; i++) {
-			adapter.add(new SampleItem("Sample List",
+			adapter.add(new DVBMenuItem("Sample List",
 					android.R.drawable.ic_menu_search));
 		}
 		setListAdapter(adapter);
 	}
 
-	private class SampleItem {
+	private class DVBMenuItem {
 		public String tag;
 		public int iconRes;
 
-		public SampleItem(String tag, int iconRes) {
+		public DVBMenuItem(String tag, int iconRes) {
 			this.tag = tag;
 			this.iconRes = iconRes;
 		}
 	}
 
-	public class SampleAdapter extends ArrayAdapter<SampleItem> {
+	public class MenuAdapter extends ArrayAdapter<DVBMenuItem   > {
 
-		public SampleAdapter(Context context) {
+		public MenuAdapter(Context context) {
 			super(context, 0);
 		}
 
