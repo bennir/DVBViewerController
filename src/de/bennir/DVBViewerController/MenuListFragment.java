@@ -22,10 +22,12 @@ public class MenuListFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		MenuAdapter adapter = new MenuAdapter(getActivity());
-		for (int i = 0; i < 20; i++) {
-			adapter.add(new DVBMenuItem("Sample List",
-					android.R.drawable.ic_menu_search));
-		}
+
+        adapter.add(new DVBMenuItem("Remote", R.drawable.ic_action_remote));
+        adapter.add(new DVBMenuItem("Channels", R.drawable.ic_action_channels));
+        adapter.add(new DVBMenuItem("Timers", R.drawable.ic_action_timers));
+        adapter.add(new DVBMenuItem("Settings", R.drawable.ic_action_settings));
+
 		setListAdapter(adapter);
 	}
 
@@ -39,7 +41,7 @@ public class MenuListFragment extends ListFragment {
 		}
 	}
 
-	public class MenuAdapter extends ArrayAdapter<DVBMenuItem   > {
+	public class MenuAdapter extends ArrayAdapter<DVBMenuItem> {
 
 		public MenuAdapter(Context context) {
 			super(context, 0);

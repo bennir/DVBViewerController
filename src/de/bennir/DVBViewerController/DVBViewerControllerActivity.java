@@ -20,7 +20,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Remote");
-        getSupportActionBar().setIcon(R.drawable.abs__ic_menu_moreoverflow_holo_dark);
+        getSupportActionBar().setIcon(R.drawable.ic_action_menu);
 
         setContentView(R.layout.main);
 
