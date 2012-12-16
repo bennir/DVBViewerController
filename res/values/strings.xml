@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DVBViewer Controller</string>
+    <string name="remote">Remote</string>
+    <string name="channels">Channels</string>
+    <string name="epg">EPG</string>
+    <string name="settings">Settings</string>
+    <string name="timer">Timers</string>
 </resources>
