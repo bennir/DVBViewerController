@@ -2,7 +2,6 @@ package de.bennir.DVBViewerController;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +26,8 @@ import java.util.ArrayList;
  */
 public class ChannelFragment extends SherlockListFragment {
     final String TAG = "ChannelFragment";
-
     ExpandableListView lv;
     ChannelAdapter lvAdapter;
-
     ArrayList<String> groupNames = new ArrayList<String>();
     ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
     ArrayList<ChannelListParcelable> chanParcel = new ArrayList<ChannelListParcelable>();
@@ -38,7 +35,6 @@ public class ChannelFragment extends SherlockListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.channel_fragment, container, false);
     }
 
@@ -70,7 +66,6 @@ public class ChannelFragment extends SherlockListFragment {
         } else {
             lvAdapter = new ChannelAdapter(getSherlockActivity(), groupNames, DVBChannels);
         }
-
     }
 
     public void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
@@ -136,7 +131,35 @@ public class ChannelFragment extends SherlockListFragment {
         test.name = "Das Erste";
         test.group = "Testgruppe";
         testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        DVBChannels.add(testChans);
 
+        groupNames.add("Privat");
+        testChans = new ArrayList<DVBChannel>();
+        test = new DVBChannel();
+
+        test.name = "ZDF HD";
+        test.group = "Privat";
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
+        testChans.add(test);
         DVBChannels.add(testChans);
 
         lvAdapter = new ChannelAdapter(getSherlockActivity(), groupNames,

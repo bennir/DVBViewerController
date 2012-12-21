@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:id="@+id/channels_group_list_item"
-          android:layout_width="fill_parent"
-          android:layout_height="fill_parent"
-          android:paddingLeft="40dp"
-          android:paddingTop="20dp"
-          android:paddingBottom="20dp"
-          android:textSize="16sp">
-</TextView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_height="wrap_content"
+              android:layout_width="fill_parent">
+    <TextView
+            android:id="@+id/channels_group_list_item"
+            android:gravity="center_vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:paddingLeft="40dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"/>
+    <!--<View-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:background="#999999"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:layout_marginBottom="5dp"/>-->
+</LinearLayout>

@@ -16,7 +16,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
     private SlidingMenu menu;
 
-    public static String dvbIp = "1.2.3.4";
+    public static String dvbIp = "192.168.2.2";
     public static String dvbPort = "8000";
     public static String recIp = "";
     public static String recPort = "";

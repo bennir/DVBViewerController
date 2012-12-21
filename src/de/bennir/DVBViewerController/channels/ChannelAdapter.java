@@ -1,15 +1,21 @@
 package de.bennir.DVBViewerController.channels;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.androidquery.AQuery;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import de.bennir.DVBViewerController.DVBViewerControllerActivity;
 import de.bennir.DVBViewerController.R;
 
-import java.net.URL;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -19,17 +25,31 @@ import java.util.ArrayList;
  * Time: 14:28
  */
 public class ChannelAdapter extends BaseExpandableListAdapter {
+    final String TAG = "ChannelAdapter";
+    AQuery aq;
     private ArrayList<String> groupNames;
     private ArrayList<ArrayList<DVBChannel>> DVBChannels;
-
     private LayoutInflater inflater;
+    private ImageLoader load;
 
     public ChannelAdapter(Context context, ArrayList<String> groups,
                           ArrayList<ArrayList<DVBChannel>> channels) {
         this.groupNames = groups;
         this.DVBChannels = channels;
+        this.aq = new AQuery(context);
 
         inflater = LayoutInflater.from(context);
+
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory()
+                .cacheOnDisc()
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
+
+        load = ImageLoader.getInstance();
+        load.init(config);
     }
 
     @Override
@@ -45,29 +65,33 @@ public class ChannelAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition,
-                             boolean isLastChild, View convertView, ViewGroup parent) {
-        View v = null;
-        if (convertView != null)
-            v = convertView;
-        else
+                             boolean isLastChild, View v, ViewGroup parent) {
+        if (v == null) {
             v = inflater.inflate(R.layout.channels_channel_list_item, parent,
                     false);
+        }
 
         DVBChannel chan = (DVBChannel) getChild(groupPosition, childPosition);
         TextView channel = (TextView) v.findViewById(R.id.channel_item_name);
-//        ImageView logo = (ImageView) v.findViewById(R.id.channel_item_logo);
-//
-//        URL logoURL = null;
-//        try {
-//            logoURL = new URL("http://" + MainActivity.dvbIp + ":"
-//                    + MainActivity.dvbPort + "/" + "?getChannelLogo="
-//                    + URLEncoder.encode(chan.name, "UTF-8"));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        new ImageLoaderTask(logo).execute(logoURL);
-
         channel.setText(chan.name);
+
+        String url = null;
+        try {
+            url = "http://" +
+                    DVBViewerControllerActivity.dvbIp + ":" +
+                    DVBViewerControllerActivity.dvbPort +
+                    "/?getChannelLogo=" + URLEncoder.encode(chan.name, "UTF-8");
+
+            Log.d(TAG, url);
+
+            ImageView logo = (ImageView) v.findViewById(R.id.channel_item_logo);
+            load.displayImage(url, logo);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+//        aq.id(R.id.channel_item_logo).image(url, true, true, 0, 0, null, AQuery.FADE_IN_NETWORK, 1.0f);
+
+
 
         return v;
     }
