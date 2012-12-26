@@ -1,32 +1,38 @@
 package de.bennir.DVBViewerController;
 
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.slidingmenu.lib.SlidingMenu;
 
 public class DVBViewerControllerActivity extends SherlockFragmentActivity {
-	private final String TAG = "DVBViewerControllerActivity";
-
-    private Fragment mContent;
-
-    private SlidingMenu menu;
-
-    public static String dvbIp = "192.168.2.2";
-    public static String dvbPort = "8000";
+    public static String dvbHost = "";
+    public static String dvbIp = "";
+    public static String dvbPort = "";
     public static String recIp = "";
     public static String recPort = "";
+    private final String TAG = "DVBViewerControllerActivity";
+    private Fragment mContent;
+    private SlidingMenu menu;
 
-	/**
-	 * Called when the activity is first created.
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            dvbHost = extras.getString("dvbHost");
+            dvbIp = extras.getString("dvbIp");
+            dvbPort = extras.getString("dvbPort");
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.remote);
@@ -52,22 +58,33 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         /**
          * Behind View
          */
-		menu = new SlidingMenu(this);
+        menu = new SlidingMenu(this);
         menu.setMenu(R.layout.menu);
+        TextView activeProfile = (TextView) menu.findViewById(R.id.active_profile);
+        activeProfile.setText(dvbHost);
+        activeProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent(getApplicationContext(), DeviceSelectionActivity.class);
+                startActivity(mIntent);
+
+                DVBViewerControllerActivity.this.finish();
+            }
+        });
 
         /**
          * Menu Customize
          */
-		menu.setMode(SlidingMenu.LEFT);
-		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-		menu.setShadowWidthRes(R.dimen.shadow_width);
-		menu.setShadowDrawable(R.drawable.shadow);
-		menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		menu.setFadeDegree(0.35f);
+        menu.setMode(SlidingMenu.LEFT);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        menu.setShadowWidthRes(R.dimen.shadow_width);
+        menu.setShadowDrawable(R.drawable.shadow);
+        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        menu.setFadeDegree(0.35f);
         menu.setBehindScrollScale(0.5f);
-		menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 
-	}
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

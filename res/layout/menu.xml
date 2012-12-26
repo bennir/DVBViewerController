@@ -19,13 +19,14 @@
                 />
         <TextView
                 android:id="@+id/active_profile"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
                 android:textSize="25dp"
-                android:text="Benni-PC"
+                android:text="benni"
                 android:paddingLeft="35dp"
                 android:layout_margin="5dp"
+                android:drawableRight="@drawable/ic_action_change_profile"
                 />
         <View
                 android:layout_height="1dp"
