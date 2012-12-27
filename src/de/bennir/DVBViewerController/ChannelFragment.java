@@ -54,7 +54,7 @@ public class ChannelFragment extends SherlockListFragment {
             dialog.setCancelable(true);
             dialog.setInverseBackgroundForced(false);
             dialog.setCanceledOnTouchOutside(true);
-            dialog.setTitle("Loading...");
+            dialog.setTitle(R.string.loadingChannels);
 
             AQuery aq = new AQuery(getSherlockActivity());
             String url = "http://" +

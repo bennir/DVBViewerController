@@ -1,13 +1,20 @@
 package de.bennir.DVBViewerController;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.slidingmenu.lib.SlidingMenu;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static String dvbHost = "";
@@ -84,6 +91,40 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         menu.setBehindScrollScale(0.5f);
         menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 
+        /**
+         * Recording Service Loading
+         */
+        AQuery aq = new AQuery(this);
+
+        ProgressDialog dialog = new ProgressDialog(this);
+
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(true);
+        dialog.setInverseBackgroundForced(false);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setTitle(R.string.loading);
+
+        String url = "http://" +
+                DVBViewerControllerActivity.dvbIp + ":" +
+                DVBViewerControllerActivity.dvbPort +
+                "/?getRecordingService";
+        Log.d(TAG, "URL=" + url);
+        aq.progress(dialog).ajax(url, JSONObject.class, this, "getRecordingServiceCallback");
+    }
+
+    public void getRecordingServiceCallback(String url, JSONObject json, AjaxStatus ajax) {
+        try {
+            if(json != null) {
+                JSONObject recordingService = json.getJSONObject("recordingService");
+
+                DVBViewerControllerActivity.recIp = recordingService.getString("ip");
+                DVBViewerControllerActivity.recPort = recordingService.getString("port");
+
+                Log.d(TAG, "RecordingService: " + DVBViewerControllerActivity.recIp + ":" + DVBViewerControllerActivity.recPort);
+            }
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -6,4 +6,6 @@
     <string name="epg">EPG</string>
     <string name="settings">Settings</string>
     <string name="timer">Timers</string>
+    <string name="loadingChannels">Loading Channels...</string>
+    <string name="loading">Loading...</string>
 </resources>
