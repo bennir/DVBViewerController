@@ -143,6 +143,7 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
                                            View.OnClickListener() {
                                                @Override
                                                public void onClick(View view) {
+                                                   DVBViewerControllerActivity.dvbHost = "Demo Device";
                                                    Intent i = new Intent(DeviceSelectionActivity.this, DVBViewerControllerActivity.class);
                                                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                    startActivity(i);

@@ -8,7 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import de.bennir.DVBViewerController.channels.ChannelAdapter;
 import de.bennir.DVBViewerController.channels.ChannelListParcelable;
@@ -31,6 +35,7 @@ public class ChannelFragment extends SherlockListFragment {
     ArrayList<String> groupNames = new ArrayList<String>();
     ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
     ArrayList<ChannelListParcelable> chanParcel = new ArrayList<ChannelListParcelable>();
+    AQuery aq;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,26 +51,78 @@ public class ChannelFragment extends SherlockListFragment {
 
         lv = (ExpandableListView) getListView();
         getSherlockActivity().registerForContextMenu(lv);
+        lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                DVBChannel chan = DVBChannels.get((groupPosition / 1024)).get(
+                        childPosition - groupPosition);
+
+                setChannel(chan.favoriteId);
+
+                return true;
+            }
+        });
 
         if (DVBChannels.isEmpty()) {
-            ProgressDialog dialog = new ProgressDialog(getSherlockActivity());
-
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(true);
-            dialog.setInverseBackgroundForced(false);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setTitle(R.string.loadingChannels);
-
-            AQuery aq = new AQuery(getSherlockActivity());
-            String url = "http://" +
-                    DVBViewerControllerActivity.dvbIp + ":" +
-                    DVBViewerControllerActivity.dvbPort +
-                    "/?getFavList";
-            Log.d(TAG, "URL=" + url);
-            aq.progress(dialog).ajax(url, JSONObject.class, this, "downloadChannelCallback");
+            updateChannelList();
         } else {
             lvAdapter = new ChannelAdapter(getSherlockActivity(), groupNames, DVBChannels);
         }
+    }
+
+    private void updateChannelList() {
+        groupNames.clear();
+        DVBChannels.clear();
+        chanParcel.clear();
+
+        ProgressDialog dialog = new ProgressDialog(getSherlockActivity());
+
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(true);
+        dialog.setInverseBackgroundForced(false);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setTitle(R.string.loadingChannels);
+
+        aq = new AQuery(getSherlockActivity());
+        String url = "http://" +
+                DVBViewerControllerActivity.dvbIp + ":" +
+                DVBViewerControllerActivity.dvbPort +
+                "/?getFavList";
+        Log.d(TAG, "URL=" + url);
+        aq.progress(dialog).ajax(url, JSONObject.class, this, "downloadChannelCallback");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem item = menu.add(2, 2, 1, "Refresh");
+        item.setIcon(R.drawable.ic_action_refresh);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                updateChannelList();
+
+                return true;
+            }
+        });
+    }
+
+    public void setChannel(String channelId) {
+        String url = "http://" +
+                DVBViewerControllerActivity.dvbIp + ":" +
+                DVBViewerControllerActivity.dvbPort +
+                "?setChannel=" + channelId;
+
+        aq.ajax(url, String.class, new AjaxCallback<String>() {
+
+            @Override
+            public void callback(String url, String html, AjaxStatus status) {
+
+            }
+
+        });
+
     }
 
     public void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
@@ -121,50 +178,52 @@ public class ChannelFragment extends SherlockListFragment {
         }
 
         // TEST CHANNEL START
-        groupNames.clear();
-        DVBChannels.clear();
+        if (DVBViewerControllerActivity.dvbHost == "Demo Device") {
+            groupNames.clear();
+            DVBChannels.clear();
 
-        groupNames.add("Testgruppe");
-        ArrayList<DVBChannel> testChans = new ArrayList<DVBChannel>();
-        DVBChannel test = new DVBChannel();
+            groupNames.add("Testgruppe");
+            ArrayList<DVBChannel> testChans = new ArrayList<DVBChannel>();
+            DVBChannel test = new DVBChannel();
 
-        test.name = "Das Erste";
-        test.group = "Testgruppe";
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        DVBChannels.add(testChans);
+            test.name = "Das Erste";
+            test.group = "Testgruppe";
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            DVBChannels.add(testChans);
 
-        groupNames.add("Privat");
-        testChans = new ArrayList<DVBChannel>();
-        test = new DVBChannel();
+            groupNames.add("Privat");
+            testChans = new ArrayList<DVBChannel>();
+            test = new DVBChannel();
 
-        test.name = "ZDF HD";
-        test.group = "Privat";
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        testChans.add(test);
-        DVBChannels.add(testChans);
+            test.name = "ZDF HD";
+            test.group = "Privat";
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            testChans.add(test);
+            DVBChannels.add(testChans);
 
-        lvAdapter = new ChannelAdapter(getSherlockActivity(), groupNames,
-                DVBChannels);
-        lv.setAdapter(lvAdapter);
+            lvAdapter = new ChannelAdapter(getSherlockActivity(), groupNames,
+                    DVBChannels);
+            lv.setAdapter(lvAdapter);
+        }
         // TEST CHANNEL END
     }
 }
