@@ -24,7 +24,6 @@
         </activity>
         <activity
                 android:name=".DeviceSelectionActivity"
-                android:theme="@style/Theme.DVBHolo"
                 android:noHistory="true"
                 >
             <intent-filter>
@@ -32,7 +31,5 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <service android:name="org.teleal.cling.android.AndroidUpnpServiceImpl"/>
     </application>
 </manifest>

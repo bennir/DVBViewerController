@@ -13,7 +13,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.Sherlock.Light.Small"
-                android:text="Active Profile"
+                android:text="@string/active_device"
                 android:paddingLeft="15dp"
                 android:paddingTop="5dp"
                 />
@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
                 android:textSize="25dp"
-                android:text="benni"
+                android:text=""
                 android:paddingLeft="35dp"
                 android:layout_margin="5dp"
                 android:drawableRight="@drawable/ic_action_change_profile"

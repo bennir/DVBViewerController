@@ -26,7 +26,6 @@ import java.util.ArrayList;
  */
 public class ChannelAdapter extends BaseExpandableListAdapter {
     final String TAG = "ChannelAdapter";
-    AQuery aq;
     private ArrayList<String> groupNames;
     private ArrayList<ArrayList<DVBChannel>> DVBChannels;
     private LayoutInflater inflater;
@@ -36,7 +35,6 @@ public class ChannelAdapter extends BaseExpandableListAdapter {
                           ArrayList<ArrayList<DVBChannel>> channels) {
         this.groupNames = groups;
         this.DVBChannels = channels;
-        this.aq = new AQuery(context);
 
         inflater = LayoutInflater.from(context);
 
@@ -72,27 +70,25 @@ public class ChannelAdapter extends BaseExpandableListAdapter {
         }
 
         DVBChannel chan = (DVBChannel) getChild(groupPosition, childPosition);
-        TextView channel = (TextView) v.findViewById(R.id.channel_item_name);
-        channel.setText(chan.name);
+        ((TextView) v.findViewById(R.id.channel_item_name)).setText(chan.name);
+        ((TextView) v.findViewById(R.id.channel_item_current_epg)).setText(chan.epgTitle);
 
-        String url = null;
-        try {
-            url = "http://" +
-                    DVBViewerControllerActivity.dvbIp + ":" +
-                    DVBViewerControllerActivity.dvbPort +
-                    "/?getChannelLogo=" + URLEncoder.encode(chan.name, "UTF-8");
+        if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
+            String url = null;
+            try {
+                url = "http://" +
+                        DVBViewerControllerActivity.dvbIp + ":" +
+                        DVBViewerControllerActivity.dvbPort +
+                        "/?getChannelLogo=" + URLEncoder.encode(chan.name, "UTF-8");
 
-            Log.d(TAG, url);
+                Log.d(TAG, url);
 
-            ImageView logo = (ImageView) v.findViewById(R.id.channel_item_logo);
-            load.displayImage(url, logo);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+                ImageView logo = (ImageView) v.findViewById(R.id.channel_item_logo);
+                load.displayImage(url, logo);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
-//        aq.id(R.id.channel_item_logo).image(url, true, true, 0, 0, null, AQuery.FADE_IN_NETWORK, 1.0f);
-
-
-
         return v;
     }
 

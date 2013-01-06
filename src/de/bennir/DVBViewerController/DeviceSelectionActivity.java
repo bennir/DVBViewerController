@@ -144,6 +144,11 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
                                                @Override
                                                public void onClick(View view) {
                                                    DVBViewerControllerActivity.dvbHost = "Demo Device";
+                                                   DVBViewerControllerActivity.dvbIp = "127.0.0.1";
+                                                   DVBViewerControllerActivity.dvbPort = "8000";
+                                                   DVBViewerControllerActivity.recIp = "127.0.0.1";
+                                                   DVBViewerControllerActivity.recPort = "8080";
+
                                                    Intent i = new Intent(DeviceSelectionActivity.this, DVBViewerControllerActivity.class);
                                                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                    startActivity(i);

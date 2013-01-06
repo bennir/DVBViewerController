@@ -15,6 +15,9 @@ public class DVBChannel implements Parcelable {
     public String favoriteId;
     public String channelId;
     public Bitmap logo;
+    public String epgTitle = "";
+    public String epgTime = "";
+    public String epgDuration = "";
 
     public int describeContents() {
         return 0;
@@ -26,6 +29,9 @@ public class DVBChannel implements Parcelable {
         out.writeString(favoriteId);
         out.writeString(channelId);
         out.writeParcelable(logo, flags);
+        out.writeString(epgTitle);
+        out.writeString(epgTime);
+        out.writeString(epgDuration);
 
     }
 
@@ -45,6 +51,9 @@ public class DVBChannel implements Parcelable {
         favoriteId = in.readString();
         channelId = in.readString();
         logo = in.readParcelable(Bitmap.class.getClassLoader());
+        epgTitle = in.readString();
+        epgTime = in.readString();
+        epgDuration = in.readString();
     }
 
     public DVBChannel() {
