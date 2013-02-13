@@ -7,10 +7,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
@@ -116,7 +113,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
     public void getRecordingServiceCallback(String url, JSONObject json, AjaxStatus ajax) {
         try {
-            if(json != null) {
+            if (json != null) {
                 JSONObject recordingService = json.getJSONObject("recordingService");
 
                 DVBViewerControllerActivity.recIp = recordingService.getString("ip");
@@ -124,7 +121,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
                 Log.d(TAG, "RecordingService: " + DVBViewerControllerActivity.recIp + ":" + DVBViewerControllerActivity.recPort);
             }
-        } catch(JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
