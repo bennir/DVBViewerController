@@ -72,6 +72,12 @@ public class ChannelAdapter extends BaseExpandableListAdapter {
         ((TextView) v.findViewById(R.id.channel_item_name)).setText(chan.name);
         ((TextView) v.findViewById(R.id.channel_item_current_epg)).setText(chan.epgTitle);
 
+        if (childPosition == 0)
+            Log.d(TAG, "Erste Channel: " + chan.name);
+        else if (childPosition == (getChildrenCount(groupPosition) - 1))
+            Log.d(TAG, "Letzte Channel: " + chan.name);
+
+
         if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
             String url = null;
             try {
