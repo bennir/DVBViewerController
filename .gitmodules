@@ -1,0 +1,6 @@
+[submodule "ActionBarSherlock"]
+	path = ActionBarSherlock
+	url = git://github.com/JakeWharton/ActionBarSherlock.git
+[submodule "SlidingMenu"]
+	path = SlidingMenu
+	url = git://github.com/jfeinstein10/SlidingMenu.git
