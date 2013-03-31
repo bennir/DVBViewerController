@@ -1,54 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/channel_item_layout"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:layout_marginBottom="30dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_selector_mid"
+                android:padding="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
         >
+    <ImageView
+            android:id="@+id/channel_item_logo"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:contentDescription="Channel Logo"
+            android:layout_marginRight="30dp"
+            />
     <TextView
             android:id="@+id/channel_item_name"
             android:layout_width="fill_parent"
             android:layout_height="35dp"
             android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
             android:textSize="14sp"
-            android:textColor="@color/abs__primary_text_holo_dark"
-            android:background="@drawable/dvbbackground"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/channel_item_logo"
             android:text="channel_item_name"
             />
-    <RelativeLayout
-            android:layout_width="fill_parent"
+    <TextView
+            android:id="@+id/channel_item_current_epg"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/dvbbackground_bright"
-            android:padding="10dp"
-            >
-        <ImageView
-                android:id="@+id/channel_item_logo"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:contentDescription="Channel Logo"
-                android:layout_marginRight="30dp"
-                />
-        <TextView
-                android:id="@+id/channel_item_current_epg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/channel_item_logo"
-                android:textColor="@color/abs__primary_text_holo_light"
-                android:text="Nachrichten"
-                />
-        <TextView
-                android:id="@+id/channel_item_current_epg_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/channel_item_logo"
-                android:layout_below="@id/channel_item_current_epg"
-                android:textColor="@color/abs__primary_text_holo_light"
-                android:text="20:00 - 20:15"
-                />
-
-    </RelativeLayout>
-</LinearLayout>
+            android:layout_toRightOf="@id/channel_item_logo"
+            android:layout_below="@id/channel_item_name"
+            android:text="Nachrichten"
+            />
+    <TextView
+            android:id="@+id/channel_item_current_epg_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/channel_item_logo"
+            android:layout_below="@id/channel_item_current_epg"
+            android:text="20:00 - 20:15"
+            />
+</RelativeLayout>
