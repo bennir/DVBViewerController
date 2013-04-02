@@ -15,6 +15,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
+import com.koushikdutta.async.http.AsyncHttpClient;
 import de.bennir.DVBViewerController.channels.ChannelAdapter;
 import de.bennir.DVBViewerController.channels.ChannelListParcelable;
 import de.bennir.DVBViewerController.channels.DVBChannel;
@@ -22,6 +23,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -120,6 +123,8 @@ public class ChannelFragment extends SherlockListFragment {
                     "/?getFavList";
             Log.d(TAG, "URL=" + url);
             aq.progress(dialog).ajax(url, JSONObject.class, this, "downloadChannelCallback");
+
+
         }
     }
 
@@ -163,6 +168,7 @@ public class ChannelFragment extends SherlockListFragment {
 
         try {
             if (json != null) {
+                Log.d(TAG, "Received answer");
                 JSONArray channelsJSON = new JSONArray(
                         json.getString("channels"));
 
@@ -176,7 +182,7 @@ public class ChannelFragment extends SherlockListFragment {
                     dvbChannel.favoriteId = chan.getString("id");
                     dvbChannel.channelId = chan.getString("channelid");
                     dvbChannel.group = chan.getString("group");
-                    dvbChannel.epgTitle = chan.getString("epgtitle");
+                    dvbChannel.epgTitle = URLDecoder.decode(chan.getString("epgtitle"));
                     dvbChannel.epgTime = chan.getString("epgtime");
                     dvbChannel.epgDuration = chan.getString("epgduration");
 

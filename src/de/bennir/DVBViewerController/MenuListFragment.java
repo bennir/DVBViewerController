@@ -1,7 +1,6 @@
 package de.bennir.DVBViewerController;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -15,16 +14,16 @@ import android.widget.TextView;
 
 public class MenuListFragment extends ListFragment {
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list, null);
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.list, null);
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		MenuAdapter adapter = new MenuAdapter(getActivity());
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        MenuAdapter adapter = new MenuAdapter(getActivity());
 
         adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote));
         adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels));
@@ -32,8 +31,8 @@ public class MenuListFragment extends ListFragment {
         adapter.add(new DVBMenuItem(getString(R.string.epg), R.drawable.ic_action_epg));
         adapter.add(new DVBMenuItem(getString(R.string.settings), R.drawable.ic_action_settings));
 
-		setListAdapter(adapter);
-	}
+        setListAdapter(adapter);
+    }
 
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id) {
@@ -86,37 +85,37 @@ public class MenuListFragment extends ListFragment {
         }
     }
 
-	private class DVBMenuItem {
-		public String tag;
-		public int iconRes;
+    private class DVBMenuItem {
+        public String tag;
+        public int iconRes;
 
-		public DVBMenuItem(String tag, int iconRes) {
-			this.tag = tag;
-			this.iconRes = iconRes;
-		}
-	}
+        public DVBMenuItem(String tag, int iconRes) {
+            this.tag = tag;
+            this.iconRes = iconRes;
+        }
+    }
 
-	public class MenuAdapter extends ArrayAdapter<DVBMenuItem> {
+    public class MenuAdapter extends ArrayAdapter<DVBMenuItem> {
 
-		public MenuAdapter(Context context) {
-			super(context, 0);
-		}
+        public MenuAdapter(Context context) {
+            super(context, 0);
+        }
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getContext()).inflate(
-						R.layout.row, null);
-			}
-			ImageView icon = (ImageView) convertView
-					.findViewById(R.id.row_icon);
-			icon.setImageResource(getItem(position).iconRes);
-			TextView title = (TextView) convertView
-					.findViewById(R.id.row_title);
-			title.setText(getItem(position).tag);
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(
+                        R.layout.row, null);
+            }
+            ImageView icon = (ImageView) convertView
+                    .findViewById(R.id.row_icon);
+            icon.setImageResource(getItem(position).iconRes);
+            TextView title = (TextView) convertView
+                    .findViewById(R.id.row_title);
+            title.setText(getItem(position).tag);
 
-			return convertView;
-		}
+            return convertView;
+        }
 
-	}
+    }
 }

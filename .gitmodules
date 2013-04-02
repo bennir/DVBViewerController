@@ -4,3 +4,7 @@
 [submodule "SlidingMenu"]
 	path = SlidingMenu
 	url = git://github.com/jfeinstein10/SlidingMenu.git
+
+[submodule "AndroidAsync"]
+	path = AndroidAsync
+	url = git://github.com/koush/AndroidAsync.git
