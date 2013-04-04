@@ -8,3 +8,6 @@
 [submodule "AndroidAsync"]
 	path = AndroidAsync
 	url = git://github.com/koush/AndroidAsync.git
+[submodule "Crouton"]
+	path = Crouton
+	url = git://github.com/keyboardsurfer/Crouton.git

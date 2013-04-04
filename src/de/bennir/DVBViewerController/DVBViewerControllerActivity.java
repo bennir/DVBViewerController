@@ -12,6 +12,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.slidingmenu.lib.SlidingMenu;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,9 +26,14 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     private Fragment mContent;
     private SlidingMenu menu;
 
-    /**
-     * Called when the activity is first created.
-     */
+    @Override
+    protected void onDestroy() {
+        // Workaround until there's a way to detach the Activity from Crouton while
+        // there are still some in the Queue.
+        Crouton.clearCroutonsForActivity(this);
+        super.onDestroy();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

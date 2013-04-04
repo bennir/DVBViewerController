@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ExpandableListView xmlns:android="http://schemas.android.com/apk/res/android"
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@android:id/list"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_margin="5dp"
-                    android:childDivider="#00000000"
                     android:dividerHeight="0sp"
-                    android:divider="#00000000">
-</ExpandableListView>
+                    android:divider="#00000000"
+                    />

@@ -1,13 +1,14 @@
 package de.bennir.DVBViewerController;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
+import android.widget.*;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -16,9 +17,12 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.AsyncHttpResponse;
 import de.bennir.DVBViewerController.channels.ChannelAdapter;
 import de.bennir.DVBViewerController.channels.ChannelListParcelable;
 import de.bennir.DVBViewerController.channels.DVBChannel;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,15 +31,11 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-/**
- * User: benni
- * Date: 16.12.12
- * Time: 16:22
- */
 public class ChannelFragment extends SherlockListFragment {
     final String TAG = "ChannelFragment";
-    ExpandableListView lv;
-    ChannelAdapter lvAdapter;
+
+    ListView lv;
+    ChanGroupAdapter lvAdapter;
     ArrayList<String> groupNames = new ArrayList<String>();
     ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
     ArrayList<ChannelListParcelable> chanParcel = new ArrayList<ChannelListParcelable>();
@@ -55,26 +55,23 @@ public class ChannelFragment extends SherlockListFragment {
 
         aq = new AQuery(getSherlockActivity());
 
-        lv = (ExpandableListView) getListView();
-        getSherlockActivity().registerForContextMenu(lv);
-        lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        lv = getListView();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                DVBChannel chan = DVBChannels.get((groupPosition / 1024)).get(
-                        childPosition - groupPosition);
-
-                setChannel(chan.favoriteId);
-
-                return true;
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                for (DVBChannel chan : DVBChannels.get(i)) {
+                    Log.d(TAG, chan.name);
+                }
             }
         });
 
         if (DVBChannels.isEmpty()) {
             updateChannelList();
         } else {
-            lvAdapter = new ChannelAdapter(getSherlockActivity(), groupNames, DVBChannels);
+            lvAdapter = new ChanGroupAdapter(getSherlockActivity(), groupNames.toArray(new String[groupNames.size()]));
         }
+
+        Crouton.makeText(getActivity(), R.string.channelgroup_crouton, Style.INFO).show();
     }
 
     private void updateChannelList() {
@@ -106,7 +103,7 @@ public class ChannelFragment extends SherlockListFragment {
             testChans.add(test);
             DVBChannels.add(testChans);
 
-            lvAdapter = new ChannelAdapter(getSherlockActivity(), groupNames, DVBChannels);
+            lvAdapter = new ChanGroupAdapter(getSherlockActivity(), groupNames.toArray(new String[groupNames.size()]));
             lv.setAdapter(lvAdapter);
         } else {
             ProgressDialog dialog = new ProgressDialog(getSherlockActivity());
@@ -124,7 +121,18 @@ public class ChannelFragment extends SherlockListFragment {
             Log.d(TAG, "URL=" + url);
             aq.progress(dialog).ajax(url, JSONObject.class, this, "downloadChannelCallback");
 
+            AsyncHttpClient.getDefaultInstance().get(url, new AsyncHttpClient.JSONObjectCallback() {
+                // Callback is invoked with any exceptions/errors, and the result, if available.
+                @Override
+                public void onCompleted(Exception e, AsyncHttpResponse response, JSONObject result) {
+                    if (e != null) {
+                        e.printStackTrace();
+                        return;
+                    }
 
+                    // Do something with JSON
+                }
+            });
         }
     }
 
@@ -202,13 +210,45 @@ public class ChannelFragment extends SherlockListFragment {
                 }
                 DVBChannels.add(dvbChans);
 
-                lvAdapter = new ChannelAdapter(getSherlockActivity(), groupNames, DVBChannels);
+                lvAdapter = new ChanGroupAdapter(getSherlockActivity(), groupNames.toArray(new String[groupNames.size()]));
 
                 lv.setAdapter(lvAdapter);
             }
         } catch (JSONException e) {
             e.printStackTrace();
             System.out.println(e.toString());
+        }
+    }
+
+    public class ChanGroupAdapter extends ArrayAdapter<String> {
+        private final Context context;
+        private final String[] values;
+
+        public ChanGroupAdapter(Context context, String[] values) {
+            super(context, R.layout.channels_group_list_item, values);
+            this.context = context;
+            this.values = values;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View v = null;
+
+            if (convertView != null)
+                v = convertView;
+            else
+                v = inflater.inflate(R.layout.channels_group_list_item, parent,
+                        false);
+
+            TextView chanGroup = (TextView) v
+                    .findViewById(R.id.channels_group_list_item);
+
+            chanGroup.setText(values[position]);
+
+            return v;
         }
     }
 }
