@@ -158,4 +158,15 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 .commit();
         menu.showContent();
     }
+
+    public void switchContent(Fragment fragment, String title, int icon) {
+        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setIcon(icon);
+        mContent = fragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+        menu.showContent();
+    }
 }

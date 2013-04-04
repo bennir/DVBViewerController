@@ -1,14 +1,16 @@
 package de.bennir.DVBViewerController;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -16,9 +18,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
-import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.AsyncHttpResponse;
-import de.bennir.DVBViewerController.channels.ChannelAdapter;
 import de.bennir.DVBViewerController.channels.ChannelListParcelable;
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -28,12 +27,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class ChannelFragment extends SherlockListFragment {
     final String TAG = "ChannelFragment";
-
     ListView lv;
     ChanGroupAdapter lvAdapter;
     ArrayList<String> groupNames = new ArrayList<String>();
@@ -59,8 +56,13 @@ public class ChannelFragment extends SherlockListFragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                for (DVBChannel chan : DVBChannels.get(i)) {
-                    Log.d(TAG, chan.name);
+
+                Fragment newContent = new ChannelGroupFragment();
+
+                if (getActivity() instanceof DVBViewerControllerActivity) {
+                    DVBViewerControllerActivity act = (DVBViewerControllerActivity) getActivity();
+                    act.switchContent(newContent, groupNames.get(i), R.drawable.ic_action_channels);
+                    act.getFragmentManager().popBackStackImmediate();
                 }
             }
         });
@@ -70,8 +72,6 @@ public class ChannelFragment extends SherlockListFragment {
         } else {
             lvAdapter = new ChanGroupAdapter(getSherlockActivity(), groupNames.toArray(new String[groupNames.size()]));
         }
-
-        Crouton.makeText(getActivity(), R.string.channelgroup_crouton, Style.INFO).show();
     }
 
     private void updateChannelList() {
@@ -106,33 +106,20 @@ public class ChannelFragment extends SherlockListFragment {
             lvAdapter = new ChanGroupAdapter(getSherlockActivity(), groupNames.toArray(new String[groupNames.size()]));
             lv.setAdapter(lvAdapter);
         } else {
-            ProgressDialog dialog = new ProgressDialog(getSherlockActivity());
-
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(true);
-            dialog.setInverseBackgroundForced(false);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setTitle(R.string.loadingChannels);
-
             String url = "http://" +
                     DVBViewerControllerActivity.dvbIp + ":" +
                     DVBViewerControllerActivity.dvbPort +
                     "/?getFavList";
             Log.d(TAG, "URL=" + url);
-            aq.progress(dialog).ajax(url, JSONObject.class, this, "downloadChannelCallback");
 
-            AsyncHttpClient.getDefaultInstance().get(url, new AsyncHttpClient.JSONObjectCallback() {
-                // Callback is invoked with any exceptions/errors, and the result, if available.
-                @Override
-                public void onCompleted(Exception e, AsyncHttpResponse response, JSONObject result) {
-                    if (e != null) {
-                        e.printStackTrace();
-                        return;
-                    }
+            Style st = new Style.Builder()
+                    .setDuration(Style.DURATION_INFINITE)
+                    .setBackgroundColorValue(Style.holoBlueLight)
+                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .build();
+            Crouton.makeText(getActivity(), R.string.loadingChannels, st).show();
 
-                    // Do something with JSON
-                }
-            });
+            aq.ajax(url, JSONObject.class, this, "downloadChannelCallback");
         }
     }
 
@@ -172,6 +159,8 @@ public class ChannelFragment extends SherlockListFragment {
 
     public void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
         Log.d(TAG, "downloadChannelCallback");
+        Crouton.cancelAllCroutons();
+
         ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
 
         try {
