@@ -17,12 +17,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DVBViewerControllerActivity extends SherlockFragmentActivity {
+    private final String TAG = DVBViewerControllerActivity.class.toString();
+
     public static String dvbHost = "";
     public static String dvbIp = "";
     public static String dvbPort = "";
     public static String recIp = "";
     public static String recPort = "";
-    private final String TAG = "DVBViewerControllerActivity";
     private Fragment mContent;
     private SlidingMenu menu;
 

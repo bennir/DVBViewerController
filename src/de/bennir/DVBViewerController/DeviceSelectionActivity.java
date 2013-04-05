@@ -29,6 +29,7 @@ import java.util.LinkedList;
 
 public class DeviceSelectionActivity extends SherlockListActivity implements ServiceListener {
     private final static String TAG = DeviceSelectionActivity.class.toString();
+
     private final static String CTRL_TYPE = "_dvbctrl._tcp.local.";
     private final static String HOSTNAME = "DVBController";
     private final static int DELAY = 500;
