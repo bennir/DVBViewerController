@@ -16,6 +16,8 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import de.bennir.DVBViewerController.util.ThreadExecutor;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
@@ -25,11 +27,6 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/**
- * User: miriam
- * Date: 13.12.12
- * Time: 21:00
- */
 public class DeviceSelectionActivity extends SherlockListActivity implements ServiceListener {
     private final static String TAG = DeviceSelectionActivity.class.toString();
     private final static String CTRL_TYPE = "_dvbctrl._tcp.local.";
@@ -84,6 +81,7 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
             zeroConf.addServiceListener(CTRL_TYPE, DeviceSelectionActivity.this);
         } else {
             // Check Wifi State
+            Crouton.makeText(this, R.string.wifistate, Style.ALERT).show();
         }
     }
 
@@ -137,6 +135,17 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
             }
         });
 
+        ThreadExecutor.runTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startProbe();
+                } catch (Exception e) {
+                    Log.d(TAG, String.format("onCreate Error: %s", e.getMessage()));
+                }
+            }
+        });
+
         Button btnSkip = (Button) findViewById(R.id.button_skip);
         btnSkip.setOnClickListener(new
 
@@ -150,23 +159,17 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
                                                    DVBViewerControllerActivity.recPort = "8080";
 
                                                    Intent i = new Intent(DeviceSelectionActivity.this, DVBViewerControllerActivity.class);
-                                                   i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                                   i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                    startActivity(i);
-                                                   DeviceSelectionActivity.this.finish();
+
+                                                   try {
+                                                       DeviceSelectionActivity.this.stopProbe();
+                                                       DeviceSelectionActivity.this.finish();
+                                                   } catch (Exception e) {
+                                                       e.printStackTrace();
+                                                   }
                                                }
                                            });
-
-        ThreadExecutor.runTask(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    startProbe();
-                } catch (Exception e) {
-                    Log.d(TAG, String.format("onCreate Error: %s", e.getMessage()));
-                }
-            }
-        });
-
     }
 
     @Override

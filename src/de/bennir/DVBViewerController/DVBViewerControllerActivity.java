@@ -1,6 +1,5 @@
 package de.bennir.DVBViewerController;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +12,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.slidingmenu.lib.SlidingMenu;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,13 +53,11 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         /**
          * Above View
          */
-        // set the Above View
         if (savedInstanceState != null)
             mContent = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
         if (mContent == null)
             mContent = new RemoteFragment();
 
-        // set the Above View
         setContentView(R.layout.main);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -87,7 +85,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         /**
          * Menu Customize
          */
-        menu.setMode(SlidingMenu.LEFT);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setShadowWidthRes(R.dimen.shadow_width);
         menu.setShadowDrawable(R.drawable.shadow);
@@ -99,22 +96,17 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         /**
          * Recording Service Loading
          */
-        AQuery aq = new AQuery(this);
+        if (DVBViewerControllerActivity.recIp.isEmpty() || DVBViewerControllerActivity.recPort.isEmpty()) {
+            Log.d(TAG, "Getting Recording Service");
+            AQuery aq = new AQuery(this);
 
-        ProgressDialog dialog = new ProgressDialog(this);
-
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(true);
-        dialog.setInverseBackgroundForced(false);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setTitle(R.string.loading);
-
-        String url = "http://" +
-                DVBViewerControllerActivity.dvbIp + ":" +
-                DVBViewerControllerActivity.dvbPort +
-                "/?getRecordingService";
-        Log.d(TAG, "URL=" + url);
-        aq.progress(dialog).ajax(url, JSONObject.class, this, "getRecordingServiceCallback");
+            String url = "http://" +
+                    DVBViewerControllerActivity.dvbIp + ":" +
+                    DVBViewerControllerActivity.dvbPort +
+                    "/?getRecordingService";
+            Log.d(TAG, "URL=" + url);
+            aq.ajax(url, JSONObject.class, this, "getRecordingServiceCallback");
+        }
     }
 
     public void getRecordingServiceCallback(String url, JSONObject json, AjaxStatus ajax) {
@@ -128,6 +120,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 Log.d(TAG, "RecordingService: " + DVBViewerControllerActivity.recIp + ":" + DVBViewerControllerActivity.recPort);
             }
         } catch (JSONException e) {
+            Crouton.makeText(this, R.string.recservicefailed, Style.ALERT).show();
+
             e.printStackTrace();
         }
     }

@@ -10,4 +10,6 @@
     <string name="loading">Loading...</string>
     <string name="active_device">Active Device</string>
     <string name="channelgroup_crouton">Press Group to see Channels</string>
+    <string name="recservicefailed">Failed to retrieve Recording Service</string>
+    <string name="wifistate">Please check your WiFi state</string>
 </resources>
