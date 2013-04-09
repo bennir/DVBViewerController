@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class MenuListFragment extends ListFragment {
+    final String TAG = MenuListFragment.class.toString();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +41,7 @@ public class MenuListFragment extends ListFragment {
         Fragment newContent = null;
         int titleRes = 0;
         int icon = 0;
+
         switch (position) {
             case 0:
                 // Remote
@@ -81,6 +84,8 @@ public class MenuListFragment extends ListFragment {
 
         if (getActivity() instanceof DVBViewerControllerActivity) {
             DVBViewerControllerActivity act = (DVBViewerControllerActivity) getActivity();
+            Log.d(TAG, "Back Stack Entries: " + act.getSupportFragmentManager().getBackStackEntryCount());
+            act.getSupportFragmentManager().popBackStackImmediate();
             act.switchContent(fragment, titleRes, icon);
         }
     }

@@ -19,8 +19,7 @@
             android:icon="@drawable/dvbviewer_controller"
             android:theme="@style/Theme.DVBHolo">
         <activity
-                android:name=".DeviceSelectionActivity"
-                android:uiOptions="splitActionBarWhenNarrow" >
+                android:name=".DeviceSelectionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

@@ -45,8 +45,47 @@ public class ChannelFragment extends SherlockListFragment {
     }
 
     @Override
+    public void onResume() {
+        Log.d(TAG, "onResume() called");
+        super.onResume();
+
+        getSherlockActivity().getSupportActionBar().setTitle(R.string.channels);
+        updateChannelList();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState() called");
+        super.onSaveInstanceState(outState);
+
+        for(ArrayList<DVBChannel> chans : DVBChannels) {
+            ChannelListParcelable parc = new ChannelListParcelable();
+            parc.channels = chans;
+            chanParcel.add(parc);
+        }
+
+        outState.putParcelableArrayList("chanParcel", chanParcel);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated() called");
         super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            Log.d(TAG, "Restoring state");
+
+            chanParcel = savedInstanceState.getParcelableArrayList("chanParcel");
+            if(chanParcel != null) {
+                Log.d(TAG, "Restored chanParcel");
+                DVBChannels.clear();
+
+                for(ChannelListParcelable parc : chanParcel) {
+                    DVBChannels.add(parc.channels);
+                }
+            }
+
+        }
 
         setHasOptionsMenu(true);
 
@@ -61,8 +100,7 @@ public class ChannelFragment extends SherlockListFragment {
 
                 if (getActivity() instanceof DVBViewerControllerActivity) {
                     DVBViewerControllerActivity act = (DVBViewerControllerActivity) getActivity();
-                    act.switchContent(newContent, groupNames.get(i), R.drawable.ic_action_channels);
-                    act.getFragmentManager().popBackStackImmediate();
+                    act.switchContent(newContent, groupNames.get(i), R.drawable.ic_action_channels, true);
                 }
             }
         });
@@ -75,6 +113,7 @@ public class ChannelFragment extends SherlockListFragment {
     }
 
     private void updateChannelList() {
+        Log.d(TAG, "updating channels");
         groupNames.clear();
         DVBChannels.clear();
         chanParcel.clear();

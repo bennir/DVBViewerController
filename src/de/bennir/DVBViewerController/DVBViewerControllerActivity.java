@@ -36,6 +36,17 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (menu.isMenuShowing()) {
+            Log.d(TAG, "Back with menu");
+            menu.showContent(true);
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -153,6 +164,21 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 .commit();
         menu.showContent();
     }
+    public void switchContent(Fragment fragment, int titleRes, int icon, boolean addToBackStack) {
+        if(addToBackStack) {
+            getSupportActionBar().setTitle(titleRes);
+            getSupportActionBar().setIcon(icon);
+            mContent = fragment;
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .addToBackStack(null)
+                    .commit();
+            menu.showContent();
+        } else {
+            switchContent(fragment, titleRes, icon);
+        }
+    }
 
     public void switchContent(Fragment fragment, String title, int icon) {
         getSupportActionBar().setTitle(title);
@@ -163,5 +189,22 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 .replace(R.id.content_frame, fragment)
                 .commit();
         menu.showContent();
+    }
+
+    public void switchContent(Fragment fragment, String title, int icon, boolean addToBackStack) {
+        if(addToBackStack) {
+            Log.d(TAG, "switchContent addToBackStack");
+            getSupportActionBar().setTitle(title);
+            getSupportActionBar().setIcon(icon);
+            mContent = fragment;
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .addToBackStack(null)
+                    .commit();
+            menu.showContent();
+        } else {
+            switchContent(fragment, title, icon);
+        }
     }
 }
