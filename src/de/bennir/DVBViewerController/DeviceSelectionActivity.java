@@ -107,9 +107,6 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
 
         setContentView(R.layout.activity_deviceselection);
 
-        getActionBar().setDisplayUseLogoEnabled(false);
-        getActionBar().setDisplayShowTitleEnabled(false);
-
         adapter = new ServiceAdapter(this);
         list = getListView();
         list.setAdapter(adapter);

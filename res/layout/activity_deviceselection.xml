@@ -7,7 +7,7 @@
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent"
                   android:layout_margin="15dp"
-                  android:background="@drawable/dvbbackground"
+                  android:background="@drawable/dvbcard"
                   android:padding="5dp">
         <TextView
                 android:id="@+id/active_profile"
@@ -21,7 +21,7 @@
         <View
                 android:layout_height="1dp"
                 android:layout_width="fill_parent"
-                android:background="#ffffff"
+                android:background="@color/DVBShadow"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 />

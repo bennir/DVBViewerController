@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="Theme.DVBHolo" parent="@style/Theme.Sherlock">
+    <style name="Theme.DVBHolo" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowBackground">@color/DVBBackgroundLight</item>
         <item name="android:actionBarStyle">@style/DVBActionBar</item>
     </style>
-    <style name="Theme.DVBHolo.NoTitleBar" parent="android:Theme.Holo.NoActionBar">
+    <style name="Theme.DVBHolo.NoTitleBar" parent="android:Theme.Holo.Light.NoActionBar">
         <item name="android:windowBackground">@color/DVBBackgroundLight</item>
         <item name="android:actionBarStyle">@style/DVBActionBar</item>
     </style>

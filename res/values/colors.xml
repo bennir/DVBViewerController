@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="DVBShadow">#0A0A0A</color>
-    <color name="DVBBackgroundLight">#333333</color>
-    <color name="DVBBackgroundDark">#181818</color>
+    <color name="DVBShadow">#d3d3d3</color>
+    <color name="DVBBackgroundLight">#e5e5e5</color>
+    <color name="DVBBackgroundDark">#ffffff</color>
 </resources>

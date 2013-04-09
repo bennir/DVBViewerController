@@ -1,84 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--android:orientation="vertical"-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent">-->
-<!--<LinearLayout android:orientation="vertical"-->
-<!--android:layout_width="fill_parent"-->
-<!--android:layout_height="fill_parent"-->
-<!--android:layout_margin="15dp"-->
-<!--android:background="@drawable/dvbbackground"-->
-<!--android:padding="5dp">-->
-<!--<TextView-->
-<!--android:layout_width="wrap_content"-->
-<!--android:layout_height="wrap_content"-->
-<!--android:textAppearance="@style/TextAppearance.Sherlock.Light.Small"-->
-<!--android:text="@string/active_device"-->
-<!--android:paddingLeft="15dp"-->
-<!--android:paddingTop="5dp"-->
-<!--/>-->
-<!--<TextView-->
-<!--android:id="@+id/active_profile"-->
-<!--android:layout_width="fill_parent"-->
-<!--android:layout_height="wrap_content"-->
-<!--android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"-->
-<!--android:textSize="25dp"-->
-<!--android:text=""-->
-<!--android:paddingLeft="35dp"-->
-<!--android:layout_margin="5dp"-->
-<!--android:drawableRight="@drawable/ic_action_change_profile"-->
-<!--/>-->
-<!--<View-->
-<!--android:layout_height="1dp"-->
-<!--android:layout_width="fill_parent"-->
-<!--android:background="#ffffff"-->
-<!--android:layout_marginTop="5dp"-->
-<!--android:layout_marginBottom="5dp"/>-->
-<!--<fragment-->
-<!--android:name="de.bennir.DVBViewerController.MenuListFragment"-->
-<!--android:layout_width="fill_parent"-->
-<!--android:layout_height="fill_parent"-->
-<!--android:paddingLeft="15dp" >-->
-<!--</fragment>-->
-<!--</LinearLayout>-->
-<!--</LinearLayout>-->
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:layout_margin="15dp"
-              android:background="@drawable/dvbbackground"
-              android:padding="5dp">
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Sherlock.Light.Small"
-            android:text="@string/active_device"
-            android:paddingLeft="15dp"
-            android:paddingTop="5dp"
-            />
-    <TextView
-            android:id="@+id/active_profile"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
-            android:textSize="25dp"
-            android:text=""
-            android:paddingLeft="35dp"
-            android:layout_margin="5dp"
-            android:drawableRight="@drawable/ic_action_change_profile"
-            />
-    <View
-            android:layout_height="1dp"
-            android:layout_width="fill_parent"
-            android:background="#ffffff"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"/>
-    <fragment
-            android:name="de.bennir.DVBViewerController.MenuListFragment"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:paddingLeft="15dp">
-    </fragment>
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:layout_margin="15dp"
+                  android:background="@drawable/dvbcard"
+                  android:padding="5dp">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Sherlock.Light.Small"
+                android:text="@string/active_device"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                />
+        <TextView
+                android:id="@+id/active_profile"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
+                android:textSize="25dp"
+                android:text=""
+                android:paddingLeft="35dp"
+                android:layout_margin="5dp"
+                android:drawableRight="@drawable/ic_action_change_profile"
+                />
+        <View
+                android:layout_height="1dp"
+                android:layout_width="fill_parent"
+                android:background="#ffffff"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+        <fragment
+                android:name="de.bennir.DVBViewerController.MenuListFragment"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:paddingLeft="15dp">
+        </fragment>
+    </LinearLayout>
 </LinearLayout>
