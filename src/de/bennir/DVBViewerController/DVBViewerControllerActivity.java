@@ -1,8 +1,10 @@
 package de.bennir.DVBViewerController;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -94,6 +96,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         activeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
                 Intent mIntent = new Intent(getApplicationContext(), DeviceSelectionActivity.class);
                 startActivity(mIntent);
 

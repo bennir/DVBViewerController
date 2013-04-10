@@ -4,6 +4,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_margin="5dp"
+                    android:listSelector="@drawable/list_selector"
                     android:dividerHeight="10sp"
                     android:divider="#00000000"
                     />
