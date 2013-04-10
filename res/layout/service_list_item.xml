@@ -13,8 +13,8 @@
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
             android:textSize="18sp"
-            android:textColor="@color/abs__primary_text_holo_dark"
-            android:text="service_name"/>
+            android:text="service_name"
+            android:textColor="@color/DVBActionBar"/>
     <TextView
             android:id="@+id/service_ip"
             android:textSize="12sp"

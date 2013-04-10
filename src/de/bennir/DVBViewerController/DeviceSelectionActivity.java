@@ -31,6 +31,10 @@ import java.util.LinkedList;
 public class DeviceSelectionActivity extends SherlockListActivity implements ServiceListener {
     private final static String TAG = DeviceSelectionActivity.class.toString();
 
+    Typeface robotoThin;
+    Typeface robotoLight;
+    Typeface robotoCondensed;
+
     private final static String CTRL_TYPE = "_dvbctrl._tcp.local.";
     private final static String HOSTNAME = "DVBController";
     private final static int DELAY = 500;
@@ -108,8 +112,9 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
 
         setContentView(R.layout.activity_deviceselection);
 
-        Typeface robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
-        Typeface robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+        robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
+        robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+        robotoCondensed = Typeface.createFromAsset(getAssets(), "RobotoCondensed-Bold.ttf");
 
         ((TextView) findViewById(R.id.select_device)).setTypeface(robotoLight);
 
@@ -292,6 +297,10 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null)
                 convertView = inflater.inflate(R.layout.service_list_item, parent, false);
+
+            ((TextView) convertView.findViewById(R.id.service_name)).setTypeface(robotoCondensed);
+            ((TextView) convertView.findViewById(R.id.service_ip)).setTypeface(robotoLight);
+            ((TextView) convertView.findViewById(R.id.service_port)).setTypeface(robotoLight);
 
             try {
                 final ServiceInfo serviceInfo = (ServiceInfo) this.getItem(position);
