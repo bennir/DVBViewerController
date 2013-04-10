@@ -10,7 +10,7 @@
                   android:background="@drawable/dvbcard"
                   android:padding="5dp">
         <TextView
-                android:id="@+id/active_profile"
+                android:id="@+id/select_device"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"

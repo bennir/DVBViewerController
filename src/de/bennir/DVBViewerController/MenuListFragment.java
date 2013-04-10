@@ -27,11 +27,11 @@ public class MenuListFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         MenuAdapter adapter = new MenuAdapter(getActivity());
 
-        adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote));
-        adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels));
-        adapter.add(new DVBMenuItem(getString(R.string.timer), R.drawable.ic_action_timers));
-        adapter.add(new DVBMenuItem(getString(R.string.epg), R.drawable.ic_action_epg));
-        adapter.add(new DVBMenuItem(getString(R.string.settings), R.drawable.ic_action_settings));
+        adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.timer), R.drawable.ic_action_timers_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.epg), R.drawable.ic_action_epg_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.settings), R.drawable.ic_action_settings_dark));
 
         setListAdapter(adapter);
     }

@@ -13,4 +13,8 @@
     <style name="DVBActionBarTitle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
         <item name="android:textColor">#e0e0e0</item>
     </style>
+
+    <!--<style name="DVBTextTitle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">-->
+        <!--<item name="android:textStyle">condensed</item>-->
+    <!--</style>-->
 </resources>

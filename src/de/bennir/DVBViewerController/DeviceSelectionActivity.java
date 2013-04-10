@@ -2,6 +2,7 @@ package de.bennir.DVBViewerController;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -107,6 +108,11 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
 
         setContentView(R.layout.activity_deviceselection);
 
+        Typeface robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
+        Typeface robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+
+        ((TextView) findViewById(R.id.select_device)).setTypeface(robotoLight);
+
         adapter = new ServiceAdapter(this);
         list = getListView();
         list.setAdapter(adapter);
@@ -128,8 +134,14 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
 
                 startActivity(mIntent);
 
-                DeviceSelectionActivity.this.stopProbe();
+                try {
+                    DeviceSelectionActivity.this.stopProbe();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 DeviceSelectionActivity.this.finish();
+                overridePendingTransition(R.anim.slide_right, R.anim.nothing);
             }
         });
 
@@ -157,15 +169,16 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
                                                    DVBViewerControllerActivity.recPort = "8080";
 
                                                    Intent i = new Intent(DeviceSelectionActivity.this, DVBViewerControllerActivity.class);
-//                                                   i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                    startActivity(i);
 
                                                    try {
                                                        DeviceSelectionActivity.this.stopProbe();
-                                                       DeviceSelectionActivity.this.finish();
                                                    } catch (Exception e) {
                                                        e.printStackTrace();
                                                    }
+
+                                                   DeviceSelectionActivity.this.finish();
+                                                   overridePendingTransition(R.anim.slide_right, R.anim.nothing);
                                                }
                                            });
     }

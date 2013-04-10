@@ -1,6 +1,7 @@
 package de.bennir.DVBViewerController;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -50,6 +51,12 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.main);
+
+        Typeface robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
+        Typeface robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+        Typeface robotoCondensed = Typeface.createFromAsset(getAssets(), "RobotoCondensed-Bold.ttf");
+
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -70,7 +77,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         if (mContent == null)
             mContent = new RemoteFragment();
 
-        setContentView(R.layout.main);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, mContent)
@@ -83,6 +89,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         menu = new SlidingMenu(this);
         menu.setMenu(R.layout.menu);
         TextView activeProfile = (TextView) menu.findViewById(R.id.active_profile);
+        activeProfile.setTypeface(robotoLight);
         activeProfile.setText(dvbHost);
         activeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +98,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 startActivity(mIntent);
 
                 DVBViewerControllerActivity.this.finish();
+                overridePendingTransition(R.anim.fadein, R.anim.slide_to_right);
             }
         });
 
