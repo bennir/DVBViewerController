@@ -8,11 +8,15 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -30,11 +34,6 @@ import java.util.LinkedList;
 
 public class DeviceSelectionActivity extends SherlockListActivity implements ServiceListener {
     private final static String TAG = DeviceSelectionActivity.class.toString();
-
-    Typeface robotoThin;
-    Typeface robotoLight;
-    Typeface robotoCondensed;
-
     private final static String CTRL_TYPE = "_dvbctrl._tcp.local.";
     private final static String HOSTNAME = "DVBController";
     private final static int DELAY = 500;
@@ -52,6 +51,9 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
             }
         }
     };
+    Typeface robotoThin;
+    Typeface robotoLight;
+    Typeface robotoCondensed;
     private ListView list;
     private ServiceAdapter adapter;
     private ArrayList<String> items = new ArrayList<String>();
@@ -161,12 +163,14 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
             }
         });
 
-        Button btnSkip = (Button) findViewById(R.id.button_skip);
+        TextView btnSkip = (TextView) findViewById(R.id.button_skip);
+        btnSkip.setTypeface(robotoLight);
         btnSkip.setOnClickListener(new
 
                                            View.OnClickListener() {
                                                @Override
                                                public void onClick(View view) {
+                                                   ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
                                                    DVBViewerControllerActivity.dvbHost = "Demo Device";
                                                    DVBViewerControllerActivity.dvbIp = "127.0.0.1";
                                                    DVBViewerControllerActivity.dvbPort = "8000";

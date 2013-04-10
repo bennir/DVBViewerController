@@ -3,12 +3,15 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <LinearLayout android:orientation="vertical"
-                  android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
-                  android:layout_margin="15dp"
-                  android:background="@drawable/dvbcard"
-                  android:padding="5dp">
+
+    <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="15dp"
+            android:background="@drawable/dvbcard"
+            android:padding="5dp">
+
         <TextView
                 android:id="@+id/select_device"
                 android:layout_width="wrap_content"
@@ -18,23 +21,38 @@
                 android:text="Select Device"
                 android:layout_margin="5dp"
                 />
+
+        <TextView
+                android:layout_toRightOf="@id/select_device"
+                android:id="@+id/button_skip"
+                android:gravity="right|center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
+                android:textSize="16dp"
+                android:text="Skip"
+                android:layout_margin="5dp"
+                android:drawableRight="@drawable/ic_action_skip_dark"
+                />
+
         <View
+                android:layout_below="@id/select_device"
+                android:id="@+id/select_device_sep"
                 android:layout_height="1dp"
                 android:layout_width="fill_parent"
                 android:background="@color/DVBShadow"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 />
-        <Button
-                android:id="@+id/button_skip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Skip"
-                />
+
         <ListView
+                android:layout_below="@id/select_device_sep"
                 android:id="@android:id/list"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
+                android:dividerHeight="5sp"
+                android:divider="#00000000"
                 />
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
