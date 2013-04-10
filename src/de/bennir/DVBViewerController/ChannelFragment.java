@@ -273,6 +273,7 @@ public class ChannelFragment extends SherlockListFragment {
 
             TextView chanGroup = (TextView) v
                     .findViewById(R.id.channels_group_list_item);
+            chanGroup.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoCondensed);
 
             chanGroup.setText(values[position]);
 

@@ -22,6 +22,10 @@ import org.json.JSONObject;
 public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     private final String TAG = DVBViewerControllerActivity.class.toString();
 
+    Typeface robotoThin;
+    Typeface robotoLight;
+    Typeface robotoCondensed;
+
     public static String dvbHost = "";
     public static String dvbIp = "";
     public static String dvbPort = "";
@@ -55,9 +59,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
         setContentView(R.layout.main);
 
-        Typeface robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
-        Typeface robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-        Typeface robotoCondensed = Typeface.createFromAsset(getAssets(), "RobotoCondensed-Bold.ttf");
+        robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
+        robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
+        robotoCondensed = Typeface.createFromAsset(getAssets(), "RobotoCondensed-Bold.ttf");
 
         Bundle extras = getIntent().getExtras();
 
