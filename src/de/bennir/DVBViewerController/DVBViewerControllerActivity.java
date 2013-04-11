@@ -20,19 +20,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DVBViewerControllerActivity extends SherlockFragmentActivity {
-    private final String TAG = DVBViewerControllerActivity.class.toString();
-
-    Typeface robotoThin;
-    Typeface robotoLight;
-    Typeface robotoCondensed;
-
     public static String dvbHost = "";
     public static String dvbIp = "";
     public static String dvbPort = "";
     public static String recIp = "";
     public static String recPort = "";
+    private final String TAG = DVBViewerControllerActivity.class.toString();
+    public SlidingMenu menu;
+    Typeface robotoThin;
+    Typeface robotoLight;
+    Typeface robotoCondensed;
     private Fragment mContent;
-    private SlidingMenu menu;
 
     @Override
     protected void onDestroy() {
@@ -179,8 +177,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 .commit();
         menu.showContent();
     }
+
     public void switchContent(Fragment fragment, int titleRes, int icon, boolean addToBackStack) {
-        if(addToBackStack) {
+        if (addToBackStack) {
             getSupportActionBar().setTitle(titleRes);
             getSupportActionBar().setIcon(icon);
             mContent = fragment;
@@ -207,7 +206,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     }
 
     public void switchContent(Fragment fragment, String title, int icon, boolean addToBackStack) {
-        if(addToBackStack) {
+        if (addToBackStack) {
             Log.d(TAG, "switchContent addToBackStack");
             getSupportActionBar().setTitle(title);
             getSupportActionBar().setIcon(icon);

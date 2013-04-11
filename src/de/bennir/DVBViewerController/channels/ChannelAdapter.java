@@ -18,11 +18,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-/**
- * User: miriam
- * Date: 18.12.12
- * Time: 14:28
- */
 public class ChannelAdapter extends BaseExpandableListAdapter {
     final String TAG = "ChannelAdapter";
     private ArrayList<String> groupNames;

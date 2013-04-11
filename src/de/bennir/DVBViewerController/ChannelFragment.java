@@ -2,7 +2,6 @@ package de.bennir.DVBViewerController;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +29,12 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 
 public class ChannelFragment extends SherlockListFragment {
+    public static ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
+    public static ArrayList<DVBChannel> currentGroup = new ArrayList<DVBChannel>();
     final String TAG = "ChannelFragment";
     ListView lv;
     ChanGroupAdapter lvAdapter;
     ArrayList<String> groupNames = new ArrayList<String>();
-    ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
     ArrayList<ChannelListParcelable> chanParcel = new ArrayList<ChannelListParcelable>();
     AQuery aq;
 
@@ -58,7 +58,7 @@ public class ChannelFragment extends SherlockListFragment {
         Log.d(TAG, "onSaveInstanceState() called");
         super.onSaveInstanceState(outState);
 
-        for(ArrayList<DVBChannel> chans : DVBChannels) {
+        for (ArrayList<DVBChannel> chans : DVBChannels) {
             ChannelListParcelable parc = new ChannelListParcelable();
             parc.channels = chans;
             chanParcel.add(parc);
@@ -72,15 +72,15 @@ public class ChannelFragment extends SherlockListFragment {
         Log.d(TAG, "onActivityCreated() called");
         super.onActivityCreated(savedInstanceState);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             Log.d(TAG, "Restoring state");
 
             chanParcel = savedInstanceState.getParcelableArrayList("chanParcel");
-            if(chanParcel != null) {
+            if (chanParcel != null) {
                 Log.d(TAG, "Restored chanParcel");
                 DVBChannels.clear();
 
-                for(ChannelListParcelable parc : chanParcel) {
+                for (ChannelListParcelable parc : chanParcel) {
                     DVBChannels.add(parc.channels);
                 }
             }
@@ -95,12 +95,13 @@ public class ChannelFragment extends SherlockListFragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Fragment newContent = new ChannelGroupFragment();
-
                 if (getActivity() instanceof DVBViewerControllerActivity) {
+                    currentGroup = DVBChannels.get(i);
+                    for (DVBChannel chan : currentGroup) {
+                        Log.d(TAG, "currGrp Chan: " + chan.name);
+                    }
                     DVBViewerControllerActivity act = (DVBViewerControllerActivity) getActivity();
-                    act.switchContent(newContent, groupNames.get(i), R.drawable.ic_action_channels, true);
+                    act.switchContent(new ChannelGroupFragment(), groupNames.get(i), R.drawable.ic_action_channels, true);
                 }
             }
         });
