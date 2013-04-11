@@ -14,10 +14,13 @@ import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.slidingmenu.lib.SlidingMenu;
+import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static String dvbHost = "";
@@ -25,6 +28,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static String dvbPort = "";
     public static String recIp = "";
     public static String recPort = "";
+    public static ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
+    public static ArrayList<String> groupNames = new ArrayList<String>();
+    public static int currentGroup = -1;
     private final String TAG = DVBViewerControllerActivity.class.toString();
     public SlidingMenu menu;
     Typeface robotoThin;

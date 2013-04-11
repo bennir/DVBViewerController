@@ -5,7 +5,9 @@
                 android:padding="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
+                android:background="@drawable/list_selector"
         >
+
     <ImageView
             android:id="@+id/channel_item_logo"
             android:layout_width="75dp"
@@ -13,6 +15,7 @@
             android:contentDescription="Channel Logo"
             android:layout_marginRight="30dp"
             />
+
     <TextView
             android:id="@+id/channel_item_name"
             android:layout_width="fill_parent"
@@ -24,6 +27,17 @@
             android:text="channel_item_name"
             />
     <TextView
+            android:id="@+id/channel_item_favid"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:text=""
+            android:visibility="invisible"
+            />
+
+    <TextView
             android:id="@+id/channel_item_current_epg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,6 +45,7 @@
             android:layout_below="@id/channel_item_name"
             android:text="Nachrichten"
             />
+
     <TextView
             android:id="@+id/channel_item_current_epg_time"
             android:layout_width="wrap_content"
