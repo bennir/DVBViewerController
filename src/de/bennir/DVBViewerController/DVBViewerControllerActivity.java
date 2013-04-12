@@ -65,6 +65,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
+        getWindow().setBackgroundDrawable(null);
 
         robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
         robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
