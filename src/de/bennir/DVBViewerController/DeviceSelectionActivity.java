@@ -38,7 +38,6 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
     private final static String HOSTNAME = "DVBController";
     private final static int DELAY = 500;
     private static JmDNS zeroConf = null;
-    private static WifiManager.MulticastLock mLock = null;
     public Handler resultsUpdated = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -54,7 +53,6 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
     Typeface robotoThin;
     Typeface robotoLight;
     Typeface robotoCondensed;
-    private ListView list;
     private ServiceAdapter adapter;
     private ArrayList<String> items = new ArrayList<String>();
 
@@ -81,7 +79,7 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
 
             Log.d(TAG, String.format("found intaddr=%d, addr=%s", intaddr, addr.toString()));
 
-            mLock = wifi.createMulticastLock("DVBController Lock");
+            WifiManager.MulticastLock mLock = wifi.createMulticastLock("DVBController Lock");
             mLock.setReferenceCounted(true);
             mLock.acquire();
 
@@ -121,7 +119,7 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
         ((TextView) findViewById(R.id.select_device)).setTypeface(robotoLight);
 
         adapter = new ServiceAdapter(this);
-        list = getListView();
+        ListView list = getListView();
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

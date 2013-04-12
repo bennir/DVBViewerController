@@ -53,7 +53,6 @@ public class ChannelGroupFragment extends SherlockListFragment {
 
         DVBChannelAdapter lvAdapter = new DVBChannelAdapter(
                 getSherlockActivity(),
-                R.layout.channels_channel_list_item,
                 chans
         );
 
@@ -86,8 +85,8 @@ public class ChannelGroupFragment extends SherlockListFragment {
         ArrayList<DVBChannel> chans;
         Context context;
 
-        public DVBChannelAdapter(Context context, int resourceId, ArrayList<DVBChannel> dvbChans) {
-            super(context, resourceId, dvbChans);
+        public DVBChannelAdapter(Context context, ArrayList<DVBChannel> dvbChans) {
+            super(context, R.layout.channels_channel_list_item, dvbChans);
             this.chans = dvbChans;
             this.context = context;
 

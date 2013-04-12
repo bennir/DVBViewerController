@@ -12,7 +12,7 @@
             android:id="@+id/channel_item_logo"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:contentDescription="Channel Logo"
+            android:contentDescription="@string/desc_channel_logo"
             android:layout_marginRight="30dp"
             />
 
@@ -24,7 +24,6 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_toRightOf="@id/channel_item_logo"
-            android:text="channel_item_name"
             />
     <TextView
             android:id="@+id/channel_item_favid"
@@ -33,7 +32,6 @@
             android:gravity="center_vertical"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:text=""
             android:visibility="invisible"
             />
 
@@ -43,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/channel_item_logo"
             android:layout_below="@id/channel_item_name"
-            android:text="Nachrichten"
             />
 
     <TextView
@@ -52,6 +49,5 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/channel_item_logo"
             android:layout_below="@id/channel_item_current_epg"
-            android:text="20:00 - 20:15"
             />
 </RelativeLayout>

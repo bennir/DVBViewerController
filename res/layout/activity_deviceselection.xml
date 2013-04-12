@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+              <!--android:orientation="vertical"-->
+              <!--android:layout_width="match_parent"-->
+              <!--android:layout_height="match_parent">-->
 
-    <RelativeLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -18,7 +18,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
                 android:textSize="25dp"
-                android:text="Select Device"
+                android:text="@string/select_device"
                 android:layout_margin="5dp"
                 />
 
@@ -31,7 +31,7 @@
                 android:layout_alignParentRight="true"
                 android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
                 android:textSize="16dp"
-                android:text="Skip"
+                android:text="@string/skip_selection"
                 android:layout_margin="5dp"
                 android:drawableRight="@drawable/ic_action_skip_dark"
                 />
@@ -55,4 +55,4 @@
                 android:divider="#00000000"
                 />
     </RelativeLayout>
-</LinearLayout>
+<!--</LinearLayout>-->

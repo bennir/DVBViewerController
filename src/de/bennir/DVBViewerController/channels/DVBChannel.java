@@ -46,6 +46,5 @@ public class DVBChannel implements Parcelable {
     }
 
     public DVBChannel() {
-        ;
     }
 }

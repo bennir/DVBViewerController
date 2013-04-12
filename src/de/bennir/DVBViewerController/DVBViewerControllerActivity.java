@@ -211,6 +211,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         menu.showContent();
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void switchContent(Fragment fragment, String title, int icon, boolean addToBackStack) {
         if (addToBackStack) {
             Log.d(TAG, "switchContent addToBackStack");
