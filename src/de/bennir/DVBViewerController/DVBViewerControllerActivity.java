@@ -3,12 +3,15 @@ package de.bennir.DVBViewerController;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
@@ -114,7 +117,68 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         });
 
         /**
-         * Menu Customize
+         * Menu Items
+         */
+        MenuAdapter adapter = new MenuAdapter(this);
+        ListView lvMenu = (ListView) menu.findViewById(R.id.menu_list);
+
+        adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.timer), R.drawable.ic_action_timers_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.epg), R.drawable.ic_action_epg_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.settings), R.drawable.ic_action_settings_dark));
+
+        lvMenu.setAdapter(adapter);
+
+        lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Fragment newContent = null;
+                int titleRes = 0;
+                int icon = 0;
+
+                switch (position) {
+                    case 0:
+                        // Remote
+                        newContent = new RemoteFragment();
+                        titleRes = R.string.remote;
+                        icon = R.drawable.ic_action_remote;
+                        break;
+                    case 1:
+                        // Channels
+                        newContent = new ChannelFragment();
+                        titleRes = R.string.channels;
+                        icon = R.drawable.ic_action_channels;
+                        break;
+                    case 2:
+                        // Timers
+                        newContent = new TimerFragment();
+                        titleRes = R.string.timer;
+                        icon = R.drawable.ic_action_timers;
+                        break;
+                    case 3:
+                        // EPG
+                        newContent = new EPGFragment();
+                        titleRes = R.string.epg;
+                        icon = R.drawable.ic_action_epg;
+                        break;
+                    case 4:
+                        // Settings
+                        newContent = new SettingsFragment();
+                        titleRes = R.string.settings;
+                        icon = R.drawable.ic_action_settings;
+                        break;
+                }
+                if (newContent != null) {
+                    getSupportFragmentManager().popBackStackImmediate();
+                    switchContent(newContent, titleRes, icon);
+                }
+            }
+        });
+
+
+        /**
+         * SlideMenu Customize
          */
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setShadowWidthRes(R.dimen.shadow_width);
@@ -227,5 +291,40 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         } else {
             switchContent(fragment, title, icon);
         }
+    }
+
+    private class DVBMenuItem {
+        public String tag;
+        public int iconRes;
+
+        public DVBMenuItem(String tag, int iconRes) {
+            this.tag = tag;
+            this.iconRes = iconRes;
+        }
+    }
+
+    public class MenuAdapter extends ArrayAdapter<DVBMenuItem> {
+
+        public MenuAdapter(Context context) {
+            super(context, 0);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(
+                        R.layout.row, null);
+            }
+
+            TextView title = (TextView) convertView
+                    .findViewById(R.id.row_title);
+            title.setText(getItem(position).tag);
+            Drawable img = getContext().getResources().getDrawable(getItem(position).iconRes);
+            img.setBounds(0, 0, 50, 50);
+            title.setCompoundDrawables(img, null, null, null);
+
+            return convertView;
+        }
+
     }
 }

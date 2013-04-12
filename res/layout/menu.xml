@@ -35,11 +35,9 @@
                 android:background="#ffffff"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"/>
-        <fragment
-                android:name="de.bennir.DVBViewerController.MenuListFragment"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:paddingLeft="15dp">
-        </fragment>
+        <ListView android:id="@+id/menu_list"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                />
     </LinearLayout>
 </LinearLayout>
