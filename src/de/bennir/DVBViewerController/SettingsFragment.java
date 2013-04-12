@@ -6,12 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * User: benni
- * Date: 16.12.12
- * Time: 16:22
- */
 public class SettingsFragment extends Fragment {
+    private static final String TAG = SettingsFragment.class.toString();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -1,17 +1,11 @@
 package de.bennir.DVBViewerController.channels;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * User: miriam
- * Date: 18.12.12
- * Time: 14:34
- */
 public class DVBChannel implements Parcelable {
+    private static final String TAG = DVBChannel.class.toString();
     public String name;
-    public String group;
     public String favoriteId;
     public String channelId;
     public String epgTitle = "";
@@ -24,7 +18,6 @@ public class DVBChannel implements Parcelable {
 
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(name);
-        out.writeString(group);
         out.writeString(favoriteId);
         out.writeString(channelId);
         out.writeString(epgTitle);
@@ -45,7 +38,6 @@ public class DVBChannel implements Parcelable {
 
     private DVBChannel(Parcel in) {
         name = in.readString();
-        group = in.readString();
         favoriteId = in.readString();
         channelId = in.readString();
         epgTitle = in.readString();

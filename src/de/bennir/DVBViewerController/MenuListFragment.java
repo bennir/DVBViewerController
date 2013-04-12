@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class MenuListFragment extends ListFragment {
-    final String TAG = MenuListFragment.class.toString();
+    private static final String TAG = MenuListFragment.class.toString();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

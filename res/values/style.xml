@@ -15,6 +15,6 @@
     </style>
 
     <!--<style name="DVBTextTitle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">-->
-        <!--<item name="android:textStyle">condensed</item>-->
+    <!--<item name="android:textStyle">condensed</item>-->
     <!--</style>-->
 </resources>

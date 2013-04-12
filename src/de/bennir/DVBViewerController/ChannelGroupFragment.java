@@ -23,7 +23,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class ChannelGroupFragment extends SherlockListFragment {
-    final String TAG = ChannelGroupFragment.class.toString();
+    private static final String TAG = ChannelGroupFragment.class.toString();
     ListView lv;
     AQuery aq;
     private ImageLoader load;

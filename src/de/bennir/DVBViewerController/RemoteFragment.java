@@ -7,20 +7,18 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 
-/**
- * User: benni
- * Date: 16.12.12
- * Time: 16:22
- */
 public class RemoteFragment extends SherlockFragment {
-    final String TAG = RemoteFragment.class.toString();
+    private static final String TAG = RemoteFragment.class.toString();
 
     AQuery aq;
 
@@ -43,7 +41,7 @@ public class RemoteFragment extends SherlockFragment {
         remote.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     int coords[] = new int[2];
                     v.getLocationOnScreen(coords);
 
@@ -124,7 +122,7 @@ public class RemoteFragment extends SherlockFragment {
             String url = "http://" +
                     DVBViewerControllerActivity.dvbIp + ":" +
                     DVBViewerControllerActivity.dvbPort +
-                    "/?"+command;
+                    "/?" + command;
 
             aq.ajax(url, String.class, new AjaxCallback<String>() {
 

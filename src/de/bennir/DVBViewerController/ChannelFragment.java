@@ -27,7 +27,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 
 public class ChannelFragment extends SherlockListFragment {
-    final String TAG = "ChannelFragment";
+    private static final String TAG = ChannelFragment.class.toString();
     ListView lv;
     ChanGroupAdapter lvAdapter;
     AQuery aq;
@@ -81,21 +81,23 @@ public class ChannelFragment extends SherlockListFragment {
         if (DVBViewerControllerActivity.dvbHost == "Demo Device") {
             DVBViewerControllerActivity.groupNames.add("ARD");
             ArrayList<DVBChannel> testChans = new ArrayList<DVBChannel>();
-            DVBChannel test = new DVBChannel();
 
-            test.name = "Das Erste";
-            test.group = "ARD";
+            DVBChannel test = new DVBChannel();
+            test.name = "Das Erste HD";
             testChans.add(test);
+            test = new DVBChannel();
+            test.name = "NDR HD";
             testChans.add(test);
             DVBViewerControllerActivity.DVBChannels.add(testChans);
 
             DVBViewerControllerActivity.groupNames.add("ZDF");
             testChans = new ArrayList<DVBChannel>();
-            test = new DVBChannel();
 
+            test = new DVBChannel();
             test.name = "ZDF HD";
-            test.group = "ZDF";
             testChans.add(test);
+            test = new DVBChannel();
+            test.name = "ZDF Kultur";
             testChans.add(test);
             DVBViewerControllerActivity.DVBChannels.add(testChans);
 
@@ -159,7 +161,6 @@ public class ChannelFragment extends SherlockListFragment {
                     dvbChannel.name = chan.getString("name");
                     dvbChannel.favoriteId = chan.getString("id");
                     dvbChannel.channelId = chan.getString("channelid");
-                    dvbChannel.group = chan.getString("group");
                     dvbChannel.epgTitle = URLDecoder.decode(chan.getString("epgtitle"));
                     dvbChannel.epgTime = chan.getString("epgtime");
                     dvbChannel.epgDuration = chan.getString("epgduration");
@@ -172,11 +173,8 @@ public class ChannelFragment extends SherlockListFragment {
                         }
                         DVBViewerControllerActivity.groupNames.add(group);
                         currentGroup = group;
-
-                        dvbChans.add(dvbChannel);
-                    } else {
-                        dvbChans.add(dvbChannel);
                     }
+                    dvbChans.add(dvbChannel);
                 }
                 DVBViewerControllerActivity.DVBChannels.add(dvbChans);
 

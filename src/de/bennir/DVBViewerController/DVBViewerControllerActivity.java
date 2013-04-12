@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class DVBViewerControllerActivity extends SherlockFragmentActivity {
+    private static final String TAG = DVBViewerControllerActivity.class.toString();
     public static String dvbHost = "";
     public static String dvbIp = "";
     public static String dvbPort = "";
@@ -31,7 +32,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
     public static ArrayList<String> groupNames = new ArrayList<String>();
     public static int currentGroup = -1;
-    private final String TAG = DVBViewerControllerActivity.class.toString();
     public SlidingMenu menu;
     Typeface robotoThin;
     Typeface robotoLight;
