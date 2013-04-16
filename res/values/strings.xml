@@ -15,4 +15,5 @@
     <string name="select_device">Select Device</string>
     <string name="skip_selection">Skip</string>
     <string name="desc_channel_logo">Channel Logo</string>
+    <string name="refresh">Refresh</string>
 </resources>

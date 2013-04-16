@@ -30,7 +30,6 @@ public class ChannelFragment extends SherlockListFragment {
     private static final String TAG = ChannelFragment.class.toString();
     ListView lv;
     ChanGroupAdapter lvAdapter;
-    AQuery aq;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,8 +46,6 @@ public class ChannelFragment extends SherlockListFragment {
         setHasOptionsMenu(true);
         getSherlockActivity().getSupportActionBar().setTitle(R.string.channels);
 
-        aq = new AQuery(getSherlockActivity());
-
         lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -62,133 +59,36 @@ public class ChannelFragment extends SherlockListFragment {
         });
 
         if (DVBViewerControllerActivity.DVBChannels.isEmpty()) {
-            updateChannelList();
-        } else {
-            lvAdapter = new ChanGroupAdapter(
-                    getSherlockActivity(),
-                    DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
-            );
-            lv.setAdapter(lvAdapter);
-            lv.invalidate();
+            ((DVBViewerControllerActivity)getSherlockActivity()).updateChannelList();
         }
+
+        addChannelsToListView();
     }
 
-    private void updateChannelList() {
-        Log.d(TAG, "updating channels");
-        DVBViewerControllerActivity.groupNames.clear();
-        DVBViewerControllerActivity.DVBChannels.clear();
-
-        if (DVBViewerControllerActivity.dvbHost == "Demo Device") {
-            DVBViewerControllerActivity.groupNames.add("ARD");
-            ArrayList<DVBChannel> testChans = new ArrayList<DVBChannel>();
-
-            DVBChannel test = new DVBChannel();
-            test.name = "Das Erste HD";
-            testChans.add(test);
-            test = new DVBChannel();
-            test.name = "NDR HD";
-            testChans.add(test);
-            DVBViewerControllerActivity.DVBChannels.add(testChans);
-
-            DVBViewerControllerActivity.groupNames.add("ZDF");
-            testChans = new ArrayList<DVBChannel>();
-
-            test = new DVBChannel();
-            test.name = "ZDF HD";
-            testChans.add(test);
-            test = new DVBChannel();
-            test.name = "ZDF Kultur";
-            testChans.add(test);
-            DVBViewerControllerActivity.DVBChannels.add(testChans);
-
-            lvAdapter = new ChanGroupAdapter(
-                    getSherlockActivity(),
-                    DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
-            );
-            lv.setAdapter(lvAdapter);
-        } else {
-            String url = "http://" +
-                    DVBViewerControllerActivity.dvbIp + ":" +
-                    DVBViewerControllerActivity.dvbPort +
-                    "/?getFavList";
-            Log.d(TAG, "URL=" + url);
-
-            Style st = new Style.Builder()
-                    .setDuration(Style.DURATION_INFINITE)
-                    .setBackgroundColorValue(Style.holoBlueLight)
-                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .build();
-            Crouton.makeText(getActivity(), R.string.loadingChannels, st).show();
-
-            aq.ajax(url, JSONObject.class, this, "downloadChannelCallback");
-        }
+    private void addChannelsToListView() {
+        lvAdapter = new ChanGroupAdapter(
+                getSherlockActivity(),
+                DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
+        );
+        lv.setAdapter(lvAdapter);
+        lv.invalidate();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem item = menu.add(2, 2, 1, "Refresh");
+        MenuItem item = menu.add(2, 2, 1, R.string.refresh);
         item.setIcon(R.drawable.ic_action_refresh);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                updateChannelList();
+                ((DVBViewerControllerActivity)getSherlockActivity()).updateChannelList();
+                addChannelsToListView();
 
                 return true;
             }
         });
-    }
-
-    public void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
-        Log.d(TAG, "downloadChannelCallback");
-        Crouton.cancelAllCroutons();
-
-        ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
-
-        try {
-            if (json != null) {
-                Log.d(TAG, "Received answer");
-                JSONArray channelsJSON = new JSONArray(
-                        json.getString("channels"));
-
-                String currentGroup = "";
-
-                for (int i = 0; i < channelsJSON.length(); i++) {
-                    JSONObject chan = channelsJSON.getJSONObject(i);
-
-                    DVBChannel dvbChannel = new DVBChannel();
-                    dvbChannel.name = chan.getString("name");
-                    dvbChannel.favoriteId = chan.getString("id");
-                    dvbChannel.channelId = chan.getString("channelid");
-                    dvbChannel.epgTitle = URLDecoder.decode(chan.getString("epgtitle"));
-                    dvbChannel.epgTime = chan.getString("epgtime");
-                    dvbChannel.epgDuration = chan.getString("epgduration");
-
-                    String group = chan.getString("group");
-                    if (!group.equals(currentGroup)) {
-                        if (i > 0) {
-                            DVBViewerControllerActivity.DVBChannels.add(dvbChans);
-                            dvbChans = new ArrayList<DVBChannel>();
-                        }
-                        DVBViewerControllerActivity.groupNames.add(group);
-                        currentGroup = group;
-                    }
-                    dvbChans.add(dvbChannel);
-                }
-                DVBViewerControllerActivity.DVBChannels.add(dvbChans);
-
-                lvAdapter = new ChanGroupAdapter(
-                        getSherlockActivity(),
-                        DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
-                );
-
-                lv.setAdapter(lvAdapter);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            System.out.println(e.toString());
-        }
     }
 
     public class ChanGroupAdapter extends ArrayAdapter<String> {

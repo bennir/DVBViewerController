@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
@@ -38,6 +41,8 @@ public class ChannelGroupFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        setHasOptionsMenu(true);
+
         lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -48,6 +53,10 @@ public class ChannelGroupFragment extends SherlockListFragment {
         });
         aq = new AQuery(getSherlockActivity());
 
+        addChannelsToListView();
+    }
+
+    private void addChannelsToListView() {
         ArrayList<DVBChannel> chans = DVBViewerControllerActivity.DVBChannels.get(DVBViewerControllerActivity.currentGroup);
         Log.d(TAG, "Chan Count: " + chans.size());
 
@@ -57,7 +66,23 @@ public class ChannelGroupFragment extends SherlockListFragment {
         );
 
         lv.setAdapter(lvAdapter);
+    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem item = menu.add(2, 2, 1, R.string.refresh);
+        item.setIcon(R.drawable.ic_action_refresh);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                ((DVBViewerControllerActivity)getSherlockActivity()).updateChannelList();
+                addChannelsToListView();
+
+                return true;
+            }
+        });
     }
 
     public void setChannel(String channelId) {
