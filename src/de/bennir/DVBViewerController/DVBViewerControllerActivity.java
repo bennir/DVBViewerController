@@ -11,7 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
@@ -43,6 +46,51 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     Typeface robotoLight;
     Typeface robotoCondensed;
     private Fragment mContent;
+
+    @SuppressWarnings("UnusedDeclaration")
+    public static void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
+        Log.d(TAG, "downloadChannelCallback");
+        Crouton.cancelAllCroutons();
+
+        ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
+
+        try {
+            if (json != null) {
+                Log.d(TAG, "Received answer");
+                JSONArray channelsJSON = new JSONArray(
+                        json.getString("channels"));
+
+                String currentGroup = "";
+
+                for (int i = 0; i < channelsJSON.length(); i++) {
+                    JSONObject chan = channelsJSON.getJSONObject(i);
+
+                    DVBChannel dvbChannel = new DVBChannel();
+                    dvbChannel.name = chan.getString("name");
+                    dvbChannel.favoriteId = chan.getString("id");
+                    dvbChannel.channelId = chan.getString("channelid");
+                    dvbChannel.epgTitle = URLDecoder.decode(chan.getString("epgtitle"));
+                    dvbChannel.epgTime = chan.getString("epgtime");
+                    dvbChannel.epgDuration = chan.getString("epgduration");
+
+                    String group = chan.getString("group");
+                    if (!group.equals(currentGroup)) {
+                        if (i > 0) {
+                            DVBViewerControllerActivity.DVBChannels.add(dvbChans);
+                            dvbChans = new ArrayList<DVBChannel>();
+                        }
+                        DVBViewerControllerActivity.groupNames.add(group);
+                        currentGroup = group;
+                    }
+                    dvbChans.add(dvbChannel);
+                }
+                DVBViewerControllerActivity.DVBChannels.add(dvbChans);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            System.out.println(e.toString());
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -194,16 +242,18 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         /**
          * Recording Service Loading
          */
-        if (DVBViewerControllerActivity.recIp.isEmpty() || DVBViewerControllerActivity.recPort.isEmpty()) {
-            Log.d(TAG, "Getting Recording Service");
-            AQuery aq = new AQuery(this);
+        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+            if (DVBViewerControllerActivity.recIp.isEmpty() || DVBViewerControllerActivity.recPort.isEmpty()) {
+                Log.d(TAG, "Getting Recording Service");
+                AQuery aq = new AQuery(this);
 
-            String url = "http://" +
-                    DVBViewerControllerActivity.dvbIp + ":" +
-                    DVBViewerControllerActivity.dvbPort +
-                    "/?getRecordingService";
-            Log.d(TAG, "URL=" + url);
-            aq.ajax(url, JSONObject.class, this, "getRecordingServiceCallback");
+                String url = "http://" +
+                        DVBViewerControllerActivity.dvbIp + ":" +
+                        DVBViewerControllerActivity.dvbPort +
+                        "/?getRecordingService";
+                Log.d(TAG, "URL=" + url);
+                aq.ajax(url, JSONObject.class, this, "getRecordingServiceCallback");
+            }
         }
     }
 
@@ -273,51 +323,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             Crouton.makeText(this, R.string.loadingChannels, st).show();
 
             aq.ajax(url, JSONObject.class, this, "downloadChannelCallback");
-        }
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public static void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
-        Log.d(TAG, "downloadChannelCallback");
-        Crouton.cancelAllCroutons();
-
-        ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
-
-        try {
-            if (json != null) {
-                Log.d(TAG, "Received answer");
-                JSONArray channelsJSON = new JSONArray(
-                        json.getString("channels"));
-
-                String currentGroup = "";
-
-                for (int i = 0; i < channelsJSON.length(); i++) {
-                    JSONObject chan = channelsJSON.getJSONObject(i);
-
-                    DVBChannel dvbChannel = new DVBChannel();
-                    dvbChannel.name = chan.getString("name");
-                    dvbChannel.favoriteId = chan.getString("id");
-                    dvbChannel.channelId = chan.getString("channelid");
-                    dvbChannel.epgTitle = URLDecoder.decode(chan.getString("epgtitle"));
-                    dvbChannel.epgTime = chan.getString("epgtime");
-                    dvbChannel.epgDuration = chan.getString("epgduration");
-
-                    String group = chan.getString("group");
-                    if (!group.equals(currentGroup)) {
-                        if (i > 0) {
-                            DVBViewerControllerActivity.DVBChannels.add(dvbChans);
-                            dvbChans = new ArrayList<DVBChannel>();
-                        }
-                        DVBViewerControllerActivity.groupNames.add(group);
-                        currentGroup = group;
-                    }
-                    dvbChans.add(dvbChannel);
-                }
-                DVBViewerControllerActivity.DVBChannels.add(dvbChans);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            System.out.println(e.toString());
         }
     }
 

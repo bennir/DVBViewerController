@@ -87,7 +87,7 @@ public class ChannelGroupFragment extends SherlockListFragment {
 
     public void setChannel(String channelId) {
         ((Vibrator) getSherlockActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
-        if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
+        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             String url = "http://" +
                     DVBViewerControllerActivity.dvbIp + ":" +
                     DVBViewerControllerActivity.dvbPort +
