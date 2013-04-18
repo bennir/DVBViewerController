@@ -19,7 +19,6 @@ import com.androidquery.callback.AjaxStatus;
 
 public class RemoteFragment extends SherlockFragment {
     private static final String TAG = RemoteFragment.class.toString();
-
     AQuery aq;
 
     @Override
@@ -47,6 +46,10 @@ public class RemoteFragment extends SherlockFragment {
 
                     int x = (int) event.getRawX() - coords[0];
                     int y = (int) event.getRawY() - coords[1];
+
+                    if (x < 0 || y < 0) {
+                        return false;
+                    }
 
                     ImageView img = (ImageView) getActivity().findViewById(
                             R.id.remote_touchmap);

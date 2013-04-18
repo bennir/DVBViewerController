@@ -42,9 +42,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static int currentGroup = -1;
     public SlidingMenu menu;
     public AQuery aq;
-    Typeface robotoThin;
-    Typeface robotoLight;
-    Typeface robotoCondensed;
+    public Typeface robotoThin;
+    public Typeface robotoLight;
+    public Typeface robotoCondensed;
     private Fragment mContent;
 
     @SuppressWarnings("UnusedDeclaration")
@@ -175,8 +175,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
         adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote_dark));
         adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels_dark));
-        adapter.add(new DVBMenuItem(getString(R.string.timer), R.drawable.ic_action_timers_dark));
         adapter.add(new DVBMenuItem(getString(R.string.epg), R.drawable.ic_action_epg_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.timer), R.drawable.ic_action_timers_dark));
         adapter.add(new DVBMenuItem(getString(R.string.settings), R.drawable.ic_action_settings_dark));
 
         lvMenu.setAdapter(adapter);
@@ -202,16 +202,16 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                         icon = R.drawable.ic_action_channels;
                         break;
                     case 2:
-                        // Timers
-                        newContent = new TimerFragment();
-                        titleRes = R.string.timer;
-                        icon = R.drawable.ic_action_timers;
-                        break;
-                    case 3:
                         // EPG
                         newContent = new EPGFragment();
                         titleRes = R.string.epg;
                         icon = R.drawable.ic_action_epg;
+                        break;
+                    case 3:
+                        // Timers
+                        newContent = new TimerFragment();
+                        titleRes = R.string.timer;
+                        icon = R.drawable.ic_action_timers;
                         break;
                     case 4:
                         // Settings

@@ -77,7 +77,7 @@ public class ChannelGroupFragment extends SherlockListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ((DVBViewerControllerActivity)getSherlockActivity()).updateChannelList();
+                ((DVBViewerControllerActivity) getSherlockActivity()).updateChannelList();
                 addChannelsToListView();
 
                 return true;
@@ -116,6 +116,9 @@ public class ChannelGroupFragment extends SherlockListFragment {
             this.context = context;
 
             DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                    .showStubImage(R.drawable.dvbviewer_controller)
+                    .showImageForEmptyUri(R.drawable.dvbviewer_controller)
+                    .showImageOnFail(R.drawable.dvbviewer_controller)
                     .cacheInMemory()
                     .cacheOnDisc()
                     .build();
@@ -158,6 +161,12 @@ public class ChannelGroupFragment extends SherlockListFragment {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+            } else {
+                ((ImageView) v.findViewById(R.id.channel_item_logo))
+                        .setImageDrawable(
+                                context.getResources()
+                                        .getDrawable(R.drawable.dvbviewer_controller)
+                        );
             }
 
             return v;
