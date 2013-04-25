@@ -85,6 +85,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                     dvbChans.add(dvbChannel);
                 }
                 DVBViewerControllerActivity.DVBChannels.add(dvbChans);
+
+                ChannelFragment.addChannelsToListView();
+                ChannelGroupFragment.addChannelsToListView();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -255,6 +258,13 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 aq.ajax(url, JSONObject.class, this, "getRecordingServiceCallback");
             }
         }
+
+        /**
+         * Channel Loading
+         */
+        if (DVBChannels.isEmpty()) {
+            updateChannelList();
+        }
     }
 
     private void initFonts() {
@@ -328,6 +338,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG,"onOptionsItemSelected");
         switch (item.getItemId()) {
             case android.R.id.home:
                 menu.toggle();

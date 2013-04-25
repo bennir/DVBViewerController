@@ -3,6 +3,8 @@ package de.bennir.DVBViewerController.channels;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
+
 public class DVBChannel implements Parcelable {
     private static final String TAG = DVBChannel.class.toString();
     public String name;
@@ -46,5 +48,13 @@ public class DVBChannel implements Parcelable {
     }
 
     public DVBChannel() {
+    }
+
+    public static class DVBChannelComparator implements Comparator<DVBChannel> {
+
+        @Override
+        public int compare(DVBChannel dvbChannel, DVBChannel dvbChannel2) {
+            return dvbChannel.name.compareTo(dvbChannel2.name);
+        }
     }
 }

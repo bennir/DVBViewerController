@@ -27,7 +27,8 @@ import java.util.ArrayList;
 
 public class ChannelGroupFragment extends SherlockListFragment {
     private static final String TAG = ChannelGroupFragment.class.toString();
-    ListView lv;
+    private static ListView lv;
+    private static DVBChannelAdapter lvAdapter;
     AQuery aq;
     private ImageLoader load;
 
@@ -51,21 +52,23 @@ public class ChannelGroupFragment extends SherlockListFragment {
                 setChannel(channelId);
             }
         });
-        aq = new AQuery(getSherlockActivity());
 
-        addChannelsToListView();
-    }
+        aq = ((DVBViewerControllerActivity) getSherlockActivity()).aq;
 
-    private void addChannelsToListView() {
+
         ArrayList<DVBChannel> chans = DVBViewerControllerActivity.DVBChannels.get(DVBViewerControllerActivity.currentGroup);
-        Log.d(TAG, "Chan Count: " + chans.size());
-
-        DVBChannelAdapter lvAdapter = new DVBChannelAdapter(
+        lvAdapter = new DVBChannelAdapter(
                 getSherlockActivity(),
                 chans
         );
 
+        addChannelsToListView();
+    }
+
+    public static void addChannelsToListView() {
+        lvAdapter.notifyDataSetChanged();
         lv.setAdapter(lvAdapter);
+        lv.invalidate();
     }
 
     @Override
@@ -83,6 +86,17 @@ public class ChannelGroupFragment extends SherlockListFragment {
                 return true;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG,"onOptionsItemSelected");
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getSherlockActivity().getFragmentManager().popBackStackImmediate();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void setChannel(String channelId) {

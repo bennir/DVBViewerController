@@ -28,8 +28,8 @@ import java.util.ArrayList;
 
 public class ChannelFragment extends SherlockListFragment {
     private static final String TAG = ChannelFragment.class.toString();
-    ListView lv;
-    ChanGroupAdapter lvAdapter;
+    static ListView lv;
+    static ChanGroupAdapter lvAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,18 +58,20 @@ public class ChannelFragment extends SherlockListFragment {
             }
         });
 
-        if (DVBViewerControllerActivity.DVBChannels.isEmpty()) {
-            ((DVBViewerControllerActivity)getSherlockActivity()).updateChannelList();
-        }
+//        if (DVBViewerControllerActivity.DVBChannels.isEmpty()) {
+//            ((DVBViewerControllerActivity)getSherlockActivity()).updateChannelList();
+//        }
 
-        addChannelsToListView();
-    }
-
-    private void addChannelsToListView() {
         lvAdapter = new ChanGroupAdapter(
                 getSherlockActivity(),
                 DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
         );
+
+        addChannelsToListView();
+    }
+
+    public static void addChannelsToListView() {
+        lvAdapter.notifyDataSetChanged();
         lv.setAdapter(lvAdapter);
         lv.invalidate();
     }
