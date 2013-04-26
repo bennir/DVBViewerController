@@ -38,6 +38,7 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
     private final static String HOSTNAME = "DVBController";
     private final static int DELAY = 500;
     private static JmDNS zeroConf = null;
+    WifiManager.MulticastLock mLock = null;
     public Handler resultsUpdated = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -79,7 +80,7 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
 
             Log.d(TAG, String.format("found intaddr=%d, addr=%s", intaddr, addr.toString()));
 
-            WifiManager.MulticastLock mLock = wifi.createMulticastLock("DVBController Lock");
+            mLock = wifi.createMulticastLock("DVBController Lock");
             mLock.setReferenceCounted(true);
             mLock.acquire();
 
@@ -100,6 +101,7 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
                 try {
                     zeroConf.close();
                     zeroConf = null;
+                    mLock.release();
                 } catch (Exception e) {
                     Log.d(TAG, String.format("ZeroConf Error: %s", e.getMessage()));
                 }

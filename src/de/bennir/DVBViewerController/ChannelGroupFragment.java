@@ -158,8 +158,8 @@ public class ChannelGroupFragment extends SherlockListFragment {
                         false);
 
             ((TextView) v.findViewById(R.id.channel_item_name)).setText(chans.get(position).name);
-            ((TextView) v.findViewById(R.id.channel_item_current_epg)).setText(chans.get(position).epgTitle);
-            ((TextView) v.findViewById(R.id.channel_item_current_epg_time)).setText(chans.get(position).epgTime);
+            ((TextView) v.findViewById(R.id.channel_item_current_epg)).setText(chans.get(position).epgInfo.title);
+            ((TextView) v.findViewById(R.id.channel_item_current_epg_time)).setText(chans.get(position).epgInfo.time);
             ((TextView) v.findViewById(R.id.channel_item_favid)).setText(chans.get(position).favoriteId);
 
             if (DVBViewerControllerActivity.dvbHost != "Demo Device") {

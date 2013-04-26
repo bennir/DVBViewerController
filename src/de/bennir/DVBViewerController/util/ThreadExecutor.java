@@ -49,7 +49,7 @@ public class ThreadExecutor {
         private final AtomicInteger mCount = new AtomicInteger(1);
 
         public Thread newThread(Runnable r) {
-            final String threadName = "TunesRemote #" + mCount.getAndIncrement();
+            final String threadName = "DVBViwerController #" + mCount.getAndIncrement();
             Log.d(TAG, String.format("Creating Thread: %s", threadName));
             final Thread thread = new Thread(r, threadName);
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);

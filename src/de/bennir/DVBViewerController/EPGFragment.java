@@ -89,7 +89,7 @@ public class EPGFragment extends SherlockListFragment {
 
         title = ((TextView) getSherlockActivity()
                 .findViewById(R.id.epg_channel_name));
-        title.setTypeface(((DVBViewerControllerActivity) getSherlockActivity()).robotoLight);
+        title.setTypeface(((DVBViewerControllerActivity) getSherlockActivity()).robotoCondensed);
 
         channelList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -121,8 +121,8 @@ public class EPGFragment extends SherlockListFragment {
                  */
             } else {
                 EPGInfo epgInfo = new EPGInfo();
-                epgInfo.setTitle("Tagesschau");
-                epgInfo.setDesc("Heute mit ganz tollen, neuen Nachrichten");
+                epgInfo.title = "Tagesschau";
+                epgInfo.desc = "Heute mit ganz tollen, neuen Nachrichten";
 
                 for (int i = 0; i < 20; i++) {
                     epgInfos.add(epgInfo);
@@ -209,8 +209,8 @@ public class EPGFragment extends SherlockListFragment {
             else
                 v = inflater.inflate(R.layout.epg_info_item, parent, false);
 
-            ((TextView) v.findViewById(R.id.epg_item_title)).setText(epgInfos.get(position).getTitle());
-            ((TextView) v.findViewById(R.id.epg_item_description)).setText(epgInfos.get(position).getDesc());
+            ((TextView) v.findViewById(R.id.epg_item_title)).setText(epgInfos.get(position).title);
+            ((TextView) v.findViewById(R.id.epg_item_description)).setText(epgInfos.get(position).desc);
 
 
             return v;

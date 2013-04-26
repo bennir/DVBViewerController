@@ -69,9 +69,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                     dvbChannel.name = chan.getString("name");
                     dvbChannel.favoriteId = chan.getString("id");
                     dvbChannel.channelId = chan.getString("channelid");
-                    dvbChannel.epgTitle = URLDecoder.decode(chan.getString("epgtitle"));
-                    dvbChannel.epgTime = chan.getString("epgtime");
-                    dvbChannel.epgDuration = chan.getString("epgduration");
+                    dvbChannel.epgInfo.title = URLDecoder.decode(chan.getString("epgtitle"));
+                    dvbChannel.epgInfo.time = chan.getString("epgtime");
+                    dvbChannel.epgInfo.duration = chan.getString("epgduration");
 
                     String group = chan.getString("group");
                     if (!group.equals(currentGroup)) {
@@ -100,6 +100,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         // Workaround until there's a way to detach the Activity from Crouton while
         // there are still some in the Queue.
         Crouton.clearCroutonsForActivity(this);
+        DVBChannels.clear();
+        groupNames.clear();
         super.onDestroy();
     }
 
