@@ -58,10 +58,6 @@ public class ChannelFragment extends SherlockListFragment {
             }
         });
 
-//        if (DVBViewerControllerActivity.DVBChannels.isEmpty()) {
-//            ((DVBViewerControllerActivity)getSherlockActivity()).updateChannelList();
-//        }
-
         lvAdapter = new ChanGroupAdapter(
                 getSherlockActivity(),
                 DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])

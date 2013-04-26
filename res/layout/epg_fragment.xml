@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
         >
-
-</LinearLayout>
+    <ImageView android:layout_width="30dp"
+               android:layout_height="30dp"
+               android:id="@+id/epg_channel_logo"
+               android:contentDescription="@string/desc_channel_logo"
+               android:layout_margin="5dp"
+            />
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/epg_channel_name"
+              android:layout_toRightOf="@id/epg_channel_logo"
+              android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
+              android:textSize="25dp"
+              android:layout_margin="5dp"
+            />
+    <View
+            android:layout_below="@id/epg_channel_logo"
+            android:id="@+id/epg_fragment_sep"
+            android:layout_height="1dp"
+            android:layout_width="fill_parent"
+            android:background="@color/DVBShadow"
+            android:layout_marginTop="5dp"
+            />
+    <ListView android:layout_below="@id/epg_fragment_sep"
+              android:id="@android:id/list"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:layout_margin="5dp"
+              android:listSelector="@drawable/list_selector"
+              android:dividerHeight="10sp"
+              android:divider="#00000000"
+            />
+</RelativeLayout>
