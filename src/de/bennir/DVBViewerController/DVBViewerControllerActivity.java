@@ -50,7 +50,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     @SuppressWarnings("UnusedDeclaration")
     public static void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
         Log.d(TAG, "downloadChannelCallback");
-        Crouton.cancelAllCroutons();
 
         ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
 
@@ -88,10 +87,14 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
                 ChannelFragment.addChannelsToListView();
                 ChannelGroupFragment.addChannelsToListView();
+
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
             System.out.println(e.toString());
+        } finally {
+            Crouton.cancelAllCroutons();
         }
     }
 
