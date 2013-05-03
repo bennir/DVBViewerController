@@ -7,6 +7,3 @@
 [submodule "Crouton"]
 	path = Crouton
 	url = git://github.com/keyboardsurfer/Crouton.git
-[submodule "Android-ProgressFragment"]
-	path = Android-ProgressFragment
-	url = https://github.com/johnkil/Android-ProgressFragment
