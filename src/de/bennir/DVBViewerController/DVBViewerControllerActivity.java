@@ -45,7 +45,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public Typeface robotoThin;
     public Typeface robotoLight;
     public Typeface robotoCondensed;
-    private Fragment mContent;
+    public Fragment mContent;
 
     @SuppressWarnings("UnusedDeclaration")
     public static void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {

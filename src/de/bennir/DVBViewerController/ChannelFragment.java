@@ -42,6 +42,7 @@ public class ChannelFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.d(TAG, "onActivityCreated Size: " + DVBViewerControllerActivity.DVBChannels.size());
         super.onActivityCreated(savedInstanceState);
+        ((DVBViewerControllerActivity) getSherlockActivity()).mContent = this;
 
         setHasOptionsMenu(true);
         getSherlockActivity().getSupportActionBar().setTitle(R.string.channels);
