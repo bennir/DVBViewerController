@@ -32,7 +32,7 @@ public class RemoteFragment extends SherlockFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        aq = new AQuery(getSherlockActivity());
+        aq = ((DVBViewerControllerActivity)getSherlockActivity()).aq;
 
         ImageView remote = (ImageView) getSherlockActivity().findViewById(
                 R.id.remote);

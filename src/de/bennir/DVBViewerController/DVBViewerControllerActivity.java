@@ -253,7 +253,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             if (DVBViewerControllerActivity.recIp.isEmpty() || DVBViewerControllerActivity.recPort.isEmpty()) {
                 Log.d(TAG, "Getting Recording Service");
-                AQuery aq = new AQuery(this);
 
                 String url = "http://" +
                         DVBViewerControllerActivity.dvbIp + ":" +
@@ -343,7 +342,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG,"onOptionsItemSelected");
+        Log.d(TAG, "onOptionsItemSelected");
         switch (item.getItemId()) {
             case android.R.id.home:
                 menu.toggle();

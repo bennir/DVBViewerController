@@ -32,6 +32,12 @@ public class ChannelGroupFragment extends SherlockListFragment {
     AQuery aq;
     private ImageLoader load;
 
+    public static void addChannelsToListView() {
+        lvAdapter.notifyDataSetChanged();
+        lv.setAdapter(lvAdapter);
+        lv.invalidate();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,12 +71,6 @@ public class ChannelGroupFragment extends SherlockListFragment {
         addChannelsToListView();
     }
 
-    public static void addChannelsToListView() {
-        lvAdapter.notifyDataSetChanged();
-        lv.setAdapter(lvAdapter);
-        lv.invalidate();
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem item = menu.add(2, 2, 1, R.string.refresh);
@@ -90,7 +90,7 @@ public class ChannelGroupFragment extends SherlockListFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG,"onOptionsItemSelected");
+        Log.d(TAG, "onOptionsItemSelected");
         switch (item.getItemId()) {
             case android.R.id.home:
                 getSherlockActivity().getFragmentManager().popBackStackImmediate();

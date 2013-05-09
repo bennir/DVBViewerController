@@ -14,22 +14,17 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import de.bennir.DVBViewerController.channels.DVBChannel;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URLDecoder;
-import java.util.ArrayList;
 
 public class ChannelFragment extends SherlockListFragment {
     private static final String TAG = ChannelFragment.class.toString();
     static ListView lv;
     static ChanGroupAdapter lvAdapter;
+
+    public static void addChannelsToListView() {
+        lvAdapter.notifyDataSetChanged();
+        lv.setAdapter(lvAdapter);
+        lv.invalidate();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,12 +62,6 @@ public class ChannelFragment extends SherlockListFragment {
         addChannelsToListView();
     }
 
-    public static void addChannelsToListView() {
-        lvAdapter.notifyDataSetChanged();
-        lv.setAdapter(lvAdapter);
-        lv.invalidate();
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem item = menu.add(2, 2, 1, R.string.refresh);
@@ -82,7 +71,7 @@ public class ChannelFragment extends SherlockListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ((DVBViewerControllerActivity)getSherlockActivity()).updateChannelList();
+                ((DVBViewerControllerActivity) getSherlockActivity()).updateChannelList();
                 addChannelsToListView();
 
                 return true;

@@ -4,8 +4,9 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
-    <TextView android:layout_width="fill_parent"
+    <TextView android:id="@+id/timer_recserv"
+              android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:text="@string/timer"
+              android:text=""
             />
 </LinearLayout>
