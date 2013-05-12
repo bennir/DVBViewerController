@@ -7,21 +7,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 
 public class ChannelFragment extends SherlockListFragment {
     private static final String TAG = ChannelFragment.class.toString();
     static ListView lv;
     static ChanGroupAdapter lvAdapter;
+    static Context context;
 
     public static void addChannelsToListView() {
+        if(lvAdapter == null) {
+        ChannelFragment.lvAdapter = new ChanGroupAdapter(
+                context,
+                DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
+        );
+    } else {
         lvAdapter.notifyDataSetChanged();
+    }
         lv.setAdapter(lvAdapter);
         lv.invalidate();
     }
@@ -42,6 +49,7 @@ public class ChannelFragment extends SherlockListFragment {
         setHasOptionsMenu(true);
         getSherlockActivity().getSupportActionBar().setTitle(R.string.channels);
 
+        this.context = getSherlockActivity();
         lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -53,11 +61,6 @@ public class ChannelFragment extends SherlockListFragment {
                 }
             }
         });
-
-        lvAdapter = new ChanGroupAdapter(
-                getSherlockActivity(),
-                DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
-        );
 
         addChannelsToListView();
     }
@@ -77,38 +80,5 @@ public class ChannelFragment extends SherlockListFragment {
                 return true;
             }
         });
-    }
-
-    public class ChanGroupAdapter extends ArrayAdapter<String> {
-        private final Context context;
-        private final String[] values;
-
-        public ChanGroupAdapter(Context context, String[] values) {
-            super(context, R.layout.channels_group_list_item, values);
-            this.context = context;
-            this.values = values;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            View v = null;
-
-            if (convertView != null)
-                v = convertView;
-            else
-                v = inflater.inflate(R.layout.channels_group_list_item, parent,
-                        false);
-
-            TextView chanGroup = (TextView) v
-                    .findViewById(R.id.channels_group_list_item);
-            chanGroup.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoCondensed);
-
-            chanGroup.setText(values[position]);
-
-            return v;
-        }
     }
 }

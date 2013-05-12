@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
-    <TextView android:id="@+id/timer_recserv"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:text=""
-            />
-</LinearLayout>
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@android:id/list"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          android:layout_margin="5dp"
+          android:listSelector="@drawable/list_selector"
+          android:dividerHeight="10sp"
+          android:divider="#00000000"
+        />

@@ -16,4 +16,5 @@
     <string name="skip_selection">Skip</string>
     <string name="desc_channel_logo">Channel Logo</string>
     <string name="refresh">Refresh</string>
+    <string name="loadingTimers">Loading Timers...</string>
 </resources>

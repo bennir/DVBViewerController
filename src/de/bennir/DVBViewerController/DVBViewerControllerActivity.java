@@ -19,8 +19,13 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
+import com.androidquery.util.XmlDom;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.slidingmenu.lib.SlidingMenu;
+import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 import de.bennir.DVBViewerController.channels.DVBChannel;
+import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
+import de.bennir.DVBViewerController.timers.DVBTimer;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import org.json.JSONArray;
@@ -29,6 +34,7 @@ import org.json.JSONObject;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     private static final String TAG = DVBViewerControllerActivity.class.toString();
@@ -39,6 +45,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static String recPort = "";
     public static ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
     public static ArrayList<String> groupNames = new ArrayList<String>();
+    public static ArrayList<DVBTimer> DVBTimers = new ArrayList<DVBTimer>();
     public static int currentGroup = -1;
     public SlidingMenu menu;
     public AQuery aq;
@@ -48,7 +55,29 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public Fragment mContent;
 
     @SuppressWarnings("UnusedDeclaration")
-    public static void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
+    public static void downloadTimerCallback(String url, XmlDom xml, AjaxStatus ajax) {
+        Log.d(TAG, "downloadTimerCallback");
+
+
+        List<XmlDom> entries = xml.tags("Timer");
+
+        String imageUrl = null;
+        DVBTimer timer;
+
+        for(XmlDom entry: entries){
+            Log.d(TAG, "XmlDom entry: " + entry.text("Descr"));
+
+            timer = new DVBTimer();
+            timer.name = entry.text("Descr");
+
+            DVBTimers.add(timer);
+        }
+        Crouton.cancelAllCroutons();
+        TimerFragment.addChannelsToListView();
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
         Log.d(TAG, "downloadChannelCallback");
 
         ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
@@ -85,10 +114,13 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 }
                 DVBViewerControllerActivity.DVBChannels.add(dvbChans);
 
+                ChannelFragment.lvAdapter = new ChanGroupAdapter(
+                        this,
+                        DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
+                );
+
                 ChannelFragment.addChannelsToListView();
                 ChannelGroupFragment.addChannelsToListView();
-
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -295,6 +327,33 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         }
     }
 
+    public void updateTimers() {
+        Log.d(TAG, "updating channels");
+        DVBViewerControllerActivity.DVBTimers.clear();
+
+        if (DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+            DVBTimer timer;
+            for (int i = 1; i <= 10; i++) {
+                timer = new DVBTimer();
+                timer.name = "Timer " + i;
+                DVBViewerControllerActivity.DVBTimers.add(timer);
+            }
+
+            TimerFragment.addChannelsToListView();
+        } else {
+            Style st = new Style.Builder()
+                    .setDuration(Style.DURATION_INFINITE)
+                    .setBackgroundColorValue(Style.holoBlueLight)
+                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .build();
+            Crouton.makeText(this, getString(R.string.loadingTimers), st).show();
+
+            String url = "http://192.168.2.1:8089/api/timerlist.html?utf8=";
+            aq.ajax(url, XmlDom.class, this, "downloadTimerCallback");
+        }
+
+    }
+
     public void updateChannelList() {
         Log.d(TAG, "updating channels");
         DVBViewerControllerActivity.groupNames.clear();
@@ -322,6 +381,11 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             test.name = "ZDF Kultur";
             testChans.add(test);
             DVBViewerControllerActivity.DVBChannels.add(testChans);
+
+            ChannelFragment.lvAdapter = new ChanGroupAdapter(
+                    this,
+                    DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
+            );
         } else {
             String url = "http://" +
                     DVBViewerControllerActivity.dvbIp + ":" +
