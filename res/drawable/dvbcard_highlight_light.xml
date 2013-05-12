@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- "shadow" -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/DVBShadow"/>
+            <corners android:radius="3dp"/>
+        </shape>
+    </item>
+    <item android:bottom="3px">
+        <shape>
+            <solid android:color="@color/DVBCardHighlightLight"/>
+
+            <padding android:left="1dp"
+                     android:top="1dp"
+                     android:right="1dp"
+                     android:bottom="1dp"
+                    />
+
+            <corners android:radius="3dp"/>
+        </shape>
+    </item>
+</layer-list>

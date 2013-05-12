@@ -68,7 +68,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             Log.d(TAG, "XmlDom entry: " + entry.text("Descr"));
 
             timer = new DVBTimer();
-            timer.id = entry.attr("ID");
+            timer.id = entry.text("ID");
             timer.name = entry.text("Descr");
             timer.channelId = entry.child("Channel").attr("ID");
             timer.enabled = !entry.attr("Enabled").equals("0");
@@ -80,7 +80,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             DVBTimers.add(timer);
         }
         Crouton.cancelAllCroutons();
-        TimerFragment.addChannelsToListView();
+        TimerFragment.addTimersToListView();
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -346,7 +346,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 DVBViewerControllerActivity.DVBTimers.add(timer);
             }
 
-            TimerFragment.addChannelsToListView();
+            TimerFragment.addTimersToListView();
         } else {
             Style st = new Style.Builder()
                     .setDuration(Style.DURATION_INFINITE)

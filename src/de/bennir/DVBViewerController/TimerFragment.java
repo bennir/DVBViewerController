@@ -11,24 +11,58 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
+import com.manuelpeinado.multichoiceadapter.MultiChoiceArrayAdapter;
+import com.manuelpeinado.multichoiceadapter.MultiChoiceBaseAdapter;
 import de.bennir.DVBViewerController.timers.DVBTimer;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class TimerFragment extends SherlockListFragment {
     private static final String TAG = TimerFragment.class.toString();
     static TimerAdapter lvAdapter;
     static ListView lv;
+    private AQuery aq;
 
-    public static void addChannelsToListView() {
+    public static void addTimersToListView() {
         lvAdapter.notifyDataSetChanged();
-        lv.setAdapter(lvAdapter);
+        lvAdapter.setAdapterView(lv);
         lv.invalidate();
+    }
+
+    public void deleteTimer(int position) {
+        if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
+            DVBTimer timer = DVBViewerControllerActivity.DVBTimers.get(position);
+
+            String url = "http://" +
+                    DVBViewerControllerActivity.recIp + ":" +
+                    DVBViewerControllerActivity.recPort +
+                    "/api/timerdelete.html?id="+timer.id;
+
+            Log.d(TAG, "Deleting Timer: " + url);
+
+            aq.ajax(url, String.class, new AjaxCallback<String>() {
+
+                @Override
+                public void callback(String url, String html, AjaxStatus status) {
+
+                }
+
+            });
+        }
+
+        DVBViewerControllerActivity.DVBTimers.remove(position);
     }
 
     @Override
@@ -44,6 +78,7 @@ public class TimerFragment extends SherlockListFragment {
 
         setHasOptionsMenu(true);
         lv = getListView();
+        aq = ((DVBViewerControllerActivity) getSherlockActivity()).aq;
 
         if (DVBViewerControllerActivity.recIp.equals("") || DVBViewerControllerActivity.recPort.equals("")) {
             Crouton.makeText(getSherlockActivity(), R.string.recservicefailed, Style.ALERT).show();
@@ -53,7 +88,7 @@ public class TimerFragment extends SherlockListFragment {
         }
 
         lv = getListView();
-        lvAdapter = new TimerAdapter(getSherlockActivity(), DVBViewerControllerActivity.DVBTimers);
+        lvAdapter = new TimerAdapter(savedInstanceState, DVBViewerControllerActivity.DVBTimers, getSherlockActivity());
 
         ((DVBViewerControllerActivity) getSherlockActivity()).updateTimers();
     }
@@ -68,25 +103,30 @@ public class TimerFragment extends SherlockListFragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 ((DVBViewerControllerActivity) getSherlockActivity()).updateTimers();
-                addChannelsToListView();
+                addTimersToListView();
 
                 return true;
             }
         });
     }
 
-    public class TimerAdapter extends ArrayAdapter<DVBTimer> {
-        private final Context context;
-        ArrayList<DVBTimer> timers;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        lvAdapter.save(outState);
+    }
 
-        public TimerAdapter(Context context, ArrayList<DVBTimer> timers) {
-            super(context, R.layout.timers_list_item, timers);
+    public class TimerAdapter extends MultiChoiceBaseAdapter {
+        private final Context context;
+        List<DVBTimer> timers;
+
+        public TimerAdapter(Bundle savedInstanceState, List<DVBTimer> timers, Context context) {
+            super(savedInstanceState);
             this.context = context;
             this.timers = timers;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getViewImpl(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -124,6 +164,49 @@ public class TimerFragment extends SherlockListFragment {
             ((TextView) v.findViewById(R.id.timer_list_item_channel)).setText(channelId.substring(channelId.indexOf('|') + 1));
 
             return v;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.timers_action_mode, menu);
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if(item.getItemId() == R.id.timers_menu_delete) {
+                Set<Long> checked = getCheckedItems();
+
+                for(long pos : checked) {
+                    deleteTimer((int)pos);
+                }
+                addTimersToListView();
+
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public int getCount() {
+            return timers.size();
+        }
+
+        @Override
+        public DVBTimer getItem(int position) {
+            return timers.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
         }
     }
 }
