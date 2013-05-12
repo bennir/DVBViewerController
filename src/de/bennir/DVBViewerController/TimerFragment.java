@@ -1,6 +1,7 @@
 package de.bennir.DVBViewerController;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.androidquery.AQuery;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import de.bennir.DVBViewerController.timers.DVBTimer;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -21,7 +24,6 @@ public class TimerFragment extends SherlockListFragment {
     private static final String TAG = TimerFragment.class.toString();
     static TimerAdapter lvAdapter;
     static ListView lv;
-    AQuery aq;
 
     public static void addChannelsToListView() {
         lvAdapter.notifyDataSetChanged();
@@ -40,7 +42,7 @@ public class TimerFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        aq = ((DVBViewerControllerActivity) getSherlockActivity()).aq;
+        setHasOptionsMenu(true);
         lv = getListView();
 
         if (DVBViewerControllerActivity.recIp.equals("") || DVBViewerControllerActivity.recPort.equals("")) {
@@ -54,6 +56,23 @@ public class TimerFragment extends SherlockListFragment {
         lvAdapter = new TimerAdapter(getSherlockActivity(), DVBViewerControllerActivity.DVBTimers);
 
         ((DVBViewerControllerActivity) getSherlockActivity()).updateTimers();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem item = menu.add(2, 2, 1, R.string.refresh);
+        item.setIcon(R.drawable.ic_action_refresh);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                ((DVBViewerControllerActivity) getSherlockActivity()).updateTimers();
+                addChannelsToListView();
+
+                return true;
+            }
+        });
     }
 
     public class TimerAdapter extends ArrayAdapter<DVBTimer> {
@@ -82,8 +101,27 @@ public class TimerFragment extends SherlockListFragment {
             TextView timerName = (TextView) v
                     .findViewById(R.id.timer_list_item_name);
             timerName.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoLight);
-
             timerName.setText(timers.get(position).name);
+            Drawable img;
+            if (timers.get(position).enabled)
+                img = context.getResources().getDrawable(R.drawable.indicator_enabled);
+            else
+                img = context.getResources().getDrawable(R.drawable.indicator_disabled);
+            img.setBounds(0, 2, 30, 30);
+            timerName.setCompoundDrawables(img, null, null, null);
+
+            TextView date = (TextView) v.findViewById(R.id.timer_list_item_date);
+            date.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoLight);
+            date.setText(timers.get(position).date);
+
+            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+                TextView time = (TextView) v.findViewById(R.id.timer_list_item_time);
+                time.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoLight);
+                time.setText(timers.get(position).start + " - " + timers.get(position).end);
+            }
+
+            String channelId = timers.get(position).channelId;
+            ((TextView) v.findViewById(R.id.timer_list_item_channel)).setText(channelId.substring(channelId.indexOf('|') + 1));
 
             return v;
         }

@@ -68,7 +68,14 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             Log.d(TAG, "XmlDom entry: " + entry.text("Descr"));
 
             timer = new DVBTimer();
+            timer.id = entry.attr("ID");
             timer.name = entry.text("Descr");
+            timer.channelId = entry.child("Channel").attr("ID");
+            timer.enabled = !entry.attr("Enabled").equals("0");
+            timer.date = entry.attr("Date");
+            timer.start = entry.attr("Start");
+            timer.duration = entry.attr("Dur");
+            timer.end = entry.attr("End");
 
             DVBTimers.add(timer);
         }
