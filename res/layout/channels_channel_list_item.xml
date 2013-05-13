@@ -25,6 +25,7 @@
             android:textStyle="bold"
             android:layout_toRightOf="@id/channel_item_logo"
             />
+
     <TextView
             android:id="@+id/channel_item_favid"
             android:layout_width="fill_parent"
@@ -43,11 +44,13 @@
             android:layout_below="@id/channel_item_name"
             />
 
-    <TextView
-            android:id="@+id/channel_item_current_epg_time"
-            android:layout_width="wrap_content"
+    <ProgressBar
+            android:id="@+id/channel_item_progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/channel_item_logo"
             android:layout_below="@id/channel_item_current_epg"
+            android:layout_toRightOf="@id/channel_item_logo"
+            android:progressDrawable="@drawable/progress_light"
             />
 </RelativeLayout>
