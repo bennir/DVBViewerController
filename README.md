@@ -19,7 +19,7 @@ It uses the following libraries:
 If you want to contribute, do not hesitate to contact me via Twitter: [@agormog](https://twitter.com/agormog).
 
 ## License
-> Copyright 2012 Benjamin Rüder
+> Copyright 2013 Benjamin Rüder
 
 >Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
