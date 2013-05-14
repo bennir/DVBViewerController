@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -18,14 +17,15 @@ import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
-import com.manuelpeinado.multichoiceadapter.MultiChoiceArrayAdapter;
 import com.manuelpeinado.multichoiceadapter.MultiChoiceBaseAdapter;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.ObjectAnimator;
 import de.bennir.DVBViewerController.timers.DVBTimer;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -42,13 +42,15 @@ public class TimerFragment extends SherlockListFragment {
     }
 
     public void deleteTimer(int position) {
+        DVBTimer timer = DVBViewerControllerActivity.DVBTimers.get(position);
+        Log.d(TAG, "deleteTimer: " + timer.id);
+
         if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
-            DVBTimer timer = DVBViewerControllerActivity.DVBTimers.get(position);
 
             String url = "http://" +
                     DVBViewerControllerActivity.recIp + ":" +
                     DVBViewerControllerActivity.recPort +
-                    "/api/timerdelete.html?id="+timer.id;
+                    "/api/timerdelete.html?id=" + timer.id;
 
             Log.d(TAG, "Deleting Timer: " + url);
 
@@ -62,7 +64,7 @@ public class TimerFragment extends SherlockListFragment {
             });
         }
 
-        DVBViewerControllerActivity.DVBTimers.remove(position);
+        lvAdapter.delete(timer);
     }
 
     @Override
@@ -117,12 +119,19 @@ public class TimerFragment extends SherlockListFragment {
 
     public class TimerAdapter extends MultiChoiceBaseAdapter {
         private final Context context;
-        List<DVBTimer> timers;
+        private List<DVBTimer> timers;
+        private List<DVBTimer> deleteTimers;
 
         public TimerAdapter(Bundle savedInstanceState, List<DVBTimer> timers, Context context) {
             super(savedInstanceState);
             this.context = context;
             this.timers = timers;
+            this.deleteTimers = new ArrayList<DVBTimer>();
+        }
+
+        public void delete(DVBTimer delete) {
+            deleteTimers.add(delete);
+            notifyDataSetChanged();
         }
 
         @Override
@@ -138,12 +147,14 @@ public class TimerFragment extends SherlockListFragment {
                 v = inflater.inflate(R.layout.timers_list_item, parent,
                         false);
 
+            DVBTimer timer = timers.get(position);
+
             TextView timerName = (TextView) v
                     .findViewById(R.id.timer_list_item_name);
             timerName.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoLight);
-            timerName.setText(timers.get(position).name);
+            timerName.setText(timer.name);
             Drawable img;
-            if (timers.get(position).enabled)
+            if (timer.enabled)
                 img = context.getResources().getDrawable(R.drawable.indicator_enabled);
             else
                 img = context.getResources().getDrawable(R.drawable.indicator_disabled);
@@ -152,18 +163,49 @@ public class TimerFragment extends SherlockListFragment {
 
             TextView date = (TextView) v.findViewById(R.id.timer_list_item_date);
             date.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoLight);
-            date.setText(timers.get(position).date);
+            date.setText(timer.date);
 
             if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
                 TextView time = (TextView) v.findViewById(R.id.timer_list_item_time);
                 time.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoLight);
-                time.setText(timers.get(position).start + " - " + timers.get(position).end);
+                time.setText(timer.start + " - " + timer.end);
             }
 
-            String channelId = timers.get(position).channelId;
+            String channelId = timer.channelId;
             ((TextView) v.findViewById(R.id.timer_list_item_channel)).setText(channelId.substring(channelId.indexOf('|') + 1));
 
+            checkIfTimerDelete(v, timer);
+
             return v;
+        }
+
+        private void checkIfTimerDelete(View v, DVBTimer timer) {
+            for (DVBTimer delete : deleteTimers) {
+                deleteIfMarkedDeleteable(v, timer, delete);
+            }
+        }
+
+        private void deleteIfMarkedDeleteable(View v, final DVBTimer timer, final DVBTimer delete) {
+            if (timerIsDeleteable(timer, delete)) {
+                Log.d(TAG, "deleteIfMarkedDeleteable: " + timer.id);
+
+                ObjectAnimator anim = ObjectAnimator.ofFloat(v, "translationX", 0f, 2500f);
+                anim.setDuration(500);
+                anim.start();
+                anim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        timers.remove(timer);
+                        deleteTimers.remove(delete);
+
+                        addTimersToListView();
+                    }
+                });
+            }
+        }
+
+        private boolean timerIsDeleteable(DVBTimer timer, DVBTimer delete) {
+            return timer.id == delete.id;
         }
 
         @Override
@@ -181,13 +223,12 @@ public class TimerFragment extends SherlockListFragment {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if(item.getItemId() == R.id.timers_menu_delete) {
+            if (item.getItemId() == R.id.timers_menu_delete) {
                 Set<Long> checked = getCheckedItems();
 
-                for(long pos : checked) {
-                    deleteTimer((int)pos);
+                for (long pos : checked) {
+                    deleteTimer((int) pos);
                 }
-                addTimersToListView();
 
                 return true;
             }

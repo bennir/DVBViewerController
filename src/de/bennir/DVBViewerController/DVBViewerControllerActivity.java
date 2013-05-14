@@ -342,6 +342,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             DVBTimer timer;
             for (int i = 1; i <= 10; i++) {
                 timer = new DVBTimer();
+                timer.id = Integer.toString(i);
                 timer.name = "Timer " + i;
                 DVBViewerControllerActivity.DVBTimers.add(timer);
             }
