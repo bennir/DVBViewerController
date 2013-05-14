@@ -209,6 +209,12 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 Intent mIntent = new Intent(getApplicationContext(), DeviceSelectionActivity.class);
                 startActivity(mIntent);
 
+                dvbHost = "";
+                dvbIp = "";
+                dvbPort = "";
+                recIp = "";
+                recPort = "";
+
                 DVBViewerControllerActivity.this.finish();
                 overridePendingTransition(R.anim.fadein, R.anim.slide_to_right);
             }
