@@ -8,6 +8,7 @@ This App **requires** the [DVBViewerControllerServer] (https://github.com/bennir
 It uses the following libraries:
 * [SlidingMenu] (https://github.com/jfeinstein10/SlidingMenu) by jfeinstein10
 * [ActionBarSherlock] (https://github.com/JakeWharton/ActionBarSherlock) by JakeWharton
+* [NineOldAndroids] (https://github.com/JakeWharton/NineOldAndroids) by JakeWharton
 * [Crouton] (https://github.com/keyboardsurfer/Crouton) by keyboardsurfer
 * [Universal Image Loader] (https://github.com/nostra13/Android-Universal-Image-Loader) by nostra13
 * [MultiChoiceAdapter] (https://github.com/ManuelPeinado/MultiChoiceAdapter) by ManuelPeinado
@@ -18,7 +19,7 @@ It uses the following libraries:
 If you want to contribute, do not hesitate to contact me via Twitter: [@agormog](https://twitter.com/agormog).
 
 ## License
-> Copyright 2012 Benjamin Rüder
+> Copyright 2013 Benjamin Rüder
 
 >Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
