@@ -29,7 +29,6 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DeviceSelectionActivity extends SherlockListActivity implements ServiceListener {
@@ -38,8 +37,8 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
     private final static String HOSTNAME = "DVBController";
     private final static int DELAY = 500;
     private static JmDNS zeroConf = null;
-    WifiManager.MulticastLock mLock = null;
-    public Handler resultsUpdated = new Handler() {
+    private WifiManager.MulticastLock mLock = null;
+    private Handler resultsUpdated = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.obj != null) {
@@ -51,13 +50,12 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
             }
         }
     };
-    Typeface robotoThin;
-    Typeface robotoLight;
-    Typeface robotoCondensed;
+    private Typeface robotoThin;
+    private Typeface robotoLight;
+    private Typeface robotoCondensed;
     private ServiceAdapter adapter;
-    private ArrayList<String> items = new ArrayList<String>();
 
-    protected void startProbe() throws Exception {
+    void startProbe() throws Exception {
         if (zeroConf != null)
             stopProbe();
 
@@ -92,7 +90,7 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
         }
     }
 
-    protected void stopProbe() {
+    void stopProbe() {
         zeroConf.removeServiceListener(CTRL_TYPE, DeviceSelectionActivity.this);
 
         ThreadExecutor.runTask(new Runnable() {
@@ -238,12 +236,10 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
     }
 
     public class ServiceAdapter extends BaseAdapter {
-        protected Context context;
-        protected LayoutInflater inflater;
-        protected LinkedList<ServiceInfo> known = new LinkedList<ServiceInfo>();
+        LayoutInflater inflater;
+        LinkedList<ServiceInfo> known = new LinkedList<ServiceInfo>();
 
         public ServiceAdapter(Context context) {
-            this.context = context;
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SettingsFragment extends Fragment {
+class SettingsFragment extends Fragment {
     private static final String TAG = SettingsFragment.class.toString();
 
     @Override

@@ -7,20 +7,22 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/list_selector"
-        >
+    >
+
     <TextView
-            android:id="@+id/epg_item_title"
-            android:layout_width="fill_parent"
-            android:layout_height="35dp"
-            android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            />
+        android:id="@+id/epg_item_title"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:gravity="center_vertical"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        />
+
     <TextView
-            android:id="@+id/epg_item_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/epg_item_title"
-            />
+        android:id="@+id/epg_item_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/epg_item_title"
+        />
 
 </RelativeLayout>

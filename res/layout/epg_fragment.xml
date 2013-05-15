@@ -4,42 +4,49 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@android:color/transparent"
-        >
-    <ImageView android:layout_width="40dp"
-               android:layout_height="40dp"
-               android:id="@+id/epg_channel_logo"
-               android:contentDescription="@string/desc_channel_logo"
-               android:layout_marginTop="5dp"
-               android:layout_marginLeft="5dp"
-               android:layout_marginRight="5dp"
-            />
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="40dp"
-              android:id="@+id/epg_channel_name"
-              android:layout_toRightOf="@id/epg_channel_logo"
-              android:textSize="24sp"
-              android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
-              android:textColor="@color/DVBActionBar"
-              android:layout_marginTop="5dp"
-              android:layout_marginLeft="5dp"
-              android:layout_marginRight="5dp"
-              android:gravity="center_vertical"
-            />
+    >
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/epg_channel_logo"
+        android:contentDescription="@string/desc_channel_logo"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:id="@+id/epg_channel_name"
+        android:layout_toRightOf="@id/epg_channel_logo"
+        android:textSize="24sp"
+        android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
+        android:textColor="@color/DVBActionBar"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        />
+
     <View
-            android:layout_below="@id/epg_channel_logo"
-            android:id="@+id/epg_fragment_sep"
-            android:layout_height="1dp"
-            android:layout_width="fill_parent"
-            android:background="@color/DVBShadow"
-            android:layout_marginTop="5dp"
-            />
-    <ListView android:layout_below="@id/epg_fragment_sep"
-              android:id="@android:id/list"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:layout_margin="5dp"
-              android:listSelector="@drawable/list_selector"
-              android:dividerHeight="10sp"
-              android:divider="#00000000"
-            />
+        android:layout_below="@id/epg_channel_logo"
+        android:id="@+id/epg_fragment_sep"
+        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:background="@color/DVBShadow"
+        android:layout_marginTop="5dp"
+        />
+
+    <ListView
+        android:layout_below="@id/epg_fragment_sep"
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp"
+        android:listSelector="@drawable/list_selector"
+        android:dividerHeight="10sp"
+        android:divider="#00000000"
+        />
 </RelativeLayout>

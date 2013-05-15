@@ -17,9 +17,9 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 
-public class RemoteFragment extends SherlockFragment {
+class RemoteFragment extends SherlockFragment {
     private static final String TAG = RemoteFragment.class.toString();
-    AQuery aq;
+    private AQuery aq;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,7 +32,7 @@ public class RemoteFragment extends SherlockFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        aq = ((DVBViewerControllerActivity)getSherlockActivity()).aq;
+        aq = ((DVBViewerControllerActivity) getSherlockActivity()).aq;
 
         ImageView remote = (ImageView) getSherlockActivity().findViewById(
                 R.id.remote);
@@ -117,11 +117,11 @@ public class RemoteFragment extends SherlockFragment {
 
     }
 
-    public void sendCommand(String command) {
+    void sendCommand(String command) {
         Log.d(TAG, "Remote Command: " + command);
 
         ((Vibrator) getSherlockActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
-        if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
+        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             String url = "http://" +
                     DVBViewerControllerActivity.dvbIp + ":" +
                     DVBViewerControllerActivity.dvbPort +

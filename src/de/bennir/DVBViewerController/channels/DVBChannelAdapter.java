@@ -24,9 +24,9 @@ import java.util.Date;
 
 public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
     private static final String TAG = DVBChannelAdapter.class.toString();
-    ArrayList<DVBChannel> chans;
-    Context context;
-    ImageLoader load;
+    private ArrayList<DVBChannel> chans;
+    private Context context;
+    private ImageLoader load;
 
     public DVBChannelAdapter(Context context, ArrayList<DVBChannel> dvbChans) {
         super(context, R.layout.channels_channel_list_item, dvbChans);
@@ -53,7 +53,7 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View v = null;
+        View v;
 
         if (convertView != null)
             v = convertView;
@@ -63,7 +63,6 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
 
         ((TextView) v.findViewById(R.id.channel_item_name)).setText(chans.get(position).name);
         ((TextView) v.findViewById(R.id.channel_item_current_epg)).setText(chans.get(position).epgInfo.time + " - " + chans.get(position).epgInfo.title);
-//        ((TextView) v.findViewById(R.id.channel_item_current_epg_time)).setText(chans.get(position).epgInfo.time);
         ((TextView) v.findViewById(R.id.channel_item_favid)).setText(chans.get(position).favoriteId);
 
         /**
@@ -95,11 +94,11 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
         Log.d(TAG, "Completed: " + (elapsed / durMinutes * 100) + "%");
 
         ProgressBar progress = (ProgressBar) v.findViewById(R.id.channel_item_progress);
-        progress.setProgress(new Double((elapsed / durMinutes * 100)).intValue());
+        progress.setProgress(Double.valueOf((elapsed / durMinutes * 100)).intValue());
 
 
-        if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
-            String url = null;
+        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+            String url;
             try {
                 url = "http://" +
                         DVBViewerControllerActivity.dvbIp + ":" +

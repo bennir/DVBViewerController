@@ -14,21 +14,21 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 
-public class ChannelFragment extends SherlockListFragment {
+class ChannelFragment extends SherlockListFragment {
     private static final String TAG = ChannelFragment.class.toString();
-    static ListView lv;
+    private static ListView lv;
     static ChanGroupAdapter lvAdapter;
-    static Context context;
+    private static Context context;
 
     public static void addChannelsToListView() {
-        if(lvAdapter == null) {
-        ChannelFragment.lvAdapter = new ChanGroupAdapter(
-                context,
-                DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
-        );
-    } else {
-        lvAdapter.notifyDataSetChanged();
-    }
+        if (lvAdapter == null) {
+            ChannelFragment.lvAdapter = new ChanGroupAdapter(
+                    context,
+                    DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
+            );
+        } else {
+            lvAdapter.notifyDataSetChanged();
+        }
         lv.setAdapter(lvAdapter);
         lv.invalidate();
     }
@@ -49,7 +49,7 @@ public class ChannelFragment extends SherlockListFragment {
         setHasOptionsMenu(true);
         getSherlockActivity().getSupportActionBar().setTitle(R.string.channels);
 
-        this.context = getSherlockActivity();
+        context = getSherlockActivity();
         lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

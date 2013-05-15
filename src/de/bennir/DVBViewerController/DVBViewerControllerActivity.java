@@ -20,11 +20,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.util.XmlDom;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.slidingmenu.lib.SlidingMenu;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 import de.bennir.DVBViewerController.channels.DVBChannel;
-import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
 import de.bennir.DVBViewerController.timers.DVBTimer;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -58,13 +56,10 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static void downloadTimerCallback(String url, XmlDom xml, AjaxStatus ajax) {
         Log.d(TAG, "downloadTimerCallback");
 
-
         List<XmlDom> entries = xml.tags("Timer");
-
-        String imageUrl = null;
         DVBTimer timer;
 
-        for(XmlDom entry: entries){
+        for (XmlDom entry : entries) {
             Log.d(TAG, "XmlDom entry: " + entry.text("Descr"));
 
             timer = new DVBTimer();

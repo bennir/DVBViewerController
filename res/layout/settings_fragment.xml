@@ -4,8 +4,10 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
-    <TextView android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:text="@string/settings"
-            />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="@string/settings"
+        />
 </LinearLayout>

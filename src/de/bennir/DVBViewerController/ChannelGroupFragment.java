@@ -23,11 +23,11 @@ import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
 
 import java.util.ArrayList;
 
-public class ChannelGroupFragment extends SherlockListFragment {
+class ChannelGroupFragment extends SherlockListFragment {
     private static final String TAG = ChannelGroupFragment.class.toString();
-    public static DVBChannelAdapter lvAdapter;
+    private static DVBChannelAdapter lvAdapter;
     private static ListView lv;
-    AQuery aq;
+    private AQuery aq;
 
     public static void addChannelsToListView() {
         lvAdapter.notifyDataSetChanged();
@@ -95,7 +95,7 @@ public class ChannelGroupFragment extends SherlockListFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setChannel(String channelId) {
+    void setChannel(String channelId) {
         ((Vibrator) getSherlockActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             String url = "http://" +

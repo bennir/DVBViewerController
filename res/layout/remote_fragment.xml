@@ -2,39 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/DVBBackgroundLight">
+              android:layout_height="match_parent">
 
     <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="15dp"
+        android:background="@drawable/dvbcard"
+        android:padding="5dp"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:id="@+id/remote_touchmap"
+            android:visibility="invisible"
+            android:scaleType="fitCenter"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_margin="15dp"
-            android:background="@drawable/dvbcard"
-            android:padding="5dp"
-            android:orientation="vertical"
-            >
+            android:src="@drawable/remote_touchmap"
+            android:contentDescription="@string/remote"
+            />
 
         <ImageView
-                android:id="@+id/remote_touchmap"
-                android:visibility="invisible"
-                android:scaleType="fitCenter"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/remote_touchmap"
-                android:contentDescription="@string/remote"
-                />
-
-        <ImageView
-                android:id="@+id/remote"
-                android:scaleType="fitCenter"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/remote"
-                android:contentDescription="@string/remote"
-                />
+            android:id="@+id/remote"
+            android:scaleType="fitCenter"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:src="@drawable/remote"
+            android:contentDescription="@string/remote"
+            android:padding="10dp"/>
     </RelativeLayout>
 </LinearLayout>

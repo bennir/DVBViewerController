@@ -7,4 +7,4 @@
           android:listSelector="@drawable/list_selector"
           android:dividerHeight="10sp"
           android:divider="#00000000"
-        />
+    />

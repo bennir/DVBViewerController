@@ -24,16 +24,16 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class EPGFragment extends SherlockListFragment {
+class EPGFragment extends SherlockListFragment {
     private static final String TAG = EPGFragment.class.toString();
-    public static ListView channelList;
-    public String currentChan = "";
-    SlidingMenu slidingMenu;
-    AQuery aq;
-    ListView lv;
-    EPGInfoAdapter lvAdapter;
-    ArrayList<EPGInfo> epgInfos;
-    TextView title;
+    private static ListView channelList;
+    private String currentChan = "";
+    private SlidingMenu slidingMenu;
+    private AQuery aq;
+    private ListView lv;
+    private EPGInfoAdapter lvAdapter;
+    private ArrayList<EPGInfo> epgInfos;
+    private TextView title;
     private ImageLoader load;
 
     @Override
@@ -140,8 +140,8 @@ public class EPGFragment extends SherlockListFragment {
 
             ImageView logo = (ImageView) getSherlockActivity().findViewById(R.id.epg_channel_logo);
 
-            if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
-                String url = null;
+            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+                String url;
                 try {
                     url = "http://" +
                             DVBViewerControllerActivity.dvbIp + ":" +
@@ -202,7 +202,7 @@ public class EPGFragment extends SherlockListFragment {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View v = null;
+            View v;
 
             if (convertView != null)
                 v = convertView;
@@ -234,7 +234,7 @@ public class EPGFragment extends SherlockListFragment {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View v = null;
+            View v;
 
             if (convertView != null)
                 v = convertView;
@@ -245,8 +245,8 @@ public class EPGFragment extends SherlockListFragment {
             ((TextView) v.findViewById(R.id.epg_list_item_name)).setText(chans.get(position).name);
             ((TextView) v.findViewById(R.id.epg_list_item_channelid)).setText(chans.get(position).channelId);
 
-            if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
-                String url = null;
+            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+                String url;
                 try {
                     url = "http://" +
                             DVBViewerControllerActivity.dvbIp + ":" +

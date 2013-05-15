@@ -29,10 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class TimerFragment extends SherlockListFragment {
+class TimerFragment extends SherlockListFragment {
     private static final String TAG = TimerFragment.class.toString();
-    static TimerAdapter lvAdapter;
-    static ListView lv;
+    private static TimerAdapter lvAdapter;
+    private static ListView lv;
     private AQuery aq;
 
     public static void addTimersToListView() {
@@ -41,11 +41,11 @@ public class TimerFragment extends SherlockListFragment {
         lv.invalidate();
     }
 
-    public void deleteTimer(int position) {
+    void deleteTimer(int position) {
         DVBTimer timer = DVBViewerControllerActivity.DVBTimers.get(position);
         Log.d(TAG, "deleteTimer: " + timer.id);
 
-        if (DVBViewerControllerActivity.dvbHost != "Demo Device") {
+        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
 
             String url = "http://" +
                     DVBViewerControllerActivity.recIp + ":" +
@@ -139,7 +139,7 @@ public class TimerFragment extends SherlockListFragment {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View v = null;
+            View v;
 
             if (convertView != null)
                 v = convertView;
@@ -149,8 +149,7 @@ public class TimerFragment extends SherlockListFragment {
 
             DVBTimer timer = timers.get(position);
 
-            TextView timerName = (TextView) v
-                    .findViewById(R.id.timer_list_item_name);
+            TextView timerName = (TextView) v.findViewById(R.id.timer_list_item_name);
             timerName.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoLight);
             timerName.setText(timer.name);
             Drawable img;
@@ -205,7 +204,7 @@ public class TimerFragment extends SherlockListFragment {
         }
 
         private boolean timerIsDeleteable(DVBTimer timer, DVBTimer delete) {
-            return timer.id == delete.id;
+            return timer.id.equals(delete.id);
         }
 
         @Override

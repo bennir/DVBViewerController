@@ -5,16 +5,17 @@
               android:layout_width="fill_parent"
               android:background="@drawable/list_selector"
               android:layout_margin="5dp">
+
     <TextView
-            android:id="@+id/channels_group_list_item"
-            android:gravity="center_vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="40dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textSize="24sp"
-            android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
-            android:textColor="@color/DVBActionBar"
-            />
+        android:id="@+id/channels_group_list_item"
+        android:gravity="center_vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="40dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="24sp"
+        android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
+        android:textColor="@color/DVBActionBar"
+        />
 </LinearLayout>

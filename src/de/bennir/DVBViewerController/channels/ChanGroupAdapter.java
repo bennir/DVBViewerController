@@ -25,7 +25,7 @@ public class ChanGroupAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View v = null;
+        View v;
 
         if (convertView != null)
             v = convertView;
@@ -33,8 +33,7 @@ public class ChanGroupAdapter extends ArrayAdapter<String> {
             v = inflater.inflate(R.layout.channels_group_list_item, parent,
                     false);
 
-        TextView chanGroup = (TextView) v
-                .findViewById(R.id.channels_group_list_item);
+        TextView chanGroup = (TextView) v.findViewById(R.id.channels_group_list_item);
         chanGroup.setTypeface(((DVBViewerControllerActivity) context).robotoLight);
 
         chanGroup.setText(values[position]);
