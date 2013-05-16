@@ -23,7 +23,7 @@ import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
 
 import java.util.ArrayList;
 
-class ChannelGroupFragment extends SherlockListFragment {
+public class ChannelGroupFragment extends SherlockListFragment {
     private static final String TAG = ChannelGroupFragment.class.toString();
     private static DVBChannelAdapter lvAdapter;
     private static ListView lv;

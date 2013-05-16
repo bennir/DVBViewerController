@@ -17,7 +17,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 
-class RemoteFragment extends SherlockFragment {
+public class RemoteFragment extends SherlockFragment {
     private static final String TAG = RemoteFragment.class.toString();
     private AQuery aq;
 

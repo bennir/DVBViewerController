@@ -291,7 +291,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
          * Recording Service Loading
          */
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            if (DVBViewerControllerActivity.recIp.isEmpty() || DVBViewerControllerActivity.recPort.isEmpty()) {
+            if (DVBViewerControllerActivity.recIp.equals("") || DVBViewerControllerActivity.recPort.equals("")) {
                 Log.d(TAG, "Getting Recording Service");
 
                 String url = "http://" +
@@ -307,6 +307,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
          * Channel Loading
          */
         if (DVBChannels.isEmpty()) {
+            Log.d(TAG, "DVBChannels empty");
             updateChannelList();
         }
     }
@@ -426,7 +427,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
+
         getSupportFragmentManager().putFragment(outState, "mContent", mContent);
     }
 

@@ -24,7 +24,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 
-class EPGFragment extends SherlockListFragment {
+public class EPGFragment extends SherlockListFragment {
     private static final String TAG = EPGFragment.class.toString();
     private static ListView channelList;
     private String currentChan = "";
@@ -80,7 +80,7 @@ class EPGFragment extends SherlockListFragment {
             epgChannels.addAll(dvbChans);
         }
         Log.d(TAG, "epgChannels Count " + epgChannels.size());
-        Collections.sort(epgChannels, new DVBChannel.DVBChannelComparator());
+        Collections.sort(epgChannels, new DVBChannel.DVBChannelNameComparator());
 
         EPGChannelAdapter epgListAdapter = new EPGChannelAdapter(getSherlockActivity(), epgChannels);
 

@@ -14,7 +14,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 
-class ChannelFragment extends SherlockListFragment {
+public class ChannelFragment extends SherlockListFragment {
     private static final String TAG = ChannelFragment.class.toString();
     private static ListView lv;
     static ChanGroupAdapter lvAdapter;
@@ -43,6 +43,7 @@ class ChannelFragment extends SherlockListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.d(TAG, "onActivityCreated Size: " + DVBViewerControllerActivity.DVBChannels.size());
+
         super.onActivityCreated(savedInstanceState);
         ((DVBViewerControllerActivity) getSherlockActivity()).mContent = this;
 

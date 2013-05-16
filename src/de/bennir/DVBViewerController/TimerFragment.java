@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-class TimerFragment extends SherlockListFragment {
+public class TimerFragment extends SherlockListFragment {
     private static final String TAG = TimerFragment.class.toString();
     private static TimerAdapter lvAdapter;
     private static ListView lv;

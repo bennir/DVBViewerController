@@ -44,7 +44,7 @@ public class DVBChannel implements Parcelable {
 
     }
 
-    public static class DVBChannelComparator implements Comparator<DVBChannel> {
+    public static class DVBChannelNameComparator implements Comparator<DVBChannel> {
 
         @Override
         public int compare(DVBChannel dvbChannel, DVBChannel dvbChannel2) {
