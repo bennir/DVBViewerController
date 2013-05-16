@@ -17,4 +17,5 @@
     <string name="refresh">Refresh</string>
     <string name="loadingTimers">Loading Timers…</string>
     <string name="delete">Delete</string>
+    <string name="demo_device">Demo Device</string>
 </resources>
