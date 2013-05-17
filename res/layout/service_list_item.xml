@@ -13,22 +13,25 @@
         android:paddingLeft="10dp"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:textSize="18sp"
+        android:text="@string/service_name"
+        android:textSize="22sp"
         android:textColor="@color/DVBActionBar"/>
 
     <TextView
         android:id="@+id/service_ip"
-        android:textSize="12sp"
+        android:textSize="18sp"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:text="@string/ip_address"
         android:paddingLeft="10dp"
         android:layout_below="@id/service_name"/>
 
     <TextView
         android:id="@+id/service_port"
-        android:textSize="12sp"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/port"
         android:paddingLeft="10dp"
         android:layout_toRightOf="@id/service_ip"
         android:layout_below="@id/service_name"/>

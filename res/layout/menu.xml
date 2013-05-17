@@ -14,9 +14,9 @@
         android:padding="5dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Sherlock.Light.Small"
             android:color="@color/DVBShadow"
             android:text="@string/active_device"
             android:paddingLeft="15dp"
@@ -37,12 +37,15 @@
             android:drawableRight="@drawable/ic_action_change_profile_dark"
             />
 
-        <View
-            android:layout_height="1dp"
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
             android:layout_width="fill_parent"
-            android:background="#ffffff"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_height="wrap_content"
+            android:color="@color/DVBShadow"
+            android:text="@string/menu"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            />
 
         <ListView
             android:id="@+id/menu_list"

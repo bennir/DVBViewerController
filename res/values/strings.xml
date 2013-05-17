@@ -18,4 +18,8 @@
     <string name="loadingTimers">Loading Timers…</string>
     <string name="delete">Delete</string>
     <string name="demo_device">Demo Device</string>
+    <string name="menu">Menu</string>
+    <string name="service_name">Service Name</string>
+    <string name="ip_address">192.168.1.1</string>
+    <string name="port">8000</string>
 </resources>
