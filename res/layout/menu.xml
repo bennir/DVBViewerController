@@ -3,21 +3,12 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/DVBBackgroundLight">
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="15dp"
-        android:background="@drawable/dvbcard"
-        android:padding="5dp">
-
+              android:background="@color/DVBActionBar">
         <TextView
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:color="@color/DVBShadow"
+            android:textColor="@color/DVBShadow"
             android:text="@string/active_device"
             android:paddingLeft="15dp"
             android:paddingTop="5dp"
@@ -29,19 +20,19 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="left|center_vertical"
-            android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
+            android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title.Inverse"
             android:textSize="22sp"
+            android:textColor="@android:color/white"
             android:text="@string/demo_device"
-            android:paddingLeft="10dp"
-            android:layout_margin="5dp"
-            android:drawableRight="@drawable/ic_action_change_profile_dark"
+            android:paddingLeft="30dp"
+            android:drawableRight="@drawable/ic_action_change_profile"
             />
 
         <TextView
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:color="@color/DVBShadow"
+            android:textColor="@color/DVBShadow"
             android:text="@string/menu"
             android:paddingLeft="15dp"
             android:paddingTop="5dp"
@@ -51,6 +42,6 @@
             android:id="@+id/menu_list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:paddingLeft="30dp"
             />
-    </LinearLayout>
 </LinearLayout>

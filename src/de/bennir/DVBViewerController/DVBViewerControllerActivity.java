@@ -221,11 +221,11 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         MenuAdapter adapter = new MenuAdapter(this);
         ListView lvMenu = (ListView) menu.findViewById(R.id.menu_list);
 
-        adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote_dark));
-        adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels_dark));
-        adapter.add(new DVBMenuItem(getString(R.string.epg), R.drawable.ic_action_epg_dark));
-        adapter.add(new DVBMenuItem(getString(R.string.timer), R.drawable.ic_action_timers_dark));
-        adapter.add(new DVBMenuItem(getString(R.string.settings), R.drawable.ic_action_settings_dark));
+        adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote));
+        adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels));
+        adapter.add(new DVBMenuItem(getString(R.string.epg), R.drawable.ic_action_epg));
+        adapter.add(new DVBMenuItem(getString(R.string.timer), R.drawable.ic_action_timers));
+        adapter.add(new DVBMenuItem(getString(R.string.settings), R.drawable.ic_action_settings));
 
         lvMenu.setAdapter(adapter);
 
@@ -284,8 +284,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         menu.setShadowDrawable(R.drawable.shadow);
         menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         menu.setFadeDegree(0.35f);
-        menu.setBehindScrollScale(0.5f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+        menu.setBehindScrollScale(0.0f);
+        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 
         /**
          * Recording Service Loading
@@ -509,7 +509,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(
-                        R.layout.row, null);
+                        R.layout.menu_list_item, null);
             }
 
             TextView title = (TextView) convertView
