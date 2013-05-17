@@ -2,15 +2,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="Theme.DVBHolo" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="android:windowBackground">@color/DVBBackgroundLight</item>
-        <item name="android:actionBarStyle">@style/DVBActionBar</item>
-    </style>
-
-    <style name="DVBActionBar" parent="Widget.Sherlock.ActionBar">
-        <item name="android:background">@color/DVBActionBar</item>
-        <item name="android:titleTextStyle">@style/DVBActionBarTitle</item>
-    </style>
-
-    <style name="DVBActionBarTitle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
-        <item name="android:textColor">#e0e0e0</item>
     </style>
 </resources>
