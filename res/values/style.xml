@@ -2,5 +2,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="Theme.DVBHolo" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="android:windowBackground">@color/DVBBackgroundLight</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>
     </style>
 </resources>

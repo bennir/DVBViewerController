@@ -285,7 +285,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         menu.setFadeDegree(0.35f);
         menu.setBehindScrollScale(0.0f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 
         /**
          * Recording Service Loading
@@ -515,9 +515,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             TextView title = (TextView) convertView
                     .findViewById(R.id.row_title);
             title.setText(getItem(position).tag);
-            Drawable img = getContext().getResources().getDrawable(getItem(position).iconRes);
-            img.setBounds(0, 0, 50, 50);
-            title.setCompoundDrawables(img, null, null, null);
+            title.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(getItem(position).iconRes), null, null, null);
+            title.setCompoundDrawablePadding(30);
 
             return convertView;
         }

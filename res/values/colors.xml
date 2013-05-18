@@ -2,7 +2,6 @@
 <resources>
     <color name="DVBShadow">#d3d3d3</color>
     <color name="DVBBackgroundLight">#e5e5e5</color>
-    <color name="DVBBackgroundDark">#ffffff</color>
     <color name="DVBActionBar">#303030</color>
     <color name="DVBCardHighlight">#85d3ef</color>
     <color name="DVBCardHighlightLight">#b4ebff</color>

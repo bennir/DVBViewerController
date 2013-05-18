@@ -3,8 +3,7 @@
               android:orientation="vertical"
               android:layout_height="wrap_content"
               android:layout_width="fill_parent"
-              android:background="@drawable/list_selector"
-              android:layout_margin="5dp">
+              android:background="@drawable/list_selector">
 
     <TextView
         android:id="@+id/channels_group_list_item"
