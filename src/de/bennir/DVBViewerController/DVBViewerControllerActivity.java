@@ -196,7 +196,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         menu.setMenu(R.layout.menu);
         TextView activeProfile = (TextView) menu.findViewById(R.id.active_profile);
         activeProfile.setTypeface(robotoCondensed);
-        activeProfile.setText(dvbHost);
+        if(!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+            activeProfile.setText(dvbHost);
+        }
         activeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
