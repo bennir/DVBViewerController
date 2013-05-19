@@ -174,6 +174,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.remote);
         getSupportActionBar().setIcon(R.drawable.ic_action_remote);
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
 
         /**
          * Above View
@@ -287,7 +288,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         menu.setFadeDegree(0.35f);
         menu.setBehindScrollScale(0.0f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 
         /**
          * Recording Service Loading

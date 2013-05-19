@@ -112,6 +112,8 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
 
         setContentView(R.layout.activity_deviceselection);
 
+        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
+
         robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
         robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
         robotoCondensed = Typeface.createFromAsset(getAssets(), "RobotoCondensed-Bold.ttf");
