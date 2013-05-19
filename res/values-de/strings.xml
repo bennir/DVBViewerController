@@ -8,9 +8,9 @@
     <string name="desc_channel_logo">Kanal Logo</string>
     <string name="epg">EPG</string>
     <string name="ip_address">192.168.1.1</string>
-    <string name="loading">Lädt...</string>
-    <string name="loadingChannels">Lädt Kanäle...</string>
-    <string name="loadingTimers">Lädt Timer...</string>
+    <string name="loading">Lädt…</string>
+    <string name="loadingChannels">Lädt Kanäle…</string>
+    <string name="loadingTimers">Lädt Timer…</string>
     <string name="menu">Menü</string>
     <string name="port">8000</string>
     <string name="recservicefailed">Recording Service unerreichbar</string>
@@ -22,5 +22,7 @@
     <string name="skip_selection">Demo</string>
     <string name="timer">Timer</string>
     <string name="wifistate">Bitte WLAN überprüfen</string>
-
+    <string name="timer_name">Timername</string>
+    <string name="timer_date">11.11.2011</string>
+    <string name="timer_time">20:15</string>
 </resources>

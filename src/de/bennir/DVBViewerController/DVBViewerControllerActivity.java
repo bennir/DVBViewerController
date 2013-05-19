@@ -3,9 +3,7 @@ package de.bennir.DVBViewerController;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -197,13 +195,12 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         menu.setMenu(R.layout.menu);
         TextView activeProfile = (TextView) menu.findViewById(R.id.active_profile);
         activeProfile.setTypeface(robotoCondensed);
-        if(!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             activeProfile.setText(dvbHost);
         }
         activeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
                 Intent mIntent = new Intent(getApplicationContext(), DeviceSelectionActivity.class);
                 startActivity(mIntent);
 
@@ -212,6 +209,10 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 dvbPort = "";
                 recIp = "";
                 recPort = "";
+
+                DVBChannels.clear();
+                groupNames.clear();
+                DVBTimers.clear();
 
                 DVBViewerControllerActivity.this.finish();
                 overridePendingTransition(R.anim.fadein, R.anim.slide_to_right);
@@ -349,6 +350,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 timer = new DVBTimer();
                 timer.id = Integer.toString(i);
                 timer.name = "Timer " + i;
+                timer.date = "11.11.2011";
+                timer.enabled = i % 2 == 0;
                 DVBViewerControllerActivity.DVBTimers.add(timer);
             }
 

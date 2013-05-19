@@ -7,6 +7,3 @@
 [submodule "Crouton"]
 	path = Crouton
 	url = git://github.com/keyboardsurfer/Crouton.git
-[submodule "MultiChoiceAdapter"]
-	path = MultiChoiceAdapter
-	url = git://github.com/ManuelPeinado/MultiChoiceAdapter.git

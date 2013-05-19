@@ -8,7 +8,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -170,7 +169,6 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
                                            View.OnClickListener() {
                                                @Override
                                                public void onClick(View view) {
-                                                   ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
                                                    DVBViewerControllerActivity.dvbHost = "Demo Device";
                                                    DVBViewerControllerActivity.dvbIp = "127.0.0.1";
                                                    DVBViewerControllerActivity.dvbPort = "8000";

@@ -1,34 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.manuelpeinado.multichoiceadapter.CheckableRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_height="wrap_content"
-    android:layout_width="fill_parent"
-    android:background="@drawable/list_selector"
-    android:layout_margin="5dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:background="@drawable/list_selector"
+                android:padding="5dp"
+                android:id="@+id/timer_list_item_layout"
+                android:descendantFocusability="blocksDescendants">
 
-    <CheckBox
-        android:id="@android:id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+    <ImageView
+        android:id="@+id/timer_list_item_indicator"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
         android:layout_centerVertical="true"
-        android:focusable="false"/>
+        android:src="@drawable/indicator_enabled"
+        />
 
     <TextView
         android:id="@+id/timer_list_item_name"
-        android:layout_toRightOf="@android:id/checkbox"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/timer_list_item_indicator"
         android:gravity="top"
-        android:drawablePadding="10dp"
-        android:padding="5dp"
+        android:paddingLeft="10dp"
         android:textSize="20sp"
         android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
+        android:text="@string/timer_name"
+        />
+
+    <ImageButton
+        style="?android:borderlessButtonStyle"
+        android:id="@+id/timer_list_item_delete"
+        android:layout_alignParentRight="true"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_action_delete"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         />
 
     <TextView
         android:id="@+id/timer_list_item_date"
+        android:layout_toLeftOf="@id/timer_list_item_delete"
         android:layout_toRightOf="@id/timer_list_item_name"
         android:layout_width="fill_parent"
         android:layout_height="35dp"
@@ -36,21 +49,25 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:textColor="@color/DVBActionBar"
+        android:text="@string/timer_date"
         />
+
 
     <TextView
         android:id="@+id/timer_list_item_channel"
         android:layout_below="@id/timer_list_item_name"
-        android:layout_toRightOf="@android:id/checkbox"
+        android:layout_toRightOf="@id/timer_list_item_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="5dp"
+        android:paddingLeft="10dp"
         android:textColor="@color/DVBActionBar"
+        android:text="@string/channels"
         />
 
     <TextView
         android:id="@+id/timer_list_item_time"
         android:layout_below="@id/timer_list_item_name"
+        android:layout_toLeftOf="@id/timer_list_item_delete"
         android:layout_toRightOf="@id/timer_list_item_channel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -58,6 +75,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:textColor="@color/DVBActionBar"
+        android:text="@string/timer_time"
         />
 
-</com.manuelpeinado.multichoiceadapter.CheckableRelativeLayout>
+</RelativeLayout>
