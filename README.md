@@ -11,7 +11,6 @@ It uses the following libraries:
 * [NineOldAndroids] (https://github.com/JakeWharton/NineOldAndroids) by JakeWharton
 * [Crouton] (https://github.com/keyboardsurfer/Crouton) by keyboardsurfer
 * [Universal Image Loader] (https://github.com/nostra13/Android-Universal-Image-Loader) by nostra13
-* [MultiChoiceAdapter] (https://github.com/ManuelPeinado/MultiChoiceAdapter) by ManuelPeinado
 * [JmDNS] (http://jmdns.sourceforge.net/)
 * [Android Query] (https://code.google.com/p/android-query/)
 
