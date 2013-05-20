@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -55,7 +56,14 @@ public class RemoteFragment extends SherlockFragment {
                             R.id.remote_touchmap);
                     Bitmap bitmap = ((BitmapDrawable) img.getDrawable())
                             .getBitmap();
-                    int pixel = bitmap.getPixel(x, y);
+
+                    double scaleWidthRatio = (double) img.getWidth() /  (double) bitmap.getWidth();
+                    double scaleHeightRatio = (double) img.getHeight() / (double) bitmap.getHeight();
+
+                    int scaleX = (int) (x / scaleWidthRatio);
+                    int scaleY = (int) (y / scaleHeightRatio);
+
+                    int pixel = bitmap.getPixel(scaleX, scaleY);
 
                     int red = Color.red(pixel);
                     int green = Color.green(pixel);
