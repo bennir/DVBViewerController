@@ -1,6 +1,7 @@
 package de.bennir.DVBViewerController;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,6 +115,21 @@ public class TimerFragment extends SherlockListFragment {
             public boolean onMenuItemClick(MenuItem item) {
                 ((DVBViewerControllerActivity) getSherlockActivity()).updateTimers();
                 addTimersToListView();
+
+                return true;
+            }
+        });
+
+        item = menu.add(1, Menu.NONE, Menu.NONE, R.string.timer_add);
+        item.setIcon(R.drawable.ic_action_add);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent i = new Intent(getSherlockActivity(), TimerWizardActivity.class);
+                startActivity(i);
+
+                getSherlockActivity().overridePendingTransition(R.anim.slide_right, R.anim.nothing);
 
                 return true;
             }

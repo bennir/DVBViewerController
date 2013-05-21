@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/WizardPageContainer">
+
+    <TextView
+        style="@style/WizardPageTitle"
+        android:id="@android:id/title"
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Timer Name"/>
+
+            <EditText
+                android:id="@+id/timer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:saveEnabled="false"
+                android:inputType="textCapWords"
+                android:hint="Nachrichten"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Priority"/>
+
+            <EditText
+                android:id="@+id/timer_priority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:saveEnabled="false"
+                android:inputType="numberSigned"
+                android:hint="50"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

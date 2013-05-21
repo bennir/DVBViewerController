@@ -1,5 +1,5 @@
 <!--
-  Copyright 2011 The Android Open Source Project
+  Copyright 2012 Roman Nurik
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -12,18 +12,11 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
--->
+  -->
 
-<resources>
-
-    <dimen name="slidingmenu_offset">120dp</dimen>
-    <dimen name="list_padding">10dp</dimen>
-    <dimen name="shadow_width">25dp</dimen>
-
-    <integer name="num_cols">1</integer>
-
-    <dimen name="step_pager_tab_width">32dp</dimen>
-    <dimen name="step_pager_tab_height">3dp</dimen>
-    <dimen name="step_pager_tab_spacing">4dp</dimen>
-
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/item_pressed" android:state_pressed="true" />
+    <item android:drawable="@drawable/item_focused" android:state_focused="true" />
+    <item android:drawable="@drawable/item_focused" android:state_selected="true" />
+    <item android:drawable="@android:color/transparent" />
+</selector>

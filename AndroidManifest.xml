@@ -28,5 +28,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".DVBViewerControllerActivity"/>
+        <activity android:name=".TimerWizardActivity"/>
     </application>
 </manifest>
