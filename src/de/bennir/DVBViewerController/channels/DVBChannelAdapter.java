@@ -1,17 +1,14 @@
 package de.bennir.DVBViewerController.channels;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.androidquery.AQuery;
 import de.bennir.DVBViewerController.DVBViewerControllerActivity;
 import de.bennir.DVBViewerController.R;
 
@@ -26,26 +23,11 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
     private static final String TAG = DVBChannelAdapter.class.toString();
     private ArrayList<DVBChannel> chans;
     private Context context;
-    private ImageLoader load;
 
     public DVBChannelAdapter(Context context, ArrayList<DVBChannel> dvbChans) {
         super(context, R.layout.channels_channel_list_item, dvbChans);
         this.chans = dvbChans;
         this.context = context;
-
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.dvbviewer_controller)
-                .showImageForEmptyUri(R.drawable.dvbviewer_controller)
-                .showImageOnFail(R.drawable.dvbviewer_controller)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-
-        load = ImageLoader.getInstance();
-        load.init(config);
     }
 
     @Override
@@ -60,6 +42,8 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
         else
             v = inflater.inflate(R.layout.channels_channel_list_item, parent,
                     false);
+
+        AQuery aq = new AQuery(v);
 
         ((TextView) v.findViewById(R.id.channel_item_name)).setText(chans.get(position).name);
         ((TextView) v.findViewById(R.id.channel_item_current_epg)).setText(chans.get(position).epgInfo.time + " - " + chans.get(position).epgInfo.title);
@@ -91,33 +75,25 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
         double elapsed = (diff / 1000 / 60);
         long durMinutes = (durDate.getHours() * 60 + durDate.getMinutes());
 
-        Log.d(TAG, "Completed: " + (elapsed / durMinutes * 100) + "%");
-
         ProgressBar progress = (ProgressBar) v.findViewById(R.id.channel_item_progress);
         progress.setProgress(Double.valueOf((elapsed / durMinutes * 100)).intValue());
 
-
+        Bitmap placeholder = aq.getCachedImage(R.drawable.dvbviewer_controller);
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            String url;
+            String url = "";
             try {
                 url = "http://" +
                         DVBViewerControllerActivity.dvbIp + ":" +
                         DVBViewerControllerActivity.dvbPort +
                         "/?getChannelLogo=" + URLEncoder.encode(chans.get(position).name, "UTF-8");
-
-                ImageView logo = (ImageView) v.findViewById(R.id.channel_item_logo);
-                load.displayImage(url, logo);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-        } else {
-            ((ImageView) v.findViewById(R.id.channel_item_logo))
-                    .setImageDrawable(
-                            context.getResources()
-                                    .getDrawable(R.drawable.dvbviewer_controller)
-                    );
-        }
 
+            aq.id(R.id.channel_item_logo).image(url, true, true, 0, 0, placeholder, AQuery.FADE_IN_NETWORK, 1.0f);
+        } else {
+            aq.id(R.id.channel_item_logo).image(placeholder);
+        }
         return v;
     }
 

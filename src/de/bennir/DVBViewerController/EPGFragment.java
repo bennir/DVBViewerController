@@ -12,9 +12,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.slidingmenu.lib.SlidingMenu;
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.epg.EPGInfo;
@@ -34,7 +31,6 @@ public class EPGFragment extends SherlockListFragment {
     private EPGInfoAdapter lvAdapter;
     private ArrayList<EPGInfo> epgInfos;
     private TextView title;
-    private ImageLoader load;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,18 +54,6 @@ public class EPGFragment extends SherlockListFragment {
         slidingMenu.showSecondaryMenu();
 
         aq = ((DVBViewerControllerActivity) getSherlockActivity()).aq;
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.dvbviewer_controller)
-                .showImageForEmptyUri(R.drawable.dvbviewer_controller)
-                .showImageOnFail(R.drawable.dvbviewer_controller)
-                .cacheInMemory()
-                .cacheOnDisc()
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getSherlockActivity())
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-        load = ImageLoader.getInstance();
-        load.init(config);
 
         channelList = (ListView) slidingMenu.findViewById(R.id.epg_channel_list);
 
@@ -147,7 +131,6 @@ public class EPGFragment extends SherlockListFragment {
                             DVBViewerControllerActivity.dvbIp + ":" +
                             DVBViewerControllerActivity.dvbPort +
                             "/?getChannelLogo=" + URLEncoder.encode(currentChan, "UTF-8");
-                    load.displayImage(url, logo);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -254,7 +237,6 @@ public class EPGFragment extends SherlockListFragment {
                             "/?getChannelLogo=" + URLEncoder.encode(chans.get(position).name, "UTF-8");
 
                     ImageView logo = (ImageView) v.findViewById(R.id.epg_list_item_logo);
-                    load.displayImage(url, logo);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
