@@ -41,6 +41,18 @@
                 android:inputType="numberSigned"
                 android:hint="50"/>
 
+            <TextView
+                style="@style/WizardFormLabel"
+                android:text="Activation"/>
+
+            <CheckBox
+                android:id="@+id/timer_enabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:saveEnabled="false"
+                android:checked="true"/>
+
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import de.bennir.DVBViewerController.R;
 import de.bennir.DVBViewerController.wizard.model.TimerInfoPage;
@@ -20,7 +21,8 @@ public class TimerInfoFragment extends Fragment {
     private String mKey;
     private TimerInfoPage mPage;
     private TextView mNameView;
-    private TextView mEmailView;
+    private TextView mPriorityView;
+    private CheckBox mEnabledBox;
 
     public TimerInfoFragment() {
     }
@@ -49,11 +51,12 @@ public class TimerInfoFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_page_timer_info, container, false);
         ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-        mNameView = ((TextView) rootView.findViewById(R.id.timer_name));
+        mNameView = (TextView) rootView.findViewById(R.id.timer_name);
         mNameView.setText(mPage.getData().getString(TimerInfoPage.NAME_DATA_KEY));
 
-        mEmailView = ((TextView) rootView.findViewById(R.id.timer_priority));
-        mEmailView.setText(mPage.getData().getString(TimerInfoPage.PRIORITY_DATA_KEY));
+        mPriorityView = (TextView) rootView.findViewById(R.id.timer_priority);
+        mPriorityView.setText(mPage.getData().getString(TimerInfoPage.PRIORITY_DATA_KEY));
+
         return rootView;
     }
 
@@ -96,7 +99,7 @@ public class TimerInfoFragment extends Fragment {
             }
         });
 
-        mEmailView.addTextChangedListener(new TextWatcher() {
+        mPriorityView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1,
                                           int i2) {

@@ -78,7 +78,6 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
         ProgressBar progress = (ProgressBar) v.findViewById(R.id.channel_item_progress);
         progress.setProgress(Double.valueOf((elapsed / durMinutes * 100)).intValue());
 
-        Bitmap placeholder = aq.getCachedImage(R.drawable.dvbviewer_controller);
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             String url = "";
             try {
@@ -90,9 +89,7 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
                 e.printStackTrace();
             }
 
-            aq.id(R.id.channel_item_logo).image(url, true, true, 0, 0, placeholder, AQuery.FADE_IN_NETWORK, 1.0f);
-        } else {
-            aq.id(R.id.channel_item_logo).image(placeholder);
+            aq.id(R.id.channel_item_logo).image(url, true, true, 0, 0, null, AQuery.FADE_IN_NETWORK, 1.0f);
         }
         return v;
     }
