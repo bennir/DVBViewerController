@@ -41,6 +41,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static String recPort = "";
     public static ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
     public static ArrayList<String> groupNames = new ArrayList<String>();
+    public static ArrayList<String> chanNames = new ArrayList<String>();
     public static ArrayList<DVBTimer> DVBTimers = new ArrayList<DVBTimer>();
     public static int currentGroup = -1;
     public SlidingMenu menu;
@@ -110,6 +111,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                         DVBViewerControllerActivity.groupNames.add(group);
                         currentGroup = group;
                     }
+                    chanNames.add(dvbChannel.name);
                     dvbChans.add(dvbChannel);
                 }
                 DVBViewerControllerActivity.DVBChannels.add(dvbChans);
@@ -382,9 +384,11 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             DVBChannel test = new DVBChannel();
             test.name = "Das Erste HD";
             testChans.add(test);
+            chanNames.add(test.name);
             test = new DVBChannel();
             test.name = "NDR HD";
             testChans.add(test);
+            chanNames.add(test.name);
             DVBViewerControllerActivity.DVBChannels.add(testChans);
 
             DVBViewerControllerActivity.groupNames.add("ZDF");
@@ -393,9 +397,11 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             test = new DVBChannel();
             test.name = "ZDF HD";
             testChans.add(test);
+            chanNames.add(test.name);
             test = new DVBChannel();
             test.name = "ZDF Kultur";
             testChans.add(test);
+            chanNames.add(test.name);
             DVBViewerControllerActivity.DVBChannels.add(testChans);
 
             ChannelFragment.lvAdapter = new ChanGroupAdapter(

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import de.bennir.DVBViewerController.R;
 import de.bennir.DVBViewerController.wizard.model.TimerInfoPage;
@@ -22,7 +23,7 @@ public class TimerInfoFragment extends Fragment {
     private TimerInfoPage mPage;
     private TextView mNameView;
     private TextView mPriorityView;
-    private CheckBox mEnabledBox;
+    private CheckBox mEnabledView;
 
     public TimerInfoFragment() {
     }
@@ -56,6 +57,11 @@ public class TimerInfoFragment extends Fragment {
 
         mPriorityView = (TextView) rootView.findViewById(R.id.timer_priority);
         mPriorityView.setText(mPage.getData().getString(TimerInfoPage.PRIORITY_DATA_KEY));
+
+        mEnabledView = (CheckBox) rootView.findViewById(R.id.timer_enabled);
+        if (mPage.getData().getBoolean(TimerInfoPage.ENABLED_DATA_KEY)) {
+            mEnabledView.setChecked(true);
+        }
 
         return rootView;
     }
@@ -112,7 +118,15 @@ public class TimerInfoFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 mPage.getData().putString(TimerInfoPage.PRIORITY_DATA_KEY,
-                        (editable != null) ? editable.toString() : null);
+                        (editable != null) ? editable.toString() : "asd");
+                mPage.notifyDataChanged();
+            }
+        });
+
+        mEnabledView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                mPage.getData().putBoolean(TimerInfoPage.ENABLED_DATA_KEY, mEnabledView.isChecked());
                 mPage.notifyDataChanged();
             }
         });

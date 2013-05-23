@@ -5,6 +5,10 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>
     </style>
 
+    <style name="Theme.DVBHolo.Wizard" parent="@style/Theme.Sherlock.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/DVBBackgroundLight</item>
+    </style>
+
     <style name="TextAppearanceFinish" parent="android:TextAppearance.Holo.Medium">
         <item name="android:textColor">#fff</item>
     </style>

@@ -3,16 +3,14 @@ package de.bennir.DVBViewerController;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import de.bennir.DVBViewerController.wizard.model.AbstractWizardModel;
 import de.bennir.DVBViewerController.wizard.model.ModelCallbacks;
 import de.bennir.DVBViewerController.wizard.model.Page;
@@ -117,6 +115,17 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
         onPageTreeChanged();
         mPager.setAdapter(mPagerAdapter);
         updateBottomBar();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

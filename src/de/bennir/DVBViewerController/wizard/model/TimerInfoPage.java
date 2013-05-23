@@ -22,13 +22,13 @@ public class TimerInfoPage extends Page {
 
     @Override
     public void getReviewItems(ArrayList<ReviewItem> dest) {
-        dest.add(new ReviewItem("Timer Name", mData.getString(NAME_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Timer Priority", mData.getString(PRIORITY_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Timer Enabled", mData.getBoolean(ENABLED_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Name", mData.getString(NAME_DATA_KEY), getKey(), -2));
+        dest.add(new ReviewItem("Priority", mData.getString(PRIORITY_DATA_KEY), getKey(), -2));
+        dest.add(new ReviewItem("Enabled", mData.getBoolean(ENABLED_DATA_KEY), getKey(), -2));
     }
 
     @Override
     public boolean isCompleted() {
-        return !TextUtils.isEmpty(mData.getString(NAME_DATA_KEY));
+        return true;
     }
 }

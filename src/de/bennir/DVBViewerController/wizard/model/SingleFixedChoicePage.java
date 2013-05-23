@@ -61,6 +61,15 @@ public class SingleFixedChoicePage extends Page {
         return this;
     }
 
+    /**
+     * Benjamin Rüder
+     * Added Option to pass ArrayList to setChoices
+     */
+    public SingleFixedChoicePage setChoices(ArrayList<String> choices) {
+        mChoices.addAll(choices);
+        return this;
+    }
+
     public SingleFixedChoicePage setValue(String value) {
         mData.putString(SIMPLE_DATA_KEY, value);
         return this;

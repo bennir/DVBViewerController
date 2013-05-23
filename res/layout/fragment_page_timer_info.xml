@@ -18,7 +18,7 @@
 
             <TextView
                 style="@style/WizardFormLabel"
-                android:text="Timer Name"/>
+                android:text="Name"/>
 
             <EditText
                 android:id="@+id/timer_name"
@@ -39,19 +39,25 @@
                 android:layout_height="wrap_content"
                 android:saveEnabled="false"
                 android:inputType="numberSigned"
-                android:hint="50"/>
+                android:hint="50"
+                android:layout_marginBottom="16dp"/>
 
-            <TextView
-                style="@style/WizardFormLabel"
-                android:text="Activation"/>
-
-            <CheckBox
-                android:id="@+id/timer_enabled"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:saveEnabled="false"
-                android:checked="true"/>
+                android:orientation="horizontal">
 
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="Timer Enabled"/>
+
+                <CheckBox
+                        android:id="@+id/timer_enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"/>
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

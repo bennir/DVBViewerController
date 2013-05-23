@@ -28,6 +28,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".DVBViewerControllerActivity"/>
-        <activity android:name=".TimerWizardActivity"/>
+        <activity
+            android:name=".TimerWizardActivity"
+            android:theme="@style/Theme.DVBHolo.Wizard"/>
     </application>
 </manifest>
