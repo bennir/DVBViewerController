@@ -385,10 +385,12 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             test.name = "Das Erste HD";
             testChans.add(test);
             chanNames.add(test.name);
-            test = new DVBChannel();
-            test.name = "NDR HD";
-            testChans.add(test);
-            chanNames.add(test.name);
+            for(int i=0;i<10;i++) {
+                test = new DVBChannel();
+                test.name = "NDR HD";
+                testChans.add(test);
+                chanNames.add(test.name);
+            }
             DVBViewerControllerActivity.DVBChannels.add(testChans);
 
             DVBViewerControllerActivity.groupNames.add("ZDF");
@@ -398,10 +400,12 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             test.name = "ZDF HD";
             testChans.add(test);
             chanNames.add(test.name);
-            test = new DVBChannel();
-            test.name = "ZDF Kultur";
-            testChans.add(test);
-            chanNames.add(test.name);
+            for(int i=0;i<10;i++) {
+                test = new DVBChannel();
+                test.name = "ZDF Kultur";
+                testChans.add(test);
+                chanNames.add(test.name);
+            }
             DVBViewerControllerActivity.DVBChannels.add(testChans);
 
             ChannelFragment.lvAdapter = new ChanGroupAdapter(

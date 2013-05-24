@@ -72,7 +72,7 @@ public class TimerFragment extends SherlockListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.timer_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_listview, container, false);
     }
 
     @Override

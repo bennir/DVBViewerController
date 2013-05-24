@@ -37,7 +37,7 @@ public class ChannelFragment extends SherlockListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        return inflater.inflate(R.layout.channel_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_listview, container, false);
     }
 
     @Override
