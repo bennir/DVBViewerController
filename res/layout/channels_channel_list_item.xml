@@ -72,6 +72,16 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             />
+
+        <ImageButton
+            style="?android:borderlessButtonStyle"
+            android:id="@+id/channel_item_epg"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_epg_dark"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            />
     </LinearLayout>
 
 </RelativeLayout>
