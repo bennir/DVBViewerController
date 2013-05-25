@@ -8,9 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -27,6 +25,7 @@ public class ChannelGroupFragment extends SherlockListFragment {
     private static final String TAG = ChannelGroupFragment.class.toString();
     private static DVBChannelAdapter lvAdapter;
     private static ListView lv;
+    private View activeView;
     private AQuery aq;
 
     public static void addChannelsToListView() {
@@ -64,7 +63,51 @@ public class ChannelGroupFragment extends SherlockListFragment {
                 chans
         );
 
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showChannelMenu(view);
+                return true;
+            }
+        });
+
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                    clearChannelMenu();
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
         addChannelsToListView();
+    }
+
+    private void showChannelMenu(View view) {
+        clearChannelMenu();
+        activeView = view;
+        LinearLayout subMenu = (LinearLayout) view.findViewById(R.id.channel_item_submenu);
+        subMenu.setVisibility(View.VISIBLE);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW, R.id.channel_item_progress);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+        subMenu.setLayoutParams(params);
+    }
+
+    private void clearChannelMenu() {
+        if(activeView != null) {
+            LinearLayout subMenu = (LinearLayout) activeView.findViewById(R.id.channel_item_submenu);
+            subMenu.setVisibility(View.INVISIBLE);
+            subMenu.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+            activeView = null;
+        }
     }
 
     @Override
