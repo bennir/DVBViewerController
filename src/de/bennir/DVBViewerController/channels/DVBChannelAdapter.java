@@ -89,7 +89,7 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
                 e.printStackTrace();
             }
 
-            aq.id(R.id.channel_item_logo).image(url, true, true, 0, 0, null, AQuery.FADE_IN_NETWORK, 1.0f);
+            aq.id(R.id.channel_item_logo).image(url, true, true, 0, 0, null, AQuery.FADE_IN_NETWORK);
         }
         return v;
     }

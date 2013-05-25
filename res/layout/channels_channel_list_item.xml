@@ -12,6 +12,7 @@
         android:layout_height="75dp"
         android:contentDescription="@string/desc_channel_logo"
         android:layout_marginRight="30dp"
+        android:scaleType="fitCenter"
         />
 
     <TextView
