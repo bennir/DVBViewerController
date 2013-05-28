@@ -51,6 +51,21 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public Typeface robotoCondensed;
     public Fragment mContent;
 
+    public static DVBChannel getChannelByName(String name) {
+        DVBChannel ret = null;
+
+        for(ArrayList<DVBChannel> chans : DVBChannels) {
+            for(DVBChannel chan : chans) {
+                if(chan.name.toLowerCase().equals(name.toLowerCase())) {
+                    ret = chan;
+                    break;
+                }
+            }
+        }
+
+        return ret;
+    }
+
     @SuppressWarnings("UnusedDeclaration")
     public static void downloadTimerCallback(String url, XmlDom xml, AjaxStatus ajax) {
         Log.d(TAG, "downloadTimerCallback");

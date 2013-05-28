@@ -55,7 +55,7 @@
                         android:id="@+id/timer_enabled"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="false"/>
+                        android:checked="true"/>
 
             </LinearLayout>
 

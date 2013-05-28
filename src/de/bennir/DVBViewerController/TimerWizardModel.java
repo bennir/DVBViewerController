@@ -14,9 +14,15 @@ public class TimerWizardModel extends AbstractWizardModel {
                 new SingleFixedChoicePage(this, "Channel")
                         .setChoices(DVBViewerControllerActivity.chanNames)
                         .setRequired(true),
-
-                new TimerInfoPage(this, "Timer info")
-                        .setRequired(true)
+                new TimerInfoPage(this, "Timer Info")
+                        .setRequired(true),
+                new TimerDatePage(this, "Timer Date")
+                        .setRequired(true),
+                new SingleFixedChoicePage(this, "Timer Action")
+                        .setChoices("Record", "Tune")
+                        .setRequired(true),
+                new SingleFixedChoicePage(this, "After Timer")
+                        .setChoices("Shutdown", "Standby")
         );
     }
 }

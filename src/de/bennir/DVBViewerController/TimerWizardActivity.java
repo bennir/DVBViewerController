@@ -2,18 +2,19 @@ package de.bennir.DVBViewerController;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import de.bennir.DVBViewerController.wizard.model.AbstractWizardModel;
-import de.bennir.DVBViewerController.wizard.model.ModelCallbacks;
-import de.bennir.DVBViewerController.wizard.model.Page;
+import de.bennir.DVBViewerController.timers.DVBTimer;
+import de.bennir.DVBViewerController.wizard.model.*;
 import de.bennir.DVBViewerController.wizard.ui.PageFragmentCallbacks;
 import de.bennir.DVBViewerController.wizard.ui.ReviewFragment;
 import de.bennir.DVBViewerController.wizard.ui.StepPagerStrip;
@@ -89,7 +90,52 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
                         public Dialog onCreateDialog(Bundle savedInstanceState) {
                             return new AlertDialog.Builder(getActivity())
                                     .setMessage("Please confirm")
-                                    .setPositiveButton("Confirm", null)
+                                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            String channel = mWizardModel.findByKey("Channel").getData().getString(Page.SIMPLE_DATA_KEY);
+                                            String name = mWizardModel.getCurrentPageSequence().get(1).getData().getString(TimerInfoPage.NAME_DATA_KEY);
+                                            String priority = mWizardModel.getCurrentPageSequence().get(1).getData().getString(TimerInfoPage.PRIORITY_DATA_KEY);
+                                            Boolean enabled = mWizardModel.getCurrentPageSequence().get(1).getData().getBoolean(TimerInfoPage.ENABLED_DATA_KEY);
+                                            String date = mWizardModel.getCurrentPageSequence().get(2).getData().getString(TimerDatePage.DATE_DATA_KEY);
+                                            String starttime = mWizardModel.getCurrentPageSequence().get(2).getData().getString(TimerDatePage.TIMESTART_DATA_KEY);
+                                            String endtime = mWizardModel.getCurrentPageSequence().get(2).getData().getString(TimerDatePage.TIMEEND_DATA_KEY);
+                                            String action = mWizardModel.findByKey("Timer Action").getData().getString(Page.SIMPLE_DATA_KEY);
+                                            String after = mWizardModel.findByKey("After Timer").getData().getString(Page.SIMPLE_DATA_KEY);
+
+                                            if(name == null)
+                                                name = channel;
+
+                                            if(priority == null)
+                                                priority = "50";
+
+                                            Log.d("TimerWizard", channel);
+                                            Log.d("TimerWizard", name);
+                                            Log.d("TimerWizard", priority);
+                                            Log.d("TimerWizard", enabled.toString());
+                                            Log.d("TimerWizard", date);
+                                            Log.d("TimerWizard", starttime);
+                                            Log.d("TimerWizard", endtime);
+                                            Log.d("TimerWizard", "Action: " + action);
+                                            Log.d("TimerWizard", "After: " + after);
+
+                                            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+
+
+                                            } else {
+                                                DVBTimer timer = new DVBTimer();
+                                                timer.channelId = DVBViewerControllerActivity.getChannelByName(name).channelId;
+                                                timer.name = name;
+                                                timer.date = date;
+                                                timer.enabled = enabled;
+
+                                                DVBViewerControllerActivity.DVBTimers.add(timer);
+                                                TimerFragment.addTimersToListView();
+
+                                                getActivity().finish();
+                                            }
+                                        }
+                                    })
                                     .setNegativeButton(android.R.string.cancel, null)
                                     .create();
                         }

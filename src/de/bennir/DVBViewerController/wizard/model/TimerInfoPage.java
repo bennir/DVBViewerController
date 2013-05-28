@@ -13,6 +13,8 @@ public class TimerInfoPage extends Page {
 
     public TimerInfoPage(ModelCallbacks callbacks, String title) {
         super(callbacks, title);
+
+        mData.putBoolean(ENABLED_DATA_KEY, true);
     }
 
     @Override

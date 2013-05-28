@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/WizardPageContainer">
+
+    <TextView
+            style="@style/WizardPageTitle"
+            android:id="@android:id/title"
+            />
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/timer_date_layout"
+                    android:background="@drawable/selectable_item_background">
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="Set Date"/>
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:id="@+id/timer_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:saveEnabled="false"
+                        android:layout_marginBottom="16dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/timer_timestart_layout"
+                    android:background="@drawable/selectable_item_background">
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="Set Start Time"/>
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:id="@+id/timerstart_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:saveEnabled="false"
+                        android:layout_marginBottom="16dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:clickable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/timer_timeend_layout"
+                    android:background="@drawable/selectable_item_background">
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:text="Set End Time"/>
+
+                <TextView
+                        style="@style/WizardFormLabel"
+                        android:id="@+id/timerend_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:saveEnabled="false"
+                        android:layout_marginBottom="16dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
