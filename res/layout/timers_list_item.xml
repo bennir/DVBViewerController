@@ -25,6 +25,7 @@
         android:textSize="20sp"
         android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
         android:text="@string/timer_name"
+        android:maxLength="15"
         />
 
     <ImageButton
@@ -62,6 +63,7 @@
         android:paddingLeft="10dp"
         android:textColor="@color/DVBActionBar"
         android:text="@string/channels"
+        android:maxLength="20"
         />
 
     <TextView

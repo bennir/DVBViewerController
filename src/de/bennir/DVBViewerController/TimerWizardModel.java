@@ -19,10 +19,9 @@ public class TimerWizardModel extends AbstractWizardModel {
                 new TimerDatePage(this, "Timer Date")
                         .setRequired(true),
                 new SingleFixedChoicePage(this, "Timer Action")
-                        .setChoices("Record", "Tune")
-                        .setRequired(true),
+                        .setChoices("Record", "Tune"),
                 new SingleFixedChoicePage(this, "After Timer")
-                        .setChoices("Shutdown", "Standby")
+                        .setChoices("Power Off", "Standby", "Hibernate")
         );
     }
 }

@@ -56,7 +56,7 @@ public class TimerFragment extends SherlockListFragment {
                 @Override
                 public void callback(String url, String html, AjaxStatus status) {
                     // Status Ok
-                    if(status.getCode() == 200) {
+                    if (status.getCode() == 200) {
                         lvAdapter.delete(timer);
                     }
                 }
@@ -127,7 +127,7 @@ public class TimerFragment extends SherlockListFragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent i = new Intent(getSherlockActivity(), TimerWizardActivity.class);
-                startActivity(i);
+                startActivityForResult(i, 1);
 
                 getSherlockActivity().overridePendingTransition(R.anim.slide_right, R.anim.nothing);
 
@@ -197,16 +197,15 @@ public class TimerFragment extends SherlockListFragment {
 
             TextView time = (TextView) v.findViewById(R.id.timer_list_item_time);
             time.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoLight);
-            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-                time.setText(timer.start + " - " + timer.end);
-            } else {
-                time.setText(R.string.timer_time);
-            }
+            time.setText(timer.start.split(":")[0] +
+                    ":" + timer.start.split(":")[1] +
+                    " - " + timer.end.split(":")[0] +
+                    ":" + timer.end.split(":")[1]);
 
-            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-                String channelId = timer.channelId;
-                ((TextView) v.findViewById(R.id.timer_list_item_channel)).setText(channelId.substring(channelId.indexOf('|') + 1));
-            }
+            TextView channel = (TextView) v.findViewById(R.id.timer_list_item_channel);
+            channel.setTypeface(((DVBViewerControllerActivity) getActivity()).robotoLight);
+            String channelId = timer.channelId;
+            channel.setText(channelId.substring(channelId.indexOf('|') + 1));
 
             checkIfTimerDelete(v, timer);
 

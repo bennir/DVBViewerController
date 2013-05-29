@@ -4,7 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.*;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
@@ -13,13 +16,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
 import de.bennir.DVBViewerController.timers.DVBTimer;
+import de.bennir.DVBViewerController.util.DateUtils;
 import de.bennir.DVBViewerController.wizard.model.*;
 import de.bennir.DVBViewerController.wizard.ui.PageFragmentCallbacks;
 import de.bennir.DVBViewerController.wizard.ui.ReviewFragment;
 import de.bennir.DVBViewerController.wizard.ui.StepPagerStrip;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class TimerWizardActivity extends SherlockFragmentActivity implements
         PageFragmentCallbacks,
@@ -93,6 +107,7 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
                                     .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
+                                            Log.d("TimerWizard", "Review Confirm");
                                             String channel = mWizardModel.findByKey("Channel").getData().getString(Page.SIMPLE_DATA_KEY);
                                             String name = mWizardModel.getCurrentPageSequence().get(1).getData().getString(TimerInfoPage.NAME_DATA_KEY);
                                             String priority = mWizardModel.getCurrentPageSequence().get(1).getData().getString(TimerInfoPage.PRIORITY_DATA_KEY);
@@ -103,36 +118,80 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
                                             String action = mWizardModel.findByKey("Timer Action").getData().getString(Page.SIMPLE_DATA_KEY);
                                             String after = mWizardModel.findByKey("After Timer").getData().getString(Page.SIMPLE_DATA_KEY);
 
-                                            if(name == null)
+                                            if (name == null)
                                                 name = channel;
 
-                                            if(priority == null)
+                                            if (priority == null)
                                                 priority = "50";
 
-                                            Log.d("TimerWizard", channel);
-                                            Log.d("TimerWizard", name);
-                                            Log.d("TimerWizard", priority);
-                                            Log.d("TimerWizard", enabled.toString());
-                                            Log.d("TimerWizard", date);
-                                            Log.d("TimerWizard", starttime);
-                                            Log.d("TimerWizard", endtime);
-                                            Log.d("TimerWizard", "Action: " + action);
-                                            Log.d("TimerWizard", "After: " + after);
-
                                             if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+                                                try {
+                                                    DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                                                    Date d1 = df.parse(date + " " + starttime);
+                                                    Date d2 = df.parse(date + " " + endtime);
 
+                                                    String start = DateUtils.getFloatDate(d1);
+                                                    String stop = DateUtils.getFloatDate(d2);
 
+                                                    Double dor = Double.valueOf(start.split("\\.")[0]);
+
+                                                    long startVal = Math.round((Double.valueOf(start) - dor) * 60 * 24);
+                                                    long stopVal = Math.round((Double.valueOf(stop) - dor) * 60 * 24);
+
+                                                    String url = "http://";
+                                                    url += DVBViewerControllerActivity.recIp + ":";
+                                                    url += DVBViewerControllerActivity.recPort;
+                                                    url += "/api/timeradd.html?";
+                                                    url += (enabled ? "enable=1" : "enable=0");
+                                                    url += "&ch=" + URLEncoder.encode(DVBViewerControllerActivity.getChannelByName(channel).channelId, "UTF-8");
+                                                    url += "&title=" + URLEncoder.encode(name, "UTF-8");
+                                                    url += "&dor=" + start.split("\\.")[0];
+                                                    url += "&start=" + startVal;
+                                                    url += "&stop=" + stopVal;
+                                                    url += "&prio=" + priority;
+                                                    if (action != null)
+                                                        url += (action.equals("Record")) ? "&action=0" : "&action=1";
+                                                    if (after != null) {
+                                                        if (after.equals("Power Off"))
+                                                            url += "&endact=1";
+                                                        else if (after.equals("Standby"))
+                                                            url += "&endact=2";
+                                                        else
+                                                            url += "endact=3";
+                                                    }
+
+                                                    Log.d("TimerWizard", url);
+
+                                                    AQuery aq = new AQuery(getActivity());
+                                                    aq.ajax(url, String.class, new AjaxCallback<String>() {
+
+                                                        @Override
+                                                        public void callback(String url, String html, AjaxStatus status) {
+                                                            // Status Ok
+                                                            if (status.getCode() == 200) {
+                                                                setResult(1);
+                                                                finish();
+                                                            }
+                                                        }
+                                                    });
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
                                             } else {
                                                 DVBTimer timer = new DVBTimer();
-                                                timer.channelId = DVBViewerControllerActivity.getChannelByName(name).channelId;
+                                                timer.id += new Random().nextInt(100);
+                                                timer.channelId = "|" + channel;
                                                 timer.name = name;
                                                 timer.date = date;
                                                 timer.enabled = enabled;
+                                                timer.start = starttime;
+                                                timer.end = endtime;
 
                                                 DVBViewerControllerActivity.DVBTimers.add(timer);
                                                 TimerFragment.addTimersToListView();
 
-                                                getActivity().finish();
+                                                setResult(0);
+                                                finish();
                                             }
                                         }
                                     })

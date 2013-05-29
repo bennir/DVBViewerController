@@ -223,7 +223,7 @@ public class TimerDateFragment extends Fragment {
 
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            mDateView.setText(String.format("%02d", day) + "." + String.format("%02d", month) + "." + year);
+            mDateView.setText(String.format("%02d", day) + "." + String.format("%02d", month+1) + "." + year);
         }
     }
 }

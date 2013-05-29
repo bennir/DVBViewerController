@@ -153,7 +153,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         // there are still some in the Queue.
         Crouton.clearCroutonsForActivity(this);
         DVBChannels.clear();
+        DVBTimers.clear();
         groupNames.clear();
+        chanNames.clear();
         super.onDestroy();
     }
 
@@ -230,6 +232,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 DVBChannels.clear();
                 groupNames.clear();
                 DVBTimers.clear();
+                chanNames.clear();
 
                 DVBViewerControllerActivity.this.finish();
                 overridePendingTransition(R.anim.fadein, R.anim.slide_to_right);
@@ -363,12 +366,15 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
         if (DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             DVBTimer timer;
-            for (int i = 1; i <= 10; i++) {
+            for (int i = 1; i <= 5; i++) {
                 timer = new DVBTimer();
-                timer.id = Integer.toString(i);
+                timer.id = "Demo" + i;
                 timer.name = "Timer " + i;
                 timer.date = "11.11.2011";
                 timer.enabled = i % 2 == 0;
+                timer.start = "20:15";
+                timer.end = "22:00";
+                timer.channelId = "|" + timer.name;
                 DVBViewerControllerActivity.DVBTimers.add(timer);
             }
 
@@ -443,6 +449,12 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
             aq.ajax(url, JSONObject.class, this, "downloadChannelCallback");
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == 1)
+            updateTimers();
     }
 
     @Override
