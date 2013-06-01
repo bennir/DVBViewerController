@@ -22,11 +22,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/timer_date_layout"
-                    android:background="@drawable/selectable_item_background">
+                    android:background="@drawable/list_selector"
+                    android:layout_marginBottom="10dp">
 
                 <TextView
                         style="@style/WizardFormLabel"
-                        android:text="Set Date"/>
+                        android:text="@string/set_date"/>
 
                 <TextView
                         style="@style/WizardFormLabel"
@@ -44,11 +45,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/timer_timestart_layout"
-                    android:background="@drawable/selectable_item_background">
+                    android:background="@drawable/list_selector"
+                    android:layout_marginBottom="10dp">
 
                 <TextView
                         style="@style/WizardFormLabel"
-                        android:text="Set Start Time"/>
+                        android:text="@string/set_start_time"/>
 
                 <TextView
                         style="@style/WizardFormLabel"
@@ -66,11 +68,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:id="@+id/timer_timeend_layout"
-                    android:background="@drawable/selectable_item_background">
+                    android:background="@drawable/list_selector"
+                    android:layout_marginBottom="10dp">
 
                 <TextView
                         style="@style/WizardFormLabel"
-                        android:text="Set End Time"/>
+                        android:text="@string/set_end_time"/>
 
                 <TextView
                         style="@style/WizardFormLabel"

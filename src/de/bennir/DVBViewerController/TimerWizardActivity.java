@@ -25,8 +25,6 @@ import de.bennir.DVBViewerController.wizard.model.*;
 import de.bennir.DVBViewerController.wizard.ui.PageFragmentCallbacks;
 import de.bennir.DVBViewerController.wizard.ui.ReviewFragment;
 import de.bennir.DVBViewerController.wizard.ui.StepPagerStrip;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -42,7 +40,7 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
     private boolean mEditingAfterReview;
-    private AbstractWizardModel mWizardModel = new TimerWizardModel(this);
+    private AbstractWizardModel mWizardModel;
     private boolean mConsumePageSelectedEvent;
     private Button mNextButton;
     private Button mPrevButton;
@@ -52,6 +50,8 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timerwizard_main);
+
+        mWizardModel = new TimerWizardModel(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.timer_add);
@@ -103,20 +103,20 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
                         @Override
                         public Dialog onCreateDialog(Bundle savedInstanceState) {
                             return new AlertDialog.Builder(getActivity())
-                                    .setMessage("Please confirm")
-                                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                    .setMessage(getString(R.string.confirm_header))
+                                    .setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             Log.d("TimerWizard", "Review Confirm");
-                                            String channel = mWizardModel.findByKey("Channel").getData().getString(Page.SIMPLE_DATA_KEY);
+                                            String channel = mWizardModel.findByKey("channel").getData().getString(Page.SIMPLE_DATA_KEY);
                                             String name = mWizardModel.getCurrentPageSequence().get(1).getData().getString(TimerInfoPage.NAME_DATA_KEY);
                                             String priority = mWizardModel.getCurrentPageSequence().get(1).getData().getString(TimerInfoPage.PRIORITY_DATA_KEY);
                                             Boolean enabled = mWizardModel.getCurrentPageSequence().get(1).getData().getBoolean(TimerInfoPage.ENABLED_DATA_KEY);
                                             String date = mWizardModel.getCurrentPageSequence().get(2).getData().getString(TimerDatePage.DATE_DATA_KEY);
                                             String starttime = mWizardModel.getCurrentPageSequence().get(2).getData().getString(TimerDatePage.TIMESTART_DATA_KEY);
                                             String endtime = mWizardModel.getCurrentPageSequence().get(2).getData().getString(TimerDatePage.TIMEEND_DATA_KEY);
-                                            String action = mWizardModel.findByKey("Timer Action").getData().getString(Page.SIMPLE_DATA_KEY);
-                                            String after = mWizardModel.findByKey("After Timer").getData().getString(Page.SIMPLE_DATA_KEY);
+                                            String action = mWizardModel.findByKey("timer_action").getData().getString(Page.SIMPLE_DATA_KEY);
+                                            String after = mWizardModel.findByKey("timer_after").getData().getString(Page.SIMPLE_DATA_KEY);
 
                                             if (name == null)
                                                 name = channel;
@@ -150,7 +150,7 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
                                                     url += "&stop=" + stopVal;
                                                     url += "&prio=" + priority;
                                                     if (action != null)
-                                                        url += (action.equals("Record")) ? "&action=0" : "&action=1";
+                                                        url += (action.equals(getString(R.string.record))) ? "&action=0" : "&action=1";
                                                     if (after != null) {
                                                         if (after.equals("Power Off"))
                                                             url += "&endact=1";
@@ -199,7 +199,7 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
                                     .create();
                         }
                     };
-                    dg.show(getSupportFragmentManager(), "place_order_dialog");
+                    dg.show(getSupportFragmentManager(), "add_timer_dialog");
                 } else {
                     if (mEditingAfterReview) {
                         mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
@@ -245,13 +245,13 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
     private void updateBottomBar() {
         int position = mPager.getCurrentItem();
         if (position == mCurrentPageSequence.size()) {
-            mNextButton.setText("Finish");
+            mNextButton.setText(getString(R.string.finish));
             mNextButton.setBackgroundResource(R.drawable.finish_background);
             mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
         } else {
             mNextButton.setText(mEditingAfterReview
-                    ? "Review"
-                    : "Next");
+                    ? getString(R.string.review_do)
+                    : getString(R.string.next));
             mNextButton.setBackgroundResource(R.drawable.selectable_item_background);
             TypedValue v = new TypedValue();
             getTheme().resolveAttribute(android.R.attr.textAppearanceMedium, v, true);

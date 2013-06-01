@@ -74,7 +74,18 @@ public class MultipleChoiceFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_page, container, false);
-        ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
+        String title = null;
+
+        try {
+            title = getString(getResources().getIdentifier(mKey, "string", "de.bennir.DVBViewerController"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (title == null)
+            ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
+        else
+            ((TextView) rootView.findViewById(android.R.id.title)).setText(title);
 
         final ListView listView = (ListView) rootView.findViewById(android.R.id.list);
         setListAdapter(new ArrayAdapter<String>(getActivity(),

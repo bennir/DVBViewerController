@@ -58,7 +58,7 @@ public class ReviewFragment extends ListFragment implements ModelCallbacks {
         View rootView = inflater.inflate(R.layout.fragment_page, container, false);
 
         TextView titleView = (TextView) rootView.findViewById(android.R.id.title);
-        titleView.setText("Review");
+        titleView.setText(R.string.review);
         titleView.setTextColor(getResources().getColor(R.color.review_green));
 
         ListView listView = (ListView) rootView.findViewById(android.R.id.list);
@@ -164,9 +164,21 @@ public class ReviewFragment extends ListFragment implements ModelCallbacks {
             ReviewItem reviewItem = mCurrentReviewItems.get(position);
             String value = reviewItem.getDisplayValue();
             if (TextUtils.isEmpty(value)) {
-                value = "(None)";
+                value = getResources().getString(R.string.review_empty_text);
             }
-            ((TextView) rootView.findViewById(android.R.id.text1)).setText(reviewItem.getTitle());
+
+            String title = null;
+            try {
+                title = getString(getResources().getIdentifier(reviewItem.getTitle().toLowerCase(), "string", "de.bennir.DVBViewerController"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (title == null)
+                ((TextView) rootView.findViewById(android.R.id.text1)).setText(reviewItem.getTitle());
+            else
+                ((TextView) rootView.findViewById(android.R.id.text1)).setText(title);
+
             ((TextView) rootView.findViewById(android.R.id.text2)).setText(value);
             return rootView;
         }

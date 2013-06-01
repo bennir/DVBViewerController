@@ -23,8 +23,8 @@ public class TimerDatePage extends Page {
     @Override
     public void getReviewItems(ArrayList<ReviewItem> dest) {
         dest.add(new ReviewItem("Date", mData.getString(DATE_DATA_KEY), getKey(), -2));
-        dest.add(new ReviewItem("Start Time", mData.getString(TIMESTART_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("End Time", mData.getString(TIMEEND_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("start_time", mData.getString(TIMESTART_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("end_time", mData.getString(TIMEEND_DATA_KEY), getKey(), -1));
     }
 
     @Override

@@ -50,7 +50,7 @@ public class TimerInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_page_timer_info, container, false);
-        ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
+        ((TextView) rootView.findViewById(android.R.id.title)).setText(getResources().getString(R.string.timer_info));
 
         mNameView = (TextView) rootView.findViewById(R.id.timer_name);
         mNameView.setText(mPage.getData().getString(TimerInfoPage.NAME_DATA_KEY));
@@ -118,7 +118,7 @@ public class TimerInfoFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 mPage.getData().putString(TimerInfoPage.PRIORITY_DATA_KEY,
-                        (editable != null) ? editable.toString() : "asd");
+                        (editable != null) ? editable.toString() : null);
                 mPage.notifyDataChanged();
             }
         });

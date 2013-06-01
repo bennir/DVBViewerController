@@ -18,7 +18,7 @@
 
             <TextView
                 style="@style/WizardFormLabel"
-                android:text="Name"/>
+                android:text="@string/name"/>
 
             <EditText
                 android:id="@+id/timer_name"
@@ -26,12 +26,12 @@
                 android:layout_height="wrap_content"
                 android:saveEnabled="false"
                 android:inputType="textCapWords"
-                android:hint="Nachrichten"
+                android:hint="@string/example_text"
                 android:layout_marginBottom="16dp"/>
 
             <TextView
                 style="@style/WizardFormLabel"
-                android:text="Priority"/>
+                android:text="@string/priority"/>
 
             <EditText
                 android:id="@+id/timer_priority"
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:saveEnabled="false"
                 android:inputType="numberSigned"
-                android:hint="50"
+                android:hint="@string/priority_example"
                 android:layout_marginBottom="16dp"/>
 
             <LinearLayout
@@ -49,7 +49,7 @@
 
                 <TextView
                         style="@style/WizardFormLabel"
-                        android:text="Timer Enabled"/>
+                        android:text="@string/timer_enabled"/>
 
                 <CheckBox
                         android:id="@+id/timer_enabled"

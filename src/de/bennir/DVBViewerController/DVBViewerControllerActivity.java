@@ -54,9 +54,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static DVBChannel getChannelByName(String name) {
         DVBChannel ret = null;
 
-        for(ArrayList<DVBChannel> chans : DVBChannels) {
-            for(DVBChannel chan : chans) {
-                if(chan.name.toLowerCase().equals(name.toLowerCase())) {
+        for (ArrayList<DVBChannel> chans : DVBChannels) {
+            for (DVBChannel chan : chans) {
+                if (chan.name.toLowerCase().equals(name.toLowerCase())) {
                     ret = chan;
                     break;
                 }
@@ -334,6 +334,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             Log.d(TAG, "DVBChannels empty");
             updateChannelList();
         }
+
+        menu.showMenu();
     }
 
     private void initFonts() {
@@ -406,7 +408,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             test.name = "Das Erste HD";
             testChans.add(test);
             chanNames.add(test.name);
-            for(int i=0;i<10;i++) {
+            for (int i = 0; i < 10; i++) {
                 test = new DVBChannel();
                 test.name = "NDR HD";
                 testChans.add(test);
@@ -421,7 +423,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             test.name = "ZDF HD";
             testChans.add(test);
             chanNames.add(test.name);
-            for(int i=0;i<10;i++) {
+            for (int i = 0; i < 10; i++) {
                 test = new DVBChannel();
                 test.name = "ZDF Kultur";
                 testChans.add(test);
@@ -453,7 +455,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == 1)
+        if (resultCode == 1)
             updateTimers();
     }
 

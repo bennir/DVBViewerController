@@ -16,6 +16,9 @@
 
 package de.bennir.DVBViewerController.wizard.model;
 
+import android.content.Context;
+import de.bennir.DVBViewerController.R;
+
 /**
  * Represents a single line item on the final review page.
  *
@@ -39,8 +42,8 @@ public class ReviewItem {
         mWeight = weight;
     }
 
-    public ReviewItem(String title, boolean value, String pageKey, int weight) {
-        this(title, (value ? "Enabled" : "Disabled"), pageKey, weight);
+    public ReviewItem(String title, boolean value, String pageKey, int weight, Context context) {
+        this(title, (value ? context.getString(R.string.enabled) : context.getString(R.string.disabled)), pageKey, weight);
     }
 
     public String getDisplayValue() {

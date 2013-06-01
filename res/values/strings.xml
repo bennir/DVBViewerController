@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">DVBViewer Controller</string>
     <string name="remote">Remote</string>
+    <string name="channel">Channel</string>
     <string name="channels">Channels</string>
     <string name="epg">EPG</string>
     <string name="settings">Settings</string>
@@ -26,4 +27,34 @@
     <string name="timer_date">11.11.2011</string>
     <string name="timer_time">20:15</string>
     <string name="timer_add">Add Timer</string>
+    <string name="timer_info">Information</string>
+    <string name="timer_date">Date and Time</string>
+    <string name="timer_action">Action</string>
+    <string name="timer_after">Afterwards</string>
+    <string name="review">Review</string>
+    <string name="name">Name</string>
+    <string name="example_text">Example</string>
+    <string name="priority">Priority</string>
+    <string name="priority_example">50</string>
+    <string name="timer_enabled">Timer Enabled</string>
+    <string name="set_date">Set Date</string>
+    <string name="set_start_time">Set Start Time</string>
+    <string name="set_end_time">Set End Time</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="review_empty_text">(None)</string>
+    <string name="confirm_header">Please confirm</string>
+    <string name="confirm">Confirm</string>
+    <string name="review_do">Review</string>
+    <string name="finish">Finish</string>
+    <string name="record">Record</string>
+    <string name="set_channel">Set channel</string>
+    <string name="power_off">Power Off</string>
+    <string name="standby">Standby</string>
+    <string name="hibernate">Hibernate</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="date">Date</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
 </resources>

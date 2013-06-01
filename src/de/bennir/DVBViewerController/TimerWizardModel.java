@@ -4,6 +4,7 @@ import android.content.Context;
 import de.bennir.DVBViewerController.wizard.model.*;
 
 public class TimerWizardModel extends AbstractWizardModel {
+
     public TimerWizardModel(Context context) {
         super(context);
     }
@@ -11,17 +12,17 @@ public class TimerWizardModel extends AbstractWizardModel {
     @Override
     protected PageList onNewRootPageList() {
         return new PageList(
-                new SingleFixedChoicePage(this, "Channel")
+                new SingleFixedChoicePage(this, "channel")
                         .setChoices(DVBViewerControllerActivity.chanNames)
                         .setRequired(true),
-                new TimerInfoPage(this, "Timer Info")
+                new TimerInfoPage(this, "timer_info", mContext)
                         .setRequired(true),
-                new TimerDatePage(this, "Timer Date")
+                new TimerDatePage(this, "timer_date")
                         .setRequired(true),
-                new SingleFixedChoicePage(this, "Timer Action")
-                        .setChoices("Record", "Tune"),
-                new SingleFixedChoicePage(this, "After Timer")
-                        .setChoices("Power Off", "Standby", "Hibernate")
+                new SingleFixedChoicePage(this, "timer_action")
+                        .setChoices(mContext.getString(R.string.record), mContext.getString(R.string.set_channel)),
+                new SingleFixedChoicePage(this, "timer_after")
+                        .setChoices(mContext.getString(R.string.power_off), mContext.getString(R.string.standby), mContext.getString(R.string.hibernate))
         );
     }
 }

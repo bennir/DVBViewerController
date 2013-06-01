@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="active_device">Aktives Gerät</string>
     <string name="app_name">DVBViewer Controller</string>
+    <string name="channel">Kanal</string>
     <string name="channels">Kanäle</string>
     <string name="delete">Löschen</string>
     <string name="demo_device">Demo</string>
@@ -26,4 +27,34 @@
     <string name="timer_date">11.11.2011</string>
     <string name="timer_time">20:15</string>
     <string name="timer_add">Timer hinzufügen</string>
+    <string name="timer_info">Information</string>
+    <string name="timer_date">Datum und Uhrzeit</string>
+    <string name="timer_action">Aktion</string>
+    <string name="timer_after">Danach</string>
+    <string name="review">Überprüfung</string>
+    <string name="name">Name</string>
+    <string name="example_text">Beispiel</string>
+    <string name="priority">Priorität</string>
+    <string name="priority_example">50</string>
+    <string name="timer_enabled">Timer Aktiviert</string>
+    <string name="set_date">Datum wählen</string>
+    <string name="set_start_time">Startzeit wählen</string>
+    <string name="set_end_time">Stopzeit wählen</string>
+    <string name="previous">Zurück</string>
+    <string name="next">Weiter</string>
+    <string name="review_empty_text">(Nichts)</string>
+    <string name="confirm_header">Bitte bestätigen</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="review_do">Überprüfen</string>
+    <string name="finish">Abschließen</string>
+    <string name="record">Aufnahme</string>
+    <string name="set_channel">Kanal einstellen</string>
+    <string name="power_off">Herunterfahren</string>
+    <string name="standby">Energie sparen</string>
+    <string name="hibernate">Ruhemodus</string>
+    <string name="enabled">Aktiviert</string>
+    <string name="disabled">Deaktiviert</string>
+    <string name="date">Datum</string>
+    <string name="start_time">Startzeit</string>
+    <string name="end_time">Stopzeit</string>
 </resources>

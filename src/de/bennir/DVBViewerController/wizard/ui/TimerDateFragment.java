@@ -59,7 +59,7 @@ public class TimerDateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_page_timer_date, container, false);
-        ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
+        ((TextView) rootView.findViewById(android.R.id.title)).setText(getResources().getString(R.string.timer_date));
 
         mDateView = (TextView) rootView.findViewById(R.id.timer_date);
         mDateView.setText(mPage.getData().getString(TimerDatePage.DATE_DATA_KEY));
@@ -187,8 +187,7 @@ public class TimerDateFragment extends Fragment {
             implements TimePickerDialog.OnTimeSetListener {
         TextView mText;
 
-        public TimePickerFragment(TextView v)
-        {
+        public TimePickerFragment(TextView v) {
             mText = v;
         }
 
@@ -223,7 +222,7 @@ public class TimerDateFragment extends Fragment {
 
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            mDateView.setText(String.format("%02d", day) + "." + String.format("%02d", month+1) + "." + year);
+            mDateView.setText(String.format("%02d", day) + "." + String.format("%02d", month + 1) + "." + year);
         }
     }
 }
