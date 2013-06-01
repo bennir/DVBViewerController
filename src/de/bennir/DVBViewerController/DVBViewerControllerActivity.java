@@ -21,6 +21,7 @@ import com.androidquery.util.XmlDom;
 import com.slidingmenu.lib.SlidingMenu;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 import de.bennir.DVBViewerController.channels.DVBChannel;
+import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
 import de.bennir.DVBViewerController.timers.DVBTimer;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -131,10 +132,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 }
                 DVBViewerControllerActivity.DVBChannels.add(dvbChans);
 
-                ChannelFragment.lvAdapter = new ChanGroupAdapter(
-                        this,
-                        DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
-                );
+                ChannelFragment.lvAdapter = new ChanGroupAdapter(this, DVBViewerControllerActivity.groupNames);
+                ArrayList<DVBChannel> chans = DVBViewerControllerActivity.DVBChannels.get(DVBViewerControllerActivity.currentGroup);
+                ChannelGroupFragment.lvAdapter = new DVBChannelAdapter(this, chans);
 
                 ChannelFragment.addChannelsToListView();
                 ChannelGroupFragment.addChannelsToListView();
@@ -389,7 +389,9 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                     .build();
             Crouton.makeText(this, getString(R.string.loadingTimers), st).show();
 
-            String url = "http://192.168.2.1:8089/api/timerlist.html?utf8=";
+            String url = "http://";
+            url += recIp + ":" + recPort;
+            url += "/api/timerlist.html?utf8=";
             aq.ajax(url, XmlDom.class, this, "downloadTimerCallback");
         }
 
@@ -431,10 +433,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             }
             DVBViewerControllerActivity.DVBChannels.add(testChans);
 
-            ChannelFragment.lvAdapter = new ChanGroupAdapter(
-                    this,
-                    DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
-            );
+
+            ChannelFragment.lvAdapter = new ChanGroupAdapter(this, DVBViewerControllerActivity.groupNames);
         } else {
             String url = "http://" +
                     DVBViewerControllerActivity.dvbIp + ":" +

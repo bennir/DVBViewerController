@@ -23,14 +23,14 @@ import java.util.ArrayList;
 
 public class ChannelGroupFragment extends SherlockListFragment {
     private static final String TAG = ChannelGroupFragment.class.toString();
-    private static DVBChannelAdapter lvAdapter;
+    public static DVBChannelAdapter lvAdapter;
     private static ListView lv;
     private View activeView;
     private AQuery aq;
 
     public static void addChannelsToListView() {
-        lvAdapter.notifyDataSetChanged();
         lv.setAdapter(lvAdapter);
+        lvAdapter.notifyDataSetChanged();
         lv.invalidate();
     }
 
@@ -74,7 +74,7 @@ public class ChannelGroupFragment extends SherlockListFragment {
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
                     clearChannelMenu();
                 }
             }
@@ -102,7 +102,7 @@ public class ChannelGroupFragment extends SherlockListFragment {
     }
 
     private void clearChannelMenu() {
-        if(activeView != null) {
+        if (activeView != null) {
             LinearLayout subMenu = (LinearLayout) activeView.findViewById(R.id.channel_item_submenu);
             subMenu.setVisibility(View.INVISIBLE);
             subMenu.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0));
@@ -119,8 +119,9 @@ public class ChannelGroupFragment extends SherlockListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                lvAdapter.clear();
+                lvAdapter.notifyDataSetChanged();
                 ((DVBViewerControllerActivity) getSherlockActivity()).updateChannelList();
-                addChannelsToListView();
 
                 return true;
             }

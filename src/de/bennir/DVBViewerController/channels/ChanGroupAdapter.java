@@ -9,12 +9,14 @@ import android.widget.TextView;
 import de.bennir.DVBViewerController.DVBViewerControllerActivity;
 import de.bennir.DVBViewerController.R;
 
+import java.util.ArrayList;
+
 public class ChanGroupAdapter extends ArrayAdapter<String> {
     private final Context context;
-    private final String[] values;
+    private final ArrayList<String> values;
 
 
-    public ChanGroupAdapter(Context context, String[] values) {
+    public ChanGroupAdapter(Context context, ArrayList<String> values) {
         super(context, R.layout.channels_group_list_item, values);
         this.context = context;
         this.values = values;
@@ -36,7 +38,7 @@ public class ChanGroupAdapter extends ArrayAdapter<String> {
         TextView chanGroup = (TextView) v.findViewById(R.id.channels_group_list_item);
         chanGroup.setTypeface(((DVBViewerControllerActivity) context).robotoLight);
 
-        chanGroup.setText(values[position]);
+        chanGroup.setText(values.get(position));
 
         return v;
     }

@@ -16,16 +16,13 @@ import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 
 public class ChannelFragment extends SherlockListFragment {
     private static final String TAG = ChannelFragment.class.toString();
-    private static ListView lv;
     static ChanGroupAdapter lvAdapter;
+    private static ListView lv;
     private static Context context;
 
     public static void addChannelsToListView() {
         if (lvAdapter == null) {
-            ChannelFragment.lvAdapter = new ChanGroupAdapter(
-                    context,
-                    DVBViewerControllerActivity.groupNames.toArray(new String[DVBViewerControllerActivity.groupNames.size()])
-            );
+            ChannelFragment.lvAdapter = new ChanGroupAdapter(context, DVBViewerControllerActivity.groupNames);
         } else {
             lvAdapter.notifyDataSetChanged();
         }
@@ -63,6 +60,7 @@ public class ChannelFragment extends SherlockListFragment {
             }
         });
 
+        ChannelFragment.lvAdapter = new ChanGroupAdapter(context, DVBViewerControllerActivity.groupNames);
         addChannelsToListView();
     }
 
@@ -75,8 +73,9 @@ public class ChannelFragment extends SherlockListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                lvAdapter.clear();
+                lvAdapter.notifyDataSetChanged();
                 ((DVBViewerControllerActivity) getSherlockActivity()).updateChannelList();
-                addChannelsToListView();
 
                 return true;
             }
