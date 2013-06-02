@@ -2,23 +2,23 @@ package de.bennir.DVBViewerController;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.util.XmlDom;
-import com.slidingmenu.lib.SlidingMenu;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
@@ -35,6 +35,7 @@ import java.util.List;
 
 public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     private static final String TAG = DVBViewerControllerActivity.class.toString();
+    private static final String OPENED_KEY = "OPENED_KEY";
     public static String dvbHost = "";
     public static String dvbIp = "";
     public static String dvbPort = "";
@@ -45,12 +46,18 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public static ArrayList<String> chanNames = new ArrayList<String>();
     public static ArrayList<DVBTimer> DVBTimers = new ArrayList<DVBTimer>();
     public static int currentGroup = -1;
-    public SlidingMenu menu;
     public AQuery aq;
     public Typeface robotoThin;
     public Typeface robotoLight;
     public Typeface robotoCondensed;
     public Fragment mContent;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private LinearLayout mDrawer;
+    private String mTitle;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private SharedPreferences prefs = null;
+    private Boolean opened = null;
 
     public static DVBChannel getChannelByName(String name) {
         DVBChannel ret = null;
@@ -93,9 +100,22 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         TimerFragment.addTimersToListView();
     }
 
+    private static void clearChannelLists() {
+        if (ChannelFragment.lvAdapter != null) {
+            ChannelFragment.lvAdapter.clear();
+            ChannelFragment.lvAdapter.notifyDataSetChanged();
+        }
+
+        if (ChannelGroupFragment.lvAdapter != null) {
+            ChannelGroupFragment.lvAdapter.clear();
+            ChannelGroupFragment.lvAdapter.notifyDataSetChanged();
+        }
+    }
+
     @SuppressWarnings("UnusedDeclaration")
     public void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
         Log.d(TAG, "downloadChannelCallback");
+        clearChannelLists();
 
         ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
 
@@ -133,8 +153,13 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 DVBViewerControllerActivity.DVBChannels.add(dvbChans);
 
                 ChannelFragment.lvAdapter = new ChanGroupAdapter(this, DVBViewerControllerActivity.groupNames);
-                ArrayList<DVBChannel> chans = DVBViewerControllerActivity.DVBChannels.get(DVBViewerControllerActivity.currentGroup);
-                ChannelGroupFragment.lvAdapter = new DVBChannelAdapter(this, chans);
+
+                try {
+                    ArrayList<DVBChannel> chans = DVBViewerControllerActivity.DVBChannels.get(DVBViewerControllerActivity.currentGroup);
+                    ChannelGroupFragment.lvAdapter = new DVBChannelAdapter(this, chans);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
 
                 ChannelFragment.addChannelsToListView();
                 ChannelGroupFragment.addChannelsToListView();
@@ -161,13 +186,20 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if (menu.isMenuShowing()) {
-            Log.d(TAG, "Back with menu");
-            menu.showContent(true);
-            return;
-        }
-
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -175,7 +207,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
-        getWindow().setBackgroundDrawable(null);
 
         initFonts();
 
@@ -189,6 +220,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mTitle = getString(R.string.remote);
         getSupportActionBar().setTitle(R.string.remote);
         getSupportActionBar().setIcon(R.drawable.ic_action_remote);
         getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
@@ -210,9 +242,49 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         /**
          * Behind View
          */
-        menu = new SlidingMenu(this);
-        menu.setMenu(R.layout.menu);
-        TextView activeProfile = (TextView) menu.findViewById(R.id.active_profile);
+        mDrawerList = (ListView) findViewById(R.id.menu_list);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (LinearLayout) findViewById(R.id.drawer);
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                R.drawable.ic_drawer,
+                R.string.open_drawer,
+                R.string.close_drawer
+        ) {
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                getSupportActionBar().setTitle(mTitle);
+                if (opened != null && opened == false) {
+                    opened = true;
+                    if (prefs != null) {
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean(OPENED_KEY, true);
+                        editor.apply();
+                    }
+                }
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                getSupportActionBar().setTitle(R.string.app_name);
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                prefs = getPreferences(MODE_PRIVATE);
+                opened = prefs.getBoolean(OPENED_KEY, false);
+                if (opened == false) {
+                    mDrawerLayout.openDrawer(mDrawer);
+                }
+            }
+        }).start();
+
+        TextView activeProfile = (TextView) findViewById(R.id.active_profile);
         activeProfile.setTypeface(robotoCondensed);
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             activeProfile.setText(dvbHost);
@@ -243,7 +315,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
          * Menu Items
          */
         MenuAdapter adapter = new MenuAdapter(this);
-        ListView lvMenu = (ListView) menu.findViewById(R.id.menu_list);
 
         adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote));
         adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels));
@@ -251,11 +322,11 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         adapter.add(new DVBMenuItem(getString(R.string.timer), R.drawable.ic_action_timers));
         adapter.add(new DVBMenuItem(getString(R.string.settings), R.drawable.ic_action_settings));
 
-        lvMenu.setAdapter(adapter);
+        mDrawerList.setAdapter(adapter);
 
-        lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            public void onItemClick(AdapterView adapterView, View view, int position, long id) {
                 Fragment newContent = null;
                 int titleRes = 0;
                 int icon = 0;
@@ -294,22 +365,14 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 }
                 if (newContent != null) {
                     getSupportFragmentManager().popBackStackImmediate();
+                    mTitle = getString(titleRes);
                     switchContent(newContent, titleRes, icon);
                 }
+
+                mDrawerList.setItemChecked(position, true);
+                mDrawerLayout.closeDrawer(mDrawer);
             }
         });
-
-
-        /**
-         * SlideMenu Customize
-         */
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        menu.setShadowWidthRes(R.dimen.shadow_width);
-        menu.setShadowDrawable(R.drawable.shadow);
-        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        menu.setFadeDegree(0.35f);
-        menu.setBehindScrollScale(0.0f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 
         /**
          * Recording Service Loading
@@ -334,8 +397,21 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             Log.d(TAG, "DVBChannels empty");
             updateChannelList();
         }
+    }
 
-        menu.showMenu();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (mDrawerLayout.isDrawerOpen(mDrawer)) {
+                mDrawerLayout.closeDrawer(mDrawer);
+            } else {
+                mDrawerLayout.openDrawer(mDrawer);
+            }
+            return true;
+        }
+        // Handle your other action bar items...
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void initFonts() {
@@ -403,6 +479,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         DVBViewerControllerActivity.DVBChannels.clear();
 
         if (DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+            clearChannelLists();
+
             DVBViewerControllerActivity.groupNames.add("ARD");
             ArrayList<DVBChannel> testChans = new ArrayList<DVBChannel>();
 
@@ -460,17 +538,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected");
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                menu.toggle();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         Log.d(TAG, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
@@ -486,7 +553,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .commit();
-        menu.showContent();
     }
 
     public void switchContent(Fragment fragment, int titleRes, int icon, boolean addToBackStack) {
@@ -499,7 +565,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                     .replace(R.id.content_frame, fragment)
                     .addToBackStack(null)
                     .commit();
-            menu.showContent();
         } else {
             switchContent(fragment, titleRes, icon);
         }
@@ -513,7 +578,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment)
                 .commit();
-        menu.showContent();
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -528,7 +592,6 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                     .replace(R.id.content_frame, fragment)
                     .addToBackStack(null)
                     .commit();
-            menu.showContent();
         } else {
             switchContent(fragment, title, icon);
         }
@@ -557,7 +620,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
                         R.layout.menu_list_item, null);
             }
 
-            TextView title = (TextView) convertView
+            CheckedTextView title = (CheckedTextView) convertView
                     .findViewById(R.id.row_title);
             title.setText(getItem(position).tag);
             title.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(getItem(position).iconRes), null, null, null);

@@ -29,6 +29,7 @@ public class ChannelGroupFragment extends SherlockListFragment {
     private AQuery aq;
 
     public static void addChannelsToListView() {
+        Log.d(TAG, "addChannelsToListView");
         lv.setAdapter(lvAdapter);
         lvAdapter.notifyDataSetChanged();
         lv.invalidate();
@@ -119,8 +120,6 @@ public class ChannelGroupFragment extends SherlockListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                lvAdapter.clear();
-                lvAdapter.notifyDataSetChanged();
                 ((DVBViewerControllerActivity) getSherlockActivity()).updateChannelList();
 
                 return true;

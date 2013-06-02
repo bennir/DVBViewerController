@@ -2,41 +2,30 @@ package de.bennir.DVBViewerController;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.androidquery.AQuery;
-import com.slidingmenu.lib.SlidingMenu;
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.epg.EPGInfo;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class EPGFragment extends SherlockListFragment {
     private static final String TAG = EPGFragment.class.toString();
-    private static ListView channelList;
-    private String currentChan = "";
-    private SlidingMenu slidingMenu;
-    private AQuery aq;
-    private ListView lv;
-    private EPGInfoAdapter lvAdapter;
-    private ArrayList<EPGInfo> epgInfos;
-    private TextView title;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.epg_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_listview, container, false);
     }
 
     @Override
@@ -44,130 +33,16 @@ public class EPGFragment extends SherlockListFragment {
         super.onActivityCreated(savedInstanceState);
 
         setHasOptionsMenu(true);
-
-        slidingMenu = ((DVBViewerControllerActivity) getSherlockActivity()).menu;
-
-        slidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
-        slidingMenu.setSecondaryMenu(R.layout.epg_channel_list);
-        slidingMenu.setSecondaryShadowDrawable(R.drawable.shadow_inverse);
-
-        slidingMenu.showSecondaryMenu();
-
-        aq = ((DVBViewerControllerActivity) getSherlockActivity()).aq;
-
-        channelList = (ListView) slidingMenu.findViewById(R.id.epg_channel_list);
-
-
-        ArrayList<DVBChannel> epgChannels = new ArrayList<DVBChannel>();
-        for (ArrayList<DVBChannel> dvbChans : DVBViewerControllerActivity.DVBChannels) {
-            Log.d(TAG, "Adding " + dvbChans.size() + " chans");
-            epgChannels.addAll(dvbChans);
-        }
-        Log.d(TAG, "epgChannels Count " + epgChannels.size());
-        Collections.sort(epgChannels, new DVBChannel.DVBChannelNameComparator());
-
-        EPGChannelAdapter epgListAdapter = new EPGChannelAdapter(getSherlockActivity(), epgChannels);
-
-        Log.d(TAG, "Adapter Count: " + epgListAdapter.getCount());
-        channelList.setAdapter(epgListAdapter);
-
-        title = ((TextView) getSherlockActivity()
-                .findViewById(R.id.epg_channel_name));
-        title.setTypeface(((DVBViewerControllerActivity) getSherlockActivity()).robotoCondensed);
-
-        channelList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                currentChan = ((TextView) view.findViewById(R.id.epg_list_item_name)).getText().toString();
-                updateTitle();
-                updateEPG();
-
-                slidingMenu.showContent();
-            }
-        });
-
-        updateTitle();
-
-        lv = getListView();
-        epgInfos = new ArrayList<EPGInfo>();
-        lvAdapter = new EPGInfoAdapter(getSherlockActivity(), epgInfos);
-
-        updateEPG();
-    }
-
-    private void updateEPG() {
-        if (!currentChan.equals("")) {
-            epgInfos.clear();
-
-            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-                /**
-                 * Get EPG
-                 */
-            } else {
-                EPGInfo epgInfo = new EPGInfo();
-                epgInfo.title = "Tagesschau";
-                epgInfo.desc = "Heute mit ganz tollen, neuen Nachrichten";
-
-                for (int i = 0; i < 20; i++) {
-                    epgInfos.add(epgInfo);
-                }
-            }
-
-            lv.setAdapter(lvAdapter);
-            lvAdapter.notifyDataSetChanged();
-        }
-    }
-
-    private void updateTitle() {
-        if (!currentChan.equals("")) {
-            title.setText(currentChan);
-
-            ImageView logo = (ImageView) getSherlockActivity().findViewById(R.id.epg_channel_logo);
-
-            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-                String url;
-                try {
-                    url = "http://" +
-                            DVBViewerControllerActivity.dvbIp + ":" +
-                            DVBViewerControllerActivity.dvbPort +
-                            "/?getChannelLogo=" + URLEncoder.encode(currentChan, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                logo.setImageDrawable(
-                        getSherlockActivity().getResources()
-                                .getDrawable(R.drawable.dvbviewer_controller)
-                );
-            }
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        slidingMenu.setMode(SlidingMenu.LEFT);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem item = menu.add(2, 2, 1, R.string.channels);
-        item.setIcon(R.drawable.ic_action_channels);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (slidingMenu.isSecondaryMenuShowing()) {
-                    slidingMenu.toggle();
-                } else {
-                    slidingMenu.showSecondaryMenu();
-                }
-
-                return true;
-            }
-        });
     }
 
     public class EPGInfoAdapter extends ArrayAdapter<EPGInfo> {

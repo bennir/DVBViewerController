@@ -21,6 +21,7 @@ public class ChannelFragment extends SherlockListFragment {
     private static Context context;
 
     public static void addChannelsToListView() {
+        Log.d(TAG, "addChannelsToListView");
         if (lvAdapter == null) {
             ChannelFragment.lvAdapter = new ChanGroupAdapter(context, DVBViewerControllerActivity.groupNames);
         } else {
@@ -73,8 +74,6 @@ public class ChannelFragment extends SherlockListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                lvAdapter.clear();
-                lvAdapter.notifyDataSetChanged();
                 ((DVBViewerControllerActivity) getSherlockActivity()).updateChannelList();
 
                 return true;
