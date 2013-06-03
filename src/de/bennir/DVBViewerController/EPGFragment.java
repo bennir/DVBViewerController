@@ -2,15 +2,11 @@ package de.bennir.DVBViewerController;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.ListFragment;
+import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.epg.EPGInfo;
 
@@ -18,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class EPGFragment extends SherlockListFragment {
+public class EPGFragment extends ListFragment {
     private static final String TAG = EPGFragment.class.toString();
 
     @Override

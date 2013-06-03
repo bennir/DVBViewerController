@@ -1,21 +1,16 @@
 package de.bennir.DVBViewerController;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.internal.nineoldandroids.animation.Animator;
-import com.actionbarsherlock.internal.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.actionbarsherlock.internal.nineoldandroids.animation.ObjectAnimator;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
@@ -26,7 +21,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimerFragment extends SherlockListFragment {
+public class TimerFragment extends ListFragment {
     private static final String TAG = TimerFragment.class.toString();
     private static TimerAdapter lvAdapter;
     private static ListView lv;
@@ -89,19 +84,19 @@ public class TimerFragment extends SherlockListFragment {
 
             }
         });
-        aq = ((DVBViewerControllerActivity) getSherlockActivity()).aq;
+        aq = ((DVBViewerControllerActivity) getActivity()).aq;
 
         if (DVBViewerControllerActivity.recIp.equals("") || DVBViewerControllerActivity.recPort.equals("")) {
-            Crouton.makeText(getSherlockActivity(), R.string.recservicefailed, Style.ALERT).show();
+            Crouton.makeText(getActivity(), R.string.recservicefailed, Style.ALERT).show();
         } else {
             Log.d(TAG, "Recording Service IP:" + DVBViewerControllerActivity.recIp);
             Log.d(TAG, "Recording Service Port:" + DVBViewerControllerActivity.recPort);
         }
 
         lv = getListView();
-        lvAdapter = new TimerAdapter(DVBViewerControllerActivity.DVBTimers, getSherlockActivity());
+        lvAdapter = new TimerAdapter(DVBViewerControllerActivity.DVBTimers, getActivity());
 
-        ((DVBViewerControllerActivity) getSherlockActivity()).updateTimers();
+        ((DVBViewerControllerActivity) getActivity()).updateTimers();
     }
 
     @Override
@@ -113,7 +108,7 @@ public class TimerFragment extends SherlockListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ((DVBViewerControllerActivity) getSherlockActivity()).updateTimers();
+                ((DVBViewerControllerActivity) getActivity()).updateTimers();
                 addTimersToListView();
 
                 return true;
@@ -126,10 +121,10 @@ public class TimerFragment extends SherlockListFragment {
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent i = new Intent(getSherlockActivity(), TimerWizardActivity.class);
+                Intent i = new Intent(getActivity(), TimerWizardActivity.class);
                 startActivityForResult(i, 1);
 
-                getSherlockActivity().overridePendingTransition(R.anim.slide_right, R.anim.nothing);
+                getActivity().overridePendingTransition(R.anim.slide_right, R.anim.nothing);
 
                 return true;
             }

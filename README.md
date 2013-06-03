@@ -6,7 +6,8 @@ for the popular Windows Software [DVB Viewer](http://www.dvbviewer.com).
 This App **requires** the [DVBControllerServer] (https://github.com/bennir/DVBControllerServer) running on the computer to control DVBViewer on.
 
 It uses the following libraries:
-* [ActionBarSherlock] (https://github.com/JakeWharton/ActionBarSherlock) by JakeWharton
+* [Android-BetterPickers] (https://github.com/derekbrameyer/android-betterpickers) by derekbrameyer
+* [ViewPagerIndicator] (https://github.com/JakeWharton/Android-ViewPagerIndicator) by Jake Wharton
 * [Crouton] (https://github.com/keyboardsurfer/Crouton) by keyboardsurfer
 * [JmDNS] (http://jmdns.sourceforge.net/)
 * [Android Query] (https://code.google.com/p/android-query/)

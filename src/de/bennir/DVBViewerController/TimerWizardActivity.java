@@ -4,18 +4,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
@@ -33,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-public class TimerWizardActivity extends SherlockFragmentActivity implements
+public class TimerWizardActivity extends FragmentActivity implements
         PageFragmentCallbacks,
         ReviewFragment.Callbacks,
         ModelCallbacks {
@@ -53,10 +49,10 @@ public class TimerWizardActivity extends SherlockFragmentActivity implements
 
         mWizardModel = new TimerWizardModel(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.timer_add);
-        getSupportActionBar().setIcon(R.drawable.ic_action_timers);
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(R.string.timer_add);
+        getActionBar().setIcon(R.drawable.ic_action_timers);
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
 
         if (savedInstanceState != null) {
             mWizardModel.load(savedInstanceState.getBundle("model"));

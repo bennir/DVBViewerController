@@ -22,7 +22,7 @@
         android:id="@+id/epg_channel_name"
         android:layout_toRightOf="@id/epg_channel_logo"
         android:textSize="24sp"
-        android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title"
+        android:textAppearance="@android:style/TextAppearance.Holo.Widget.ActionBar.Title"
         android:textColor="@color/DVBActionBar"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"

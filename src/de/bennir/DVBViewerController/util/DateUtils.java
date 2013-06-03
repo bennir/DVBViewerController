@@ -15,8 +15,7 @@ public class DateUtils {
     /**
      * Gets the float date.
      *
-     * @param date
-     *            the date
+     * @param date the date
      * @return the float date
      * @author RayBa
      * @date 08.04.2012
@@ -40,8 +39,7 @@ public class DateUtils {
     /**
      * Gets the days since delphi null.
      *
-     * @param date
-     *            the date
+     * @param date the date
      * @return the days since delphi null
      * @author RayBa
      * @date 08.04.2012

@@ -6,19 +6,18 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.DisplayMetrics;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 
-public class RemoteFragment extends SherlockFragment {
+public class RemoteFragment extends Fragment {
     private static final String TAG = RemoteFragment.class.toString();
     private AQuery aq;
 
@@ -33,9 +32,9 @@ public class RemoteFragment extends SherlockFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        aq = ((DVBViewerControllerActivity) getSherlockActivity()).aq;
+        aq = ((DVBViewerControllerActivity) getActivity()).aq;
 
-        ImageView remote = (ImageView) getSherlockActivity().findViewById(
+        ImageView remote = (ImageView) getActivity().findViewById(
                 R.id.remote);
 
         remote.setOnTouchListener(new View.OnTouchListener() {
@@ -57,7 +56,7 @@ public class RemoteFragment extends SherlockFragment {
                     Bitmap bitmap = ((BitmapDrawable) img.getDrawable())
                             .getBitmap();
 
-                    double scaleWidthRatio = (double) img.getWidth() /  (double) bitmap.getWidth();
+                    double scaleWidthRatio = (double) img.getWidth() / (double) bitmap.getWidth();
                     double scaleHeightRatio = (double) img.getHeight() / (double) bitmap.getHeight();
 
                     int scaleX = (int) (x / scaleWidthRatio);
@@ -128,7 +127,7 @@ public class RemoteFragment extends SherlockFragment {
     void sendCommand(String command) {
         Log.d(TAG, "Remote Command: " + command);
 
-        ((Vibrator) getSherlockActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
+        ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             String url = "http://" +
                     DVBViewerControllerActivity.dvbIp + ":" +

@@ -4,15 +4,10 @@ package de.bennir.DVBViewerController;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
@@ -21,7 +16,7 @@ import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
 
 import java.util.ArrayList;
 
-public class ChannelGroupFragment extends SherlockListFragment {
+public class ChannelGroupFragment extends ListFragment {
     private static final String TAG = ChannelGroupFragment.class.toString();
     public static DVBChannelAdapter lvAdapter;
     private static ListView lv;
@@ -56,11 +51,11 @@ public class ChannelGroupFragment extends SherlockListFragment {
             }
         });
 
-        aq = ((DVBViewerControllerActivity) getSherlockActivity()).aq;
+        aq = ((DVBViewerControllerActivity) getActivity()).aq;
 
         ArrayList<DVBChannel> chans = DVBViewerControllerActivity.DVBChannels.get(DVBViewerControllerActivity.currentGroup);
         ChannelGroupFragment.lvAdapter = new DVBChannelAdapter(
-                getSherlockActivity(),
+                getActivity(),
                 chans
         );
 
@@ -120,7 +115,7 @@ public class ChannelGroupFragment extends SherlockListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ((DVBViewerControllerActivity) getSherlockActivity()).updateChannelList();
+                ((DVBViewerControllerActivity) getActivity()).updateChannelList();
 
                 return true;
             }
@@ -132,14 +127,14 @@ public class ChannelGroupFragment extends SherlockListFragment {
         Log.d(TAG, "onOptionsItemSelected");
         switch (item.getItemId()) {
             case android.R.id.home:
-                getSherlockActivity().getFragmentManager().popBackStackImmediate();
+                getActivity().getFragmentManager().popBackStackImmediate();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     void setChannel(String channelId) {
-        ((Vibrator) getSherlockActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
+        ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             String url = "http://" +
                     DVBViewerControllerActivity.dvbIp + ":" +

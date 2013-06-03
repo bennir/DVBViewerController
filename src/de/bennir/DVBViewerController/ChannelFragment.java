@@ -2,19 +2,14 @@ package de.bennir.DVBViewerController;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 
-public class ChannelFragment extends SherlockListFragment {
+public class ChannelFragment extends ListFragment {
     private static final String TAG = ChannelFragment.class.toString();
     static ChanGroupAdapter lvAdapter;
     private static ListView lv;
@@ -43,12 +38,12 @@ public class ChannelFragment extends SherlockListFragment {
         Log.d(TAG, "onActivityCreated Size: " + DVBViewerControllerActivity.DVBChannels.size());
 
         super.onActivityCreated(savedInstanceState);
-        ((DVBViewerControllerActivity) getSherlockActivity()).mContent = this;
+        ((DVBViewerControllerActivity) getActivity()).mContent = this;
 
         setHasOptionsMenu(true);
-        getSherlockActivity().getSupportActionBar().setTitle(R.string.channels);
+        getActivity().getActionBar().setTitle(R.string.channels);
 
-        context = getSherlockActivity();
+        context = getActivity();
         lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -74,7 +69,7 @@ public class ChannelFragment extends SherlockListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ((DVBViewerControllerActivity) getSherlockActivity()).updateChannelList();
+                ((DVBViewerControllerActivity) getActivity()).updateChannelList();
 
                 return true;
             }

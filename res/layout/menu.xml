@@ -16,11 +16,11 @@
 
         <Button
             android:id="@+id/active_profile"
-            style="@style/Widget.Sherlock.ActionButton"
+            style="?android:actionButtonStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="left|center_vertical"
-            android:textAppearance="@style/TextAppearance.Sherlock.Widget.ActionBar.Title.Inverse"
+            android:textAppearance="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse"
             android:textSize="22sp"
             android:textColor="@android:color/white"
             android:text="@string/demo_device"

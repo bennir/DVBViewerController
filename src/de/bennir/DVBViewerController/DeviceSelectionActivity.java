@@ -1,5 +1,6 @@
 package de.bennir.DVBViewerController;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -9,16 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import de.bennir.DVBViewerController.util.ThreadExecutor;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -30,7 +26,7 @@ import javax.jmdns.ServiceListener;
 import java.net.InetAddress;
 import java.util.LinkedList;
 
-public class DeviceSelectionActivity extends SherlockListActivity implements ServiceListener {
+public class DeviceSelectionActivity extends ListActivity implements ServiceListener {
     private final static String TAG = DeviceSelectionActivity.class.toString();
     private final static String CTRL_TYPE = "_dvbctrl._tcp.local.";
     private final static String HOSTNAME = "DVBController";
@@ -111,7 +107,7 @@ public class DeviceSelectionActivity extends SherlockListActivity implements Ser
 
         setContentView(R.layout.activity_deviceselection);
 
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
 
         robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
         robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");

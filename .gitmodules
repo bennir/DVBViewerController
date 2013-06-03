@@ -1,6 +1,9 @@
-[submodule "ActionBarSherlock"]
-	path = ActionBarSherlock
-	url = git://github.com/JakeWharton/ActionBarSherlock.git
 [submodule "Crouton"]
 	path = Crouton
 	url = git://github.com/keyboardsurfer/Crouton.git
+[submodule "Android-ViewPagerIndicator"]
+	path = Android-ViewPagerIndicator
+	url = https://github.com/JakeWharton/Android-ViewPagerIndicator
+[submodule "android-betterpickers"]
+	path = android-betterpickers
+	url = https://github.com/derekbrameyer/android-betterpickers.git

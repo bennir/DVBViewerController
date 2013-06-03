@@ -8,14 +8,14 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.util.XmlDom;
@@ -33,7 +33,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DVBViewerControllerActivity extends SherlockFragmentActivity {
+public class DVBViewerControllerActivity extends FragmentActivity {
     private static final String TAG = DVBViewerControllerActivity.class.toString();
     private static final String OPENED_KEY = "OPENED_KEY";
     public static String dvbHost = "";
@@ -219,11 +219,11 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
             dvbPort = extras.getString("dvbPort");
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         mTitle = getString(R.string.remote);
-        getSupportActionBar().setTitle(R.string.remote);
-        getSupportActionBar().setIcon(R.drawable.ic_action_remote);
-        getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
+        getActionBar().setTitle(R.string.remote);
+        getActionBar().setIcon(R.drawable.ic_action_remote);
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
 
         /**
          * Above View
@@ -255,7 +255,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
         ) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(mTitle);
+                getActionBar().setTitle(mTitle);
                 if (opened != null && opened == false) {
                     opened = true;
                     if (prefs != null) {
@@ -268,7 +268,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle(R.string.app_name);
+                getActionBar().setTitle(R.string.app_name);
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -401,12 +401,7 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            if (mDrawerLayout.isDrawerOpen(mDrawer)) {
-                mDrawerLayout.closeDrawer(mDrawer);
-            } else {
-                mDrawerLayout.openDrawer(mDrawer);
-            }
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         // Handle your other action bar items...
@@ -546,8 +541,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     }
 
     public void switchContent(Fragment fragment, int titleRes, int icon) {
-        getSupportActionBar().setTitle(titleRes);
-        getSupportActionBar().setIcon(icon);
+        getActionBar().setTitle(titleRes);
+        getActionBar().setIcon(icon);
         mContent = fragment;
         getSupportFragmentManager()
                 .beginTransaction()
@@ -557,8 +552,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
 
     public void switchContent(Fragment fragment, int titleRes, int icon, boolean addToBackStack) {
         if (addToBackStack) {
-            getSupportActionBar().setTitle(titleRes);
-            getSupportActionBar().setIcon(icon);
+            getActionBar().setTitle(titleRes);
+            getActionBar().setIcon(icon);
             mContent = fragment;
             getSupportFragmentManager()
                     .beginTransaction()
@@ -571,8 +566,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     }
 
     public void switchContent(Fragment fragment, String title, int icon) {
-        getSupportActionBar().setTitle(title);
-        getSupportActionBar().setIcon(icon);
+        getActionBar().setTitle(title);
+        getActionBar().setIcon(icon);
         mContent = fragment;
         getSupportFragmentManager()
                 .beginTransaction()
@@ -584,8 +579,8 @@ public class DVBViewerControllerActivity extends SherlockFragmentActivity {
     public void switchContent(Fragment fragment, String title, int icon, boolean addToBackStack) {
         if (addToBackStack) {
             Log.d(TAG, "switchContent addToBackStack");
-            getSupportActionBar().setTitle(title);
-            getSupportActionBar().setIcon(icon);
+            getActionBar().setTitle(title);
+            getActionBar().setIcon(icon);
             mContent = fragment;
             getSupportFragmentManager()
                     .beginTransaction()
