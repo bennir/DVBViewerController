@@ -35,7 +35,6 @@ public class TimerFragment extends ListFragment {
 
     void deleteTimer(int position) {
         final DVBTimer timer = DVBViewerControllerActivity.DVBTimers.get(position);
-        Log.d(TAG, "deleteTimer: " + timer.id);
 
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
 
@@ -79,9 +78,7 @@ public class TimerFragment extends ListFragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG, "Click Click Clack");
-                //asd
-
+                //TODO: edit timer
             }
         });
         aq = ((DVBViewerControllerActivity) getActivity()).aq;
@@ -215,8 +212,6 @@ public class TimerFragment extends ListFragment {
 
         private void deleteIfMarkedDeleteable(View v, final DVBTimer timer, final DVBTimer delete) {
             if (timerIsDeleteable(timer, delete)) {
-                Log.d(TAG, "deleteIfMarkedDeleteable: " + timer.id);
-
                 ObjectAnimator anim = ObjectAnimator.ofFloat(v, "translationX", 0f, 2500f);
                 anim.setDuration(400);
                 anim.start();

@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
     private static final String TAG = DVBChannelAdapter.class.toString();
@@ -51,31 +52,37 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
         /**
          * Duration Progress
          */
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        String curTime = format.format(new Date());
-        String startTime = chans.get(position).epgInfo.time;
-        String duration = chans.get(position).epgInfo.duration;
+        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+            String curTime = format.format(new Date());
+            String startTime = chans.get(position).epgInfo.time;
+            String duration = chans.get(position).epgInfo.duration;
 
-        Date curDate;
-        Date startDate;
-        Date durDate = new Date();
-        long diff = 0;
+            Date curDate;
+            Date startDate;
+            Date durDate = new Date();
+            long diff = 0;
 
-        try {
-            curDate = format.parse(curTime);
-            startDate = format.parse(startTime);
-            durDate = format.parse(duration);
+            try {
+                curDate = format.parse(curTime);
+                startDate = format.parse(startTime);
+                durDate = format.parse(duration);
 
-            diff = curDate.getTime() - startDate.getTime();
-        } catch (ParseException ex) {
-            ex.printStackTrace();
+                diff = curDate.getTime() - startDate.getTime();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+
+            double elapsed = (diff / 1000 / 60);
+            long durMinutes = (durDate.getHours() * 60 + durDate.getMinutes());
+
+            ProgressBar progress = (ProgressBar) v.findViewById(R.id.channel_item_progress);
+            progress.setProgress(Double.valueOf((elapsed / durMinutes * 100)).intValue());
+        } else {
+            ProgressBar progress = (ProgressBar) v.findViewById(R.id.channel_item_progress);
+            progress.setProgress(Double.valueOf(new Random().nextInt(100)).intValue());
+
         }
-
-        double elapsed = (diff / 1000 / 60);
-        long durMinutes = (durDate.getHours() * 60 + durDate.getMinutes());
-
-        ProgressBar progress = (ProgressBar) v.findViewById(R.id.channel_item_progress);
-        progress.setProgress(Double.valueOf((elapsed / durMinutes * 100)).intValue());
 
         if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
             String url = "";

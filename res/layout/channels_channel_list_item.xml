@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/channel_item_current_epg"
         android:layout_toRightOf="@id/channel_item_logo"
+        android:progressDrawable="@drawable/progress_light"
         />
 
     <LinearLayout

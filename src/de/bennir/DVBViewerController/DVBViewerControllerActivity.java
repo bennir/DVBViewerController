@@ -410,9 +410,9 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     }
 
     private void initFonts() {
-        robotoThin = Typeface.createFromAsset(getAssets(), "Roboto-Thin.ttf");
-        robotoLight = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
-        robotoCondensed = Typeface.createFromAsset(getAssets(), "RobotoCondensed-Bold.ttf");
+        robotoThin = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Thin.ttf");
+        robotoLight = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
+        robotoCondensed = Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Bold.ttf");
     }
 
     @SuppressWarnings("UnusedDeclaration")
