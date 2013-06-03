@@ -1,9 +1,11 @@
-# DVBViewer Controller
+﻿# DVBViewer Controller
 
 DVBViewerController is an Open Source Android Project to create a remote control
 for the popular Windows Software [DVB Viewer](http://www.dvbviewer.com).
 
 This App **requires** the [DVBControllerServer] (https://github.com/bennir/DVBControllerServer) running on the computer to control DVBViewer on.
+
+![Sample Screens](https://raw.github.com/bennir/DVBViewerController/Screenshots/Screenshots/sample.png)
 
 It uses the following libraries:
 * [Android-BetterPickers] (https://github.com/derekbrameyer/android-betterpickers) by derekbrameyer
