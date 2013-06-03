@@ -11,10 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
@@ -185,8 +182,16 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mDrawerLayout != null && mDrawer != null) {
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item = menu.getItem(i);
+                if (item != null) {
+                    item.setVisible(!mDrawerLayout.isDrawerOpen(mDrawer));
+                }
+            }
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -256,6 +261,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu();
                 if (opened != null && opened == false) {
                     opened = true;
                     if (prefs != null) {
@@ -269,6 +275,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(R.string.app_name);
+                invalidateOptionsMenu();
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
