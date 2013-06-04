@@ -1,5 +1,6 @@
 package de.bennir.DVBViewerController;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import com.androidquery.util.XmlDom;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
+import de.bennir.DVBViewerController.epg.EPGInfo;
 import de.bennir.DVBViewerController.timers.DVBTimer;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -43,6 +45,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     public static ArrayList<String> chanNames = new ArrayList<String>();
     public static ArrayList<DVBTimer> DVBTimers = new ArrayList<DVBTimer>();
     public static int currentGroup = -1;
+    public static int currentEPGItem = -1;
     public AQuery aq;
     public Typeface robotoThin;
     public Typeface robotoLight;
@@ -260,6 +263,10 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         ) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
+                if(mTitle.equals(getString(R.string.epg))) {
+                    getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                    getActionBar().setDisplayShowTitleEnabled(false);
+                }
                 getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu();
                 if (opened != null && opened == false) {
@@ -274,6 +281,10 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
+                if(mTitle.equals(getString(R.string.epg))) {
+                    getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                    getActionBar().setDisplayShowTitleEnabled(true);
+                }
                 getActionBar().setTitle(R.string.app_name);
                 invalidateOptionsMenu();
             }
@@ -371,6 +382,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                         break;
                 }
                 if (newContent != null) {
+                    getActionBar().setDisplayShowTitleEnabled(true);
                     getSupportFragmentManager().popBackStackImmediate();
                     mTitle = getString(titleRes);
                     switchContent(newContent, titleRes, icon);
@@ -488,11 +500,23 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
             DVBChannel test = new DVBChannel();
             test.name = "Das Erste HD";
+            EPGInfo epg = new EPGInfo();
+            epg.channel = test.name;
+            epg.desc = "Nachrichten";
+            epg.time = "20:15";
+            epg.title = "Nachrichten";
+            test.epgInfo = epg;
             testChans.add(test);
             chanNames.add(test.name);
             for (int i = 0; i < 10; i++) {
                 test = new DVBChannel();
                 test.name = "NDR HD";
+                epg = new EPGInfo();
+                epg.channel = test.name;
+                epg.desc = "Nachrichten";
+                epg.time = "20:15";
+                epg.title = "Nachrichten";
+                test.epgInfo = epg;
                 testChans.add(test);
                 chanNames.add(test.name);
             }
@@ -503,11 +527,23 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
             test = new DVBChannel();
             test.name = "ZDF HD";
+            epg = new EPGInfo();
+            epg.channel = test.name;
+            epg.desc = "Nachrichten";
+            epg.time = "20:15";
+            epg.title = "Nachrichten";
+            test.epgInfo = epg;
             testChans.add(test);
             chanNames.add(test.name);
             for (int i = 0; i < 10; i++) {
                 test = new DVBChannel();
                 test.name = "ZDF Kultur";
+                epg = new EPGInfo();
+                epg.channel = test.name;
+                epg.desc = "Nachrichten";
+                epg.time = "20:15";
+                epg.title = "Nachrichten";
+                test.epgInfo = epg;
                 testChans.add(test);
                 chanNames.add(test.name);
             }
@@ -548,32 +584,12 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     }
 
     public void switchContent(Fragment fragment, int titleRes, int icon) {
-        getActionBar().setTitle(titleRes);
-        getActionBar().setIcon(icon);
-        mContent = fragment;
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
-    }
-
-    public void switchContent(Fragment fragment, int titleRes, int icon, boolean addToBackStack) {
-        if (addToBackStack) {
-            getActionBar().setTitle(titleRes);
-            getActionBar().setIcon(icon);
-            mContent = fragment;
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.content_frame, fragment)
-                    .addToBackStack(null)
-                    .commit();
-        } else {
-            switchContent(fragment, titleRes, icon);
-        }
+        switchContent(fragment, getString(titleRes), icon);
     }
 
     public void switchContent(Fragment fragment, String title, int icon) {
-        getActionBar().setTitle(title);
+        if(!title.equals(getString(R.string.epg)))
+            getActionBar().setTitle(title);
         getActionBar().setIcon(icon);
         mContent = fragment;
         getSupportFragmentManager()

@@ -1,21 +1,27 @@
 package de.bennir.DVBViewerController;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.*;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.epg.EPGInfo;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class EPGFragment extends ListFragment {
+public class EPGFragment extends ListFragment implements ActionBar.OnNavigationListener {
     private static final String TAG = EPGFragment.class.toString();
+    private static final String SELECTED_ITEM = "selected_navigation_item";
+
+    private ActionBar actionBar;
+    private ArrayAdapter<String> adapter;
+    private ListView lv;
+    private EPGInfoAdapter epgAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,16 +35,71 @@ public class EPGFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         setHasOptionsMenu(true);
+
+        lv = getListView();
+
+        actionBar = getActivity().getActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        adapter = new ArrayAdapter<String>(
+                actionBar.getThemedContext(),
+                android.R.layout.simple_spinner_item,
+                android.R.id.text1,
+                DVBViewerControllerActivity.chanNames
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        actionBar.setListNavigationCallbacks(adapter, EPGFragment.this);
+
+        if(DVBViewerControllerActivity.currentEPGItem != -1) {
+            actionBar.setSelectedNavigationItem(DVBViewerControllerActivity.currentEPGItem);
+        } else if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(SELECTED_ITEM)) {
+                actionBar.setSelectedNavigationItem(savedInstanceState.getInt(SELECTED_ITEM));
+            }
+        }
+
+        updateEPG();
+    }
+
+    private void updateEPG() {
+        String channel = adapter.getItem(actionBar.getSelectedNavigationIndex());
+
+        ArrayList<EPGInfo> epgInfos = new ArrayList<EPGInfo>();
+        DVBChannel chan = DVBViewerControllerActivity.getChannelByName(channel);
+        EPGInfo epg = chan.epgInfo;
+
+        epgInfos.add(epg);
+
+        epgAdapter = new EPGInfoAdapter(getActivity(), epgInfos);
+
+        lv.setAdapter(epgAdapter);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // Serialize the current tab position.
+        outState.putInt(SELECTED_ITEM, DVBViewerControllerActivity.currentEPGItem);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    }
 
+    @Override
+    public boolean onNavigationItemSelected(int i, long l) {
+        DVBViewerControllerActivity.currentEPGItem = i;
+        Log.d(TAG, "Channel Select: " + DVBViewerControllerActivity.chanNames.get(i));
+
+        return true;
     }
 
     public class EPGInfoAdapter extends ArrayAdapter<EPGInfo> {
@@ -70,59 +131,4 @@ public class EPGFragment extends ListFragment {
             return v;
         }
     }
-
-    public class EPGChannelAdapter extends ArrayAdapter<DVBChannel> {
-        ArrayList<DVBChannel> chans;
-        Context context;
-
-        public EPGChannelAdapter(Context context, ArrayList<DVBChannel> dvbChans) {
-            super(context, R.layout.epg_channel_list_item, dvbChans);
-
-            chans = dvbChans;
-
-            this.context = context;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            View v;
-
-            if (convertView != null)
-                v = convertView;
-            else
-                v = inflater.inflate(R.layout.epg_channel_list_item, parent,
-                        false);
-
-            ((TextView) v.findViewById(R.id.epg_list_item_name)).setText(chans.get(position).name);
-            ((TextView) v.findViewById(R.id.epg_list_item_channelid)).setText(chans.get(position).channelId);
-
-            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-                String url;
-                try {
-                    url = "http://" +
-                            DVBViewerControllerActivity.dvbIp + ":" +
-                            DVBViewerControllerActivity.dvbPort +
-                            "/?getChannelLogo=" + URLEncoder.encode(chans.get(position).name, "UTF-8");
-
-                    ImageView logo = (ImageView) v.findViewById(R.id.epg_list_item_logo);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                ((ImageView) v.findViewById(R.id.epg_list_item_logo))
-                        .setImageDrawable(
-                                context.getResources()
-                                        .getDrawable(R.drawable.dvbviewer_controller)
-                        );
-            }
-
-            return v;
-        }
-
-
-    }
-
 }
