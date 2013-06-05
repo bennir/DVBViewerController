@@ -7,4 +7,5 @@
                  android:padding="10dp"
                  android:paddingLeft="30dp"
                  android:textAppearance="@android:style/TextAppearance.Medium"
-                 android:textColor="@android:color/white"/>
+                 android:textColor="@android:color/white"
+        android:checkMark="?android:listChoiceIndicatorSingle"/>
