@@ -473,7 +473,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
             TimerFragment.addTimersToListView();
         } else {
             Style st = new Style.Builder()
-                    .setDuration(Style.DURATION_INFINITE)
+                    // TODO: duration infinite
                     .setBackgroundColorValue(Style.holoBlueLight)
                     .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                     .build();
@@ -559,7 +559,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
             Log.d(TAG, "URL=" + url);
 
             Style st = new Style.Builder()
-                    .setDuration(Style.DURATION_INFINITE)
+                    // TODO: duration infinite
                     .setBackgroundColorValue(Style.holoBlueLight)
                     .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                     .build();

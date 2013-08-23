@@ -1,0 +1,45 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.5.+'
+    }
+}
+
+apply plugin: 'android'
+
+repositories {
+	maven {
+		url 'https://raw.github.com/ark/ark/master/releases/'
+        url 'https://github.com/Goddchen/mvn-repo/raw/master/'
+    }
+    mavenCentral()
+}
+
+configurations {
+	all*.exclude group: 'com.google.android', module: 'support-v4'
+}
+
+dependencies {
+	compile 'com.doomonafireball.betterpickers:android-betterpickers:1.3.1'
+    compile 'com.android.support:support-v4:18.0.+'
+	compile 'com.viewpagerindicator:parent:2.4.+'
+	compile 'com.googlecode.android-query:android-query:0.25.+'
+	compile 'de.keyboardsurfer.android.widget:crouton:1.8.1'
+	compile files('libs/jmdns.jar')
+}
+
+
+android {
+    compileSdkVersion 17
+    buildToolsVersion "17.0.0"
+
+	sourceSets {
+        main {
+            assets.srcDirs = ['assets']
+        }
+
+        instrumentTest.setRoot('tests')
+    }
+}
