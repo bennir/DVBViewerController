@@ -11,7 +11,6 @@ apply plugin: 'android'
 
 repositories {
 	maven {
-		url 'https://raw.github.com/ark/ark/master/releases/'
         url 'https://github.com/Goddchen/mvn-repo/raw/master/'
     }
     mavenCentral()
