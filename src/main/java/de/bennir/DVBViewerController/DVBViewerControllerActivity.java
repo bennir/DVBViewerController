@@ -59,6 +59,10 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     private SharedPreferences prefs = null;
     private Boolean opened = null;
 
+    public static de.keyboardsurfer.android.widget.crouton.Configuration croutonInfinite = new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+            .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
+            .build();
+
     public static DVBChannel getChannelByName(String name) {
         DVBChannel ret = null;
 
@@ -470,10 +474,12 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                 DVBViewerControllerActivity.DVBTimers.add(timer);
             }
 
+
+
             TimerFragment.addTimersToListView();
         } else {
             Style st = new Style.Builder()
-                    // TODO: duration infinite
+                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
                     .setBackgroundColorValue(Style.holoBlueLight)
                     .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                     .build();
@@ -558,11 +564,15 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                     "/?getFavList";
             Log.d(TAG, "URL=" + url);
 
+
+
+
             Style st = new Style.Builder()
-                    // TODO: duration infinite
+                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
                     .setBackgroundColorValue(Style.holoBlueLight)
                     .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                     .build();
+
             Crouton.makeText(this, R.string.loadingChannels, st).show();
 
             aq.ajax(url, JSONObject.class, this, "downloadChannelCallback");
