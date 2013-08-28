@@ -258,6 +258,8 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawer = (LinearLayout) findViewById(R.id.drawer);
 
+        mDrawer.setBackgroundResource(R.color.DVBActionBar);
+
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -345,6 +347,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         adapter.add(new DVBMenuItem(getString(R.string.settings), R.drawable.ic_action_settings));
 
         mDrawerList.setAdapter(adapter);
+        mDrawerList.setItemChecked(0, true);
 
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
@@ -648,7 +651,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                         R.layout.menu_list_item, null);
             }
 
-            CheckedTextView title = (CheckedTextView) convertView
+            TextView title = (TextView) convertView
                     .findViewById(R.id.row_title);
             title.setText(getItem(position).tag);
             title.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(getItem(position).iconRes), null, null, null);

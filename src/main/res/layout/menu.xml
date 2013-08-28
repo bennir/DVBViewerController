@@ -4,7 +4,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/DVBActionBar">
-        <TextView
+
+    <TextView
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -14,7 +15,7 @@
             android:paddingTop="5dp"
             />
 
-        <Button
+    <Button
             android:id="@+id/active_profile"
             style="?android:actionButtonStyle"
             android:layout_width="fill_parent"
@@ -28,7 +29,7 @@
             android:drawableRight="@drawable/ic_action_change_profile"
             />
 
-        <TextView
+    <TextView
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -38,9 +39,13 @@
             android:paddingTop="5dp"
             />
 
-        <ListView
+    <ListView
             android:id="@+id/menu_list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:choiceMode="singleChoice"
+            android:dividerHeight="2dp"
+            android:divider="@drawable/drawer_divider"
+            android:paddingLeft="20dp"
             />
 </LinearLayout>

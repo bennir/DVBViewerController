@@ -2,7 +2,7 @@
 <resources>
     <color name="DVBShadow">#d3d3d3</color>
     <color name="DVBBackgroundLight">#e5e5e5</color>
-    <color name="DVBActionBar">#303030</color>
+    <color name="DVBActionBar">#F5303030</color>
     <color name="DVBCardHighlight">#85d3ef</color>
     <color name="DVBCardHighlightLight">#b4ebff</color>
     <color name="DVBCardHighlightShadow">#0099cc</color>
@@ -15,4 +15,7 @@
     <color name="review_green">#ff669900</color>
 
     <color name="text_light">#66000000</color>
+    <color name="black">#ff000000</color>
+    <color name="holo_dark_red">#cc0000</color>
+    <color name="light_grey">#ff999999</color>
 </resources>
