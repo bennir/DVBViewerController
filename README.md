@@ -8,7 +8,6 @@ This App **requires** the [DVBControllerServer] (https://github.com/bennir/DVBCo
 ![Sample Screens](https://raw.github.com/bennir/DVBViewerController/Screenshots/Screenshots/sample.png)
 
 It uses the following libraries:
-* [Android-BetterPickers] (https://github.com/derekbrameyer/android-betterpickers) by derekbrameyer
 * [ViewPagerIndicator] (https://github.com/JakeWharton/Android-ViewPagerIndicator) by Jake Wharton
 * [Crouton] (https://github.com/keyboardsurfer/Crouton) by keyboardsurfer
 * [JmDNS] (http://jmdns.sourceforge.net/)
