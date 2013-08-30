@@ -1,8 +1,8 @@
 package de.bennir.DVBViewerController.wizard.ui;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -11,17 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.doomonafireball.betterpickers.datepicker.DatePickerBuilder;
-import com.doomonafireball.betterpickers.datepicker.DatePickerDialogFragment;
-import com.doomonafireball.betterpickers.timepicker.TimePickerBuilder;
-import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment;
+
+import com.android.datetimepicker.date.DatePickerDialog;
+import com.android.datetimepicker.time.RadialPickerLayout;
+import com.android.datetimepicker.time.TimePickerDialog;
+
 import de.bennir.DVBViewerController.R;
 import de.bennir.DVBViewerController.wizard.model.TimerDatePage;
 
 import java.util.Calendar;
 
-public class TimerDateFragment extends Fragment
-        implements DatePickerDialogFragment.DatePickerDialogHandler, TimePickerDialogFragment.TimePickerDialogHandler {
+public class TimerDateFragment extends Fragment {
     private static final String ARG_KEY = "key";
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
@@ -73,25 +73,31 @@ public class TimerDateFragment extends Fragment
         mTimeStartLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerBuilder tpb = new TimePickerBuilder()
-                        .setReference(1)
-                        .setFragmentManager(getFragmentManager())
-                        .setStyleResId(R.style.BetterPickersDialogFragment_Light)
-                        .setTargetFragment(TimerDateFragment.this);
-                tpb.show();
+                // Start Start Time Picker Dialog
+                TimePickerDialog start = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+                        mTimeStartView.setText(String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
+                    }
+                }, 0, 0, true);
+                start.show(getFragmentManager(), "starttime");
             }
         });
+
+        com.android.datetimepicker.time.TimePickerDialog time;
 
         mTimeEndLayout = (LinearLayout) rootView.findViewById(R.id.timer_timeend_layout);
         mTimeEndLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerBuilder tpb = new TimePickerBuilder()
-                        .setReference(2)
-                        .setFragmentManager(getFragmentManager())
-                        .setStyleResId(R.style.BetterPickersDialogFragment_Light)
-                        .setTargetFragment(TimerDateFragment.this);
-                tpb.show();
+                // Start End Time Picker Dialog
+                TimePickerDialog end = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+                        mTimeEndView.setText(String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
+                    }
+                }, 0, 0, true);
+                end.show(getFragmentManager(), "endtime");
             }
         });
 
@@ -101,15 +107,15 @@ public class TimerDateFragment extends Fragment
             public void onClick(View view) {
                 final Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
+                int month = c.get(Calendar.MONTH) + 1;
 
-                DatePickerBuilder dpb = new DatePickerBuilder()
-                        .setFragmentManager(getFragmentManager())
-                        .setStyleResId(R.style.BetterPickersDialogFragment_Light)
-                        .setTargetFragment(TimerDateFragment.this)
-                        .setYear(year)
-                        .setMonthOfYear(month);
-                dpb.show();
+                DatePickerDialog date = DatePickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
+                        mDateView.setText(String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + year);
+                    }
+                }, year, month, 0);
+                date.show(getFragmentManager(), "date");
             }
         });
 
@@ -196,20 +202,5 @@ public class TimerDateFragment extends Fragment
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
-    }
-
-    @Override
-    public void onDialogDateSet(int reference, int year, int monthOfYear, int dayOfMonth) {
-        Log.d("TimerDateFragment", "onDialogDateSet");
-        mDateView.setText(String.format("%02d", dayOfMonth) + "." + String.format("%02d", monthOfYear + 1) + "." + year);
-    }
-
-    @Override
-    public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
-        Log.d("TimerDateFragment", "onDialogTimeSet");
-        if (reference == 1)
-            mTimeStartView.setText(String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
-        else
-            mTimeEndView.setText(String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
     }
 }
