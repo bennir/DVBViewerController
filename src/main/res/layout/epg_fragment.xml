@@ -1,52 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@android:color/transparent"
-    >
-
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/epg_channel_logo"
-        android:contentDescription="@string/desc_channel_logo"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:id="@+id/epg_channel_name"
-        android:layout_toRightOf="@id/epg_channel_logo"
-        android:textSize="24sp"
-        android:textAppearance="@android:style/TextAppearance.Holo.Widget.ActionBar.Title"
-        android:textColor="@color/DVBActionBar"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:gravity="center_vertical"
-        />
-
-    <View
-        android:layout_below="@id/epg_channel_logo"
-        android:id="@+id/epg_fragment_sep"
-        android:layout_height="1dp"
-        android:layout_width="fill_parent"
-        android:background="@color/DVBShadow"
-        android:layout_marginTop="5dp"
-        />
-
-    <ListView
-        android:layout_below="@id/epg_fragment_sep"
-        android:id="@android:id/list"
-        android:layout_width="fill_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+             android:orientation="vertical"
+             android:background="@android:color/transparent"
+        >
+    <de.bennir.DVBViewerController.view.TwoDScrollView
+        android:id="@+id/epg_twodscroll"
         android:layout_height="fill_parent"
-        android:layout_margin="5dp"
-        android:listSelector="@drawable/list_selector"
-        android:dividerHeight="10sp"
-        android:divider="#00000000"
-        />
-</RelativeLayout>
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="30dp"
+        >
+
+                <RelativeLayout
+                        android:id="@+id/epg_content"
+                        android:layout_height="fill_parent"
+                        android:layout_width="fill_parent"/>
+
+    </de.bennir.DVBViewerController.view.TwoDScrollView>
+    <ScrollView
+            android:id="@+id/epg_side"
+            android:orientation="vertical"
+            android:layout_height="fill_parent"
+            android:layout_width="60dp"
+            android:textAlignment="center"
+            android:background="#0000ff"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:layout_marginTop="30dp"
+            >
+
+        <LinearLayout
+                android:id="@+id/epg_side_col"
+                android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+    </ScrollView>
+
+    <HorizontalScrollView
+            android:id="@+id/epg_header"
+            android:layout_height="30dp"
+            android:layout_width="fill_parent"
+            android:textAlignment="center"
+            android:background="#ff0000"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            >
+
+        <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="20:15 "/>
+        </LinearLayout>
+    </HorizontalScrollView>
+</FrameLayout>

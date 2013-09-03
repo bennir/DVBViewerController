@@ -1,33 +1,32 @@
 package de.bennir.DVBViewerController;
 
-import android.app.ActionBar;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.*;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import de.bennir.DVBViewerController.channels.DVBChannel;
-import de.bennir.DVBViewerController.epg.EPGInfo;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import de.bennir.DVBViewerController.view.TwoDScrollView;
 
-public class EPGFragment extends ListFragment implements ActionBar.OnNavigationListener {
+public class EPGFragment extends Fragment {
     private static final String TAG = EPGFragment.class.toString();
-    private static final String SELECTED_ITEM = "selected_navigation_item";
-
-    private ActionBar actionBar;
-    private ArrayAdapter<String> adapter;
-    private ListView lv;
-    private EPGInfoAdapter epgAdapter;
+    HorizontalScrollView header;
+    ScrollView side;
+    RelativeLayout content;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_listview, container, false);
+        return inflater.inflate(R.layout.epg_fragment, container, false);
     }
 
     @Override
@@ -36,99 +35,79 @@ public class EPGFragment extends ListFragment implements ActionBar.OnNavigationL
 
         setHasOptionsMenu(true);
 
-        lv = getListView();
+        header = (HorizontalScrollView) getActivity().findViewById(R.id.epg_header);
+        side = (ScrollView) getActivity().findViewById(R.id.epg_side);
+        content = (RelativeLayout) getActivity().findViewById(R.id.epg_content);
 
-        actionBar = getActivity().getActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-        adapter = new ArrayAdapter<String>(
-                actionBar.getThemedContext(),
-                android.R.layout.simple_spinner_item,
-                android.R.id.text1,
-                DVBViewerControllerActivity.chanNames
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        actionBar.setListNavigationCallbacks(adapter, EPGFragment.this);
-
-        if(DVBViewerControllerActivity.currentEPGItem != -1) {
-            actionBar.setSelectedNavigationItem(DVBViewerControllerActivity.currentEPGItem);
-        } else if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(SELECTED_ITEM)) {
-                actionBar.setSelectedNavigationItem(savedInstanceState.getInt(SELECTED_ITEM));
+        header.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
             }
+        });
+
+        side.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
+
+        TwoDScrollView container = (TwoDScrollView) getActivity().findViewById(R.id.epg_twodscroll);
+        container.setOnScrollChangedCallback(new TwoDScrollView.OnScrollChangedCallback() {
+            @Override
+            public void onScroll(int l, int t, int oldl, int oldt) {
+                header.scrollTo(l, 0);
+                side.scrollTo(0, t);
+            }
+        });
+
+        // Fake Test Content
+        LinearLayout col = (LinearLayout) getActivity().findViewById(R.id.epg_side_col);
+
+
+        int width = 100;
+        int height = 50;
+        float d = getActivity().getResources().getDisplayMetrics().density;
+        int pxWidth = Math.round(d * width);
+        int pxHeight = Math.round(d * height);
+        for (int i = 0; i < 20; i++) {
+
+
+            for (int j = 0; j < 10; j++) {
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(pxWidth, pxHeight);
+                TextView item = new TextView(getActivity().getApplicationContext());
+
+                int left = (int) (d * (j * width));
+                int top = (int) (d * (i * height));
+
+                Log.d(TAG, "i" + i + "-j" + j + ": L" + left + " T" + top);
+
+                params.setMargins(left + 10, top + 10, 10, 10);
+                item.setLayoutParams(params);
+
+
+                item.setText("ARD" + i + "-" + j);
+                item.setBackgroundResource(R.drawable.list_selector);
+
+                item.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Asd", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                content.addView(item);
+            }
+
+            TextView chan = new TextView(getActivity().getApplicationContext());
+            chan.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            chan.setText("ARD" + i);
+            chan.setHeight(pxHeight);
+            col.addView(chan);
+
         }
 
-        updateEPG();
-    }
 
-    private void updateEPG() {
-        String channel = adapter.getItem(actionBar.getSelectedNavigationIndex());
-
-        ArrayList<EPGInfo> epgInfos = new ArrayList<EPGInfo>();
-        DVBChannel chan = DVBViewerControllerActivity.getChannelByName(channel);
-        EPGInfo epg = chan.epgInfo;
-
-        epgInfos.add(epg);
-
-        epgAdapter = new EPGInfoAdapter(getActivity(), epgInfos);
-
-        lv.setAdapter(epgAdapter);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // Serialize the current tab position.
-        outState.putInt(SELECTED_ITEM, DVBViewerControllerActivity.currentEPGItem);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(int i, long l) {
-        DVBViewerControllerActivity.currentEPGItem = i;
-        Log.d(TAG, "Channel Select: " + DVBViewerControllerActivity.chanNames.get(i));
-
-        return true;
-    }
-
-    public class EPGInfoAdapter extends ArrayAdapter<EPGInfo> {
-        Context context;
-        ArrayList<EPGInfo> epgInfos;
-
-        public EPGInfoAdapter(Context context, ArrayList<EPGInfo> epgInfo) {
-            super(context, R.layout.epg_info_item, epgInfo);
-            this.epgInfos = epgInfo;
-            this.context = context;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            View v;
-
-            if (convertView != null)
-                v = convertView;
-            else
-                v = inflater.inflate(R.layout.epg_info_item, parent, false);
-
-            ((TextView) v.findViewById(R.id.epg_item_title)).setText(epgInfos.get(position).title);
-            ((TextView) v.findViewById(R.id.epg_item_description)).setText(epgInfos.get(position).desc);
-
-
-            return v;
-        }
     }
 }

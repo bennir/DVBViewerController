@@ -62,6 +62,10 @@ public class RemoteFragment extends Fragment {
                     int scaleX = (int) (x / scaleWidthRatio);
                     int scaleY = (int) (y / scaleHeightRatio);
 
+                    if(scaleX > bitmap.getWidth() || scaleY > bitmap.getHeight()) {
+                        return false;
+                    }
+
                     int pixel = bitmap.getPixel(scaleX, scaleY);
 
                     int red = Color.red(pixel);
