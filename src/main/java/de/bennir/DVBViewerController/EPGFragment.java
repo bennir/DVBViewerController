@@ -3,10 +3,12 @@ package de.bennir.DVBViewerController;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -73,21 +75,18 @@ public class EPGFragment extends Fragment {
         int pxHeight = Math.round(d * height);
         for (int i = 0; i < 20; i++) {
 
-
+            int top = (int) (d * (i * height)) + 5 + (i*10);
             for (int j = 0; j < 10; j++) {
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(pxWidth, pxHeight);
                 TextView item = new TextView(getActivity().getApplicationContext());
 
-                int left = (int) (d * (j * width));
-                int top = (int) (d * (i * height));
-
-                Log.d(TAG, "i" + i + "-j" + j + ": L" + left + " T" + top);
-
-                params.setMargins(left + 10, top + 10, 10, 10);
+                int left = (int) (d * (j * width)) + 5 + (j*10);
+                params.setMargins(left, top, 0, 0);
                 item.setLayoutParams(params);
 
 
                 item.setText("ARD" + i + "-" + j);
+                item.setGravity(Gravity.CENTER);
                 item.setBackgroundResource(R.drawable.list_selector);
 
                 item.setOnClickListener(new View.OnClickListener() {
@@ -100,10 +99,14 @@ public class EPGFragment extends Fragment {
                 content.addView(item);
             }
 
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, pxHeight);
+            params.setMargins(0, 5, 0, 5);
+
             TextView chan = new TextView(getActivity().getApplicationContext());
-            chan.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            chan.setLayoutParams(params);
             chan.setText("ARD" + i);
             chan.setHeight(pxHeight);
+            chan.setGravity(Gravity.CENTER);
             col.addView(chan);
 
         }

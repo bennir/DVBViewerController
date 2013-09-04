@@ -24,7 +24,6 @@
             android:orientation="vertical"
             android:layout_height="fill_parent"
             android:layout_width="60dp"
-            android:textAlignment="center"
             android:background="#0000ff"
             android:scrollbars="none"
             android:overScrollMode="never"
