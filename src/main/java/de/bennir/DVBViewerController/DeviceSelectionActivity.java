@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import de.bennir.DVBViewerController.util.DVBService;
 import de.bennir.DVBViewerController.util.ThreadExecutor;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -130,9 +132,9 @@ public class DeviceSelectionActivity extends ListActivity implements ServiceList
                 final String port = String.valueOf(serviceInfo.getPort());
 
                 Intent mIntent = new Intent(getApplicationContext(), DVBViewerControllerActivity.class);
-                mIntent.putExtra("dvbHost", title);
-                mIntent.putExtra("dvbIp", server);
-                mIntent.putExtra("dvbPort", port);
+                mIntent.putExtra(DVBService.DVBHOST_KEY, title);
+                mIntent.putExtra(DVBService.DVBIP_KEY, server);
+                mIntent.putExtra(DVBService.DVBPORT_KEY, port);
 
                 startActivity(mIntent);
 
@@ -165,14 +167,16 @@ public class DeviceSelectionActivity extends ListActivity implements ServiceList
                                            View.OnClickListener() {
                                                @Override
                                                public void onClick(View view) {
-                                                   DVBViewerControllerActivity.dvbHost = "Demo Device";
-                                                   DVBViewerControllerActivity.dvbIp = "127.0.0.1";
-                                                   DVBViewerControllerActivity.dvbPort = "8000";
-                                                   DVBViewerControllerActivity.recIp = "127.0.0.1";
-                                                   DVBViewerControllerActivity.recPort = "8080";
+                                                   String title = DVBService.DEMO_DEVICE;
+                                                   String server = "127.0.0.1";
+                                                   String port = "8000";
 
-                                                   Intent i = new Intent(DeviceSelectionActivity.this, DVBViewerControllerActivity.class);
-                                                   startActivity(i);
+                                                   Intent mIntent = new Intent(DeviceSelectionActivity.this, DVBViewerControllerActivity.class);
+                                                   mIntent.putExtra(DVBService.DVBHOST_KEY, title);
+                                                   mIntent.putExtra(DVBService.DVBIP_KEY, server);
+                                                   mIntent.putExtra(DVBService.DVBPORT_KEY, port);
+
+                                                   startActivity(mIntent);
 
                                                    try {
                                                        DeviceSelectionActivity.this.stopProbe();

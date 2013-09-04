@@ -11,7 +11,7 @@ import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 
 public class ChannelFragment extends ListFragment {
     private static final String TAG = ChannelFragment.class.toString();
-    static ChanGroupAdapter lvAdapter;
+    public static ChanGroupAdapter lvAdapter;
     private static ListView lv;
     private static Context context;
 
