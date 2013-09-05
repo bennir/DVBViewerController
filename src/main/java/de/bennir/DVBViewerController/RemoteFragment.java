@@ -13,13 +13,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
+
+import com.koushikdutta.async.future.FutureCallback;
+
+import de.bennir.DVBViewerController.util.DVBService;
 
 public class RemoteFragment extends Fragment {
     private static final String TAG = RemoteFragment.class.toString();
-    private AQuery aq;
+    private Context mContext;
+    private DVBService mDVBService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,7 +34,8 @@ public class RemoteFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        aq = ((DVBViewerControllerActivity) getActivity()).aq;
+        mContext = getActivity().getApplicationContext();
+        mDVBService = DVBService.getInstance(mContext);
 
         ImageView remote = (ImageView) getActivity().findViewById(
                 R.id.remote);
@@ -132,20 +135,17 @@ public class RemoteFragment extends Fragment {
         Log.d(TAG, "Remote Command: " + command);
 
         ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
-        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            String url = "http://" +
-                    DVBViewerControllerActivity.dvbIp + ":" +
-                    DVBViewerControllerActivity.dvbPort +
-                    "/?" + command;
+        if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
+            String url = mDVBService.getDVBServer().createRequestString(command);
 
-            aq.ajax(url, String.class, new AjaxCallback<String>() {
+            mDVBService.mIon.with(mContext, url)
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String s) {
 
-                @Override
-                public void callback(String url, String html, AjaxStatus status) {
-
-                }
-
-            });
+                        }
+                    });
         }
     }
 }

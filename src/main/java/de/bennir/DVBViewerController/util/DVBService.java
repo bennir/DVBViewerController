@@ -55,6 +55,8 @@ public class DVBService {
      *
      */
     private void updateRecordingService() {
+        mRecordingService = new RecordingService();
+
         if (!mDVBServer.host.equals(DVBService.DEMO_DEVICE)) {
             if (mRecordingService.ip.equals("") || mRecordingService.port.equals("")) {
                 Log.d(TAG, "Getting Recording Service");
@@ -68,7 +70,6 @@ public class DVBService {
                             public void onCompleted(Exception e, JsonObject result) {
                                 JsonObject recordingService = result.getAsJsonObject("recordingService");
 
-                                mRecordingService = new RecordingService();
                                 mRecordingService.ip = recordingService.get("ip").getAsString();
                                 mRecordingService.port = recordingService.get("port").getAsString();
 
@@ -78,6 +79,73 @@ public class DVBService {
             }
         }
     }
+
+
+
+    public void updateTimers() {
+        Log.d(TAG, "updating channels");
+        DVBTimers.clear();
+
+        if (mDVBServer.host.equals(DVBService.DEMO_DEVICE)) {
+            DVBTimer timer;
+            for (int i = 1; i <= 5; i++) {
+                timer = new DVBTimer();
+                timer.id = "Demo" + i;
+                timer.name = "Timer " + i;
+                timer.date = "11.11.2011";
+                timer.enabled = i % 2 == 0;
+                timer.start = "20:15";
+                timer.end = "22:00";
+                timer.channelId = "|" + timer.name;
+                DVBTimers.add(timer);
+            }
+        } else {
+            Style st = new Style.Builder()
+                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
+                    .setBackgroundColorValue(Style.holoBlueLight)
+                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .build();
+//            Crouton.makeText(this, getString(R.string.loadingTimers), st).show();
+
+            String url = mRecordingService.createRequestString("timerlist.html?utf8=");
+//            aq.ajax(url, XmlDom.class, this, "downloadTimerCallback");
+            mIon.with(mContext, url)
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String s) {
+                            Log.d(TAG, s);
+                        }
+                    });
+        }
+
+    }
+
+//    @SuppressWarnings("UnusedDeclaration")
+//    public static void downloadTimerCallback(String url, XmlDom xml, AjaxStatus ajax) {
+//        Log.d(TAG, "downloadTimerCallback");
+//
+//        List<XmlDom> entries = xml.tags("Timer");
+//        DVBTimer timer;
+//
+//        for (XmlDom entry : entries) {
+//            Log.d(TAG, "XmlDom entry: " + entry.text("Descr"));
+//
+//            timer = new DVBTimer();
+//            timer.id = entry.text("ID");
+//            timer.name = entry.text("Descr");
+//            timer.channelId = entry.child("Channel").attr("ID");
+//            timer.enabled = !entry.attr("Enabled").equals("0");
+//            timer.date = entry.attr("Date");
+//            timer.start = entry.attr("Start");
+//            timer.duration = entry.attr("Dur");
+//            timer.end = entry.attr("End");
+//
+//            DVBTimers.add(timer);
+//        }
+//        Crouton.cancelAllCroutons();
+//        TimerFragment.addTimersToListView();
+//    }
 
     public void updateChannelList() {
         Log.d(TAG, "updating channels");
@@ -278,6 +346,14 @@ public class DVBService {
         return _instance;
     }
 
+    public static DVBService getInstance(Context context) {
+        if (_instance == null) {
+            return null;
+        }
+
+        return _instance;
+    }
+
     /**
      * getChannelByName
      *
@@ -335,9 +411,18 @@ public class DVBService {
         return mDVBServer;
     }
 
-    private class RecordingService {
-        public String ip;
-        public String port;
+    public class RecordingService {
+        public String ip = "";
+        public String port = "";
+
+        public String createRequestString(String command) {
+            String ret = "http://" +
+                    ip + ":" +
+                    port +
+                    "/api/" + command;
+
+            return ret;
+        }
     }
 
 

@@ -9,23 +9,36 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
-import de.bennir.DVBViewerController.timers.DVBTimer;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.koushikdutta.async.future.FutureCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.bennir.DVBViewerController.timers.DVBTimer;
+import de.bennir.DVBViewerController.util.DVBService;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class TimerFragment extends ListFragment {
     private static final String TAG = TimerFragment.class.toString();
     private static TimerAdapter lvAdapter;
     private static ListView lv;
-    private AQuery aq;
+    private Context mContext;
+    private DVBService mDVBService;
+
 
     public static void addTimersToListView() {
         lvAdapter.notifyDataSetChanged();
@@ -34,28 +47,22 @@ public class TimerFragment extends ListFragment {
     }
 
     void deleteTimer(int position) {
-        final DVBTimer timer = DVBViewerControllerActivity.DVBTimers.get(position);
+        final DVBTimer timer = mDVBService.getDVBTimers().get(position);
 
-        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+        if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
 
-            String url = "http://" +
-                    DVBViewerControllerActivity.recIp + ":" +
-                    DVBViewerControllerActivity.recPort +
-                    "/api/timerdelete.html?id=" + timer.id;
+            String url = mDVBService.getRecordingService().createRequestString("timerdelete.html?id=" + timer.id);
 
             Log.d(TAG, "Deleting Timer: " + url);
 
-            aq.ajax(url, String.class, new AjaxCallback<String>() {
+            mDVBService.mIon.with(mContext, url)
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String s) {
 
-                @Override
-                public void callback(String url, String html, AjaxStatus status) {
-                    // Status Ok
-                    if (status.getCode() == 200) {
-                        lvAdapter.delete(timer);
-                    }
-                }
-
-            });
+                        }
+                    });
         } else {
             lvAdapter.delete(timer);
         }
@@ -73,6 +80,9 @@ public class TimerFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mContext = getActivity().getApplicationContext();
+        mDVBService = DVBService.getInstance(mContext);
+
         setHasOptionsMenu(true);
         lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -81,19 +91,18 @@ public class TimerFragment extends ListFragment {
                 //TODO: edit timer
             }
         });
-        aq = ((DVBViewerControllerActivity) getActivity()).aq;
 
-        if (DVBViewerControllerActivity.recIp.equals("") || DVBViewerControllerActivity.recPort.equals("")) {
+        if (mDVBService.getRecordingService().ip.equals("") || mDVBService.getRecordingService().port.equals("")) {
             Crouton.makeText(getActivity(), R.string.recservicefailed, Style.ALERT).show();
         } else {
-            Log.d(TAG, "Recording Service IP:" + DVBViewerControllerActivity.recIp);
-            Log.d(TAG, "Recording Service Port:" + DVBViewerControllerActivity.recPort);
+            Log.d(TAG, "Recording Service IP:" + mDVBService.getRecordingService().ip);
+            Log.d(TAG, "Recording Service Port:" + mDVBService.getRecordingService().port);
         }
 
         lv = getListView();
-        lvAdapter = new TimerAdapter(DVBViewerControllerActivity.DVBTimers, getActivity());
+        lvAdapter = new TimerAdapter(mDVBService.getDVBTimers(), getActivity());
 
-        ((DVBViewerControllerActivity) getActivity()).updateTimers();
+        mDVBService.updateTimers();
     }
 
     @Override
@@ -105,7 +114,7 @@ public class TimerFragment extends ListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ((DVBViewerControllerActivity) getActivity()).updateTimers();
+                mDVBService.updateTimers();
                 addTimersToListView();
 
                 return true;

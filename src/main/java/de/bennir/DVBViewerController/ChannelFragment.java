@@ -8,23 +8,25 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
+import de.bennir.DVBViewerController.util.DVBService;
 
 public class ChannelFragment extends ListFragment {
     private static final String TAG = ChannelFragment.class.toString();
     public static ChanGroupAdapter lvAdapter;
     private static ListView lv;
-    private static Context context;
+    private static Context mContext;
+    private DVBService mDVBService;
 
-    public static void addChannelsToListView() {
-        Log.d(TAG, "addChannelsToListView");
-        if (lvAdapter == null) {
-            ChannelFragment.lvAdapter = new ChanGroupAdapter(context, DVBViewerControllerActivity.groupNames);
-        } else {
-            lvAdapter.notifyDataSetChanged();
-        }
-        lv.setAdapter(lvAdapter);
-        lv.invalidate();
-    }
+//    public static void addChannelsToListView() {
+//        Log.d(TAG, "addChannelsToListView");
+//        if (lvAdapter == null) {
+//            ChannelFragment.lvAdapter = new ChanGroupAdapter(mContext, DVBViewerControllerActivity.groupNames);
+//        } else {
+//            lvAdapter.notifyDataSetChanged();
+//        }
+//        lv.setAdapter(lvAdapter);
+//        lv.invalidate();
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,7 +37,10 @@ public class ChannelFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(TAG, "onActivityCreated Size: " + DVBViewerControllerActivity.DVBChannels.size());
+        mContext = getActivity().getApplicationContext();
+        mDVBService = DVBService.getInstance(mContext);
+
+        Log.d(TAG, "onActivityCreated Size: " + mDVBService.getDVBChannels().size());
 
         super.onActivityCreated(savedInstanceState);
         ((DVBViewerControllerActivity) getActivity()).mContent = this;
@@ -43,7 +48,6 @@ public class ChannelFragment extends ListFragment {
         setHasOptionsMenu(true);
         getActivity().getActionBar().setTitle(R.string.channels);
 
-        context = getActivity();
         lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -51,13 +55,13 @@ public class ChannelFragment extends ListFragment {
                 if (getActivity() instanceof DVBViewerControllerActivity) {
                     DVBViewerControllerActivity.currentGroup = i;
                     DVBViewerControllerActivity act = (DVBViewerControllerActivity) getActivity();
-                    act.switchContent(new ChannelGroupFragment(), DVBViewerControllerActivity.groupNames.get(i), R.drawable.ic_action_channels, true);
+                    act.switchContent(new ChannelGroupFragment(), mDVBService.getGroupNames().get(i), R.drawable.ic_action_channels, true);
                 }
             }
         });
 
-        ChannelFragment.lvAdapter = new ChanGroupAdapter(context, DVBViewerControllerActivity.groupNames);
-        addChannelsToListView();
+        ChannelFragment.lvAdapter = new ChanGroupAdapter(mContext, mDVBService.getGroupNames());
+//        addChannelsToListView();
     }
 
     @Override
@@ -69,7 +73,7 @@ public class ChannelFragment extends ListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ((DVBViewerControllerActivity) getActivity()).updateChannelList();
+                mDVBService.updateChannelList();
 
                 return true;
             }

@@ -8,11 +8,12 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
+
+import com.koushikdutta.async.future.FutureCallback;
+
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
+import de.bennir.DVBViewerController.util.DVBService;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,9 @@ public class ChannelGroupFragment extends ListFragment {
     public static DVBChannelAdapter lvAdapter;
     private static ListView lv;
     private View activeView;
-    private AQuery aq;
+    private Context mContext;
+
+    private DVBService mDVBService;
 
     public static void addChannelsToListView() {
         Log.d(TAG, "addChannelsToListView");
@@ -51,9 +54,9 @@ public class ChannelGroupFragment extends ListFragment {
             }
         });
 
-        aq = ((DVBViewerControllerActivity) getActivity()).aq;
-
-        ArrayList<DVBChannel> chans = DVBViewerControllerActivity.DVBChannels.get(DVBViewerControllerActivity.currentGroup);
+        mContext = getActivity().getApplicationContext();
+        mDVBService = DVBService.getInstance(mContext);
+        ArrayList<DVBChannel> chans = mDVBService.getDVBChannels().get(DVBViewerControllerActivity.currentGroup);
         ChannelGroupFragment.lvAdapter = new DVBChannelAdapter(
                 getActivity(),
                 chans
@@ -115,7 +118,7 @@ public class ChannelGroupFragment extends ListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ((DVBViewerControllerActivity) getActivity()).updateChannelList();
+                mDVBService.updateChannelList();
 
                 return true;
             }
@@ -135,22 +138,19 @@ public class ChannelGroupFragment extends ListFragment {
 
     void setChannel(String channelId) {
         ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
-        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            String url = "http://" +
-                    DVBViewerControllerActivity.dvbIp + ":" +
-                    DVBViewerControllerActivity.dvbPort +
-                    "?setChannel=" + channelId;
+        if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
+            String url = mDVBService.getDVBServer().createRequestString("setChannel=" + channelId);
 
             Log.d(TAG, "SetChannel " + url);
 
-            aq.ajax(url, String.class, new AjaxCallback<String>() {
-
-                @Override
-                public void callback(String url, String html, AjaxStatus status) {
-
-                }
-
-            });
+            mDVBService.mIon.with(mContext, url)
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String s) {
+                            Log.d(TAG, s);
+                        }
+                    });
         }
     }
 }

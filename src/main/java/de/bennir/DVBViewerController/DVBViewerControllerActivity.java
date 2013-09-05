@@ -54,34 +54,6 @@ public class DVBViewerControllerActivity extends FragmentActivity {
             .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
             .build();
 
-
-
-    @SuppressWarnings("UnusedDeclaration")
-    public static void downloadTimerCallback(String url, XmlDom xml, AjaxStatus ajax) {
-        Log.d(TAG, "downloadTimerCallback");
-
-        List<XmlDom> entries = xml.tags("Timer");
-        DVBTimer timer;
-
-        for (XmlDom entry : entries) {
-            Log.d(TAG, "XmlDom entry: " + entry.text("Descr"));
-
-            timer = new DVBTimer();
-            timer.id = entry.text("ID");
-            timer.name = entry.text("Descr");
-            timer.channelId = entry.child("Channel").attr("ID");
-            timer.enabled = !entry.attr("Enabled").equals("0");
-            timer.date = entry.attr("Date");
-            timer.start = entry.attr("Start");
-            timer.duration = entry.attr("Dur");
-            timer.end = entry.attr("End");
-
-            DVBTimers.add(timer);
-        }
-        Crouton.cancelAllCroutons();
-        TimerFragment.addTimersToListView();
-    }
-
     public static void clearChannelLists() {
         if (ChannelFragment.lvAdapter != null) {
             ChannelFragment.lvAdapter.clear();
@@ -354,49 +326,12 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         robotoCondensed = Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Bold.ttf");
     }
 
-    public void updateTimers() {
-        Log.d(TAG, "updating channels");
-        DVBViewerControllerActivity.DVBTimers.clear();
-
-        if (DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            DVBTimer timer;
-            for (int i = 1; i <= 5; i++) {
-                timer = new DVBTimer();
-                timer.id = "Demo" + i;
-                timer.name = "Timer " + i;
-                timer.date = "11.11.2011";
-                timer.enabled = i % 2 == 0;
-                timer.start = "20:15";
-                timer.end = "22:00";
-                timer.channelId = "|" + timer.name;
-                DVBViewerControllerActivity.DVBTimers.add(timer);
-            }
-
-
-
-            TimerFragment.addTimersToListView();
-        } else {
-            Style st = new Style.Builder()
-                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
-                    .setBackgroundColorValue(Style.holoBlueLight)
-                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .build();
-            Crouton.makeText(this, getString(R.string.loadingTimers), st).show();
-
-            String url = "http://";
-            url += recIp + ":" + recPort;
-            url += "/api/timerlist.html?utf8=";
-            aq.ajax(url, XmlDom.class, this, "downloadTimerCallback");
-        }
-
-    }
-
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == 1)
-            updateTimers();
+            mDVBService.updateTimers();
     }
 
     @Override
