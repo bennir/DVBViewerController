@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.bennir.DVBViewerController.timers.DVBTimer;
-import de.bennir.DVBViewerController.util.DVBService;
+import de.bennir.DVBViewerController.service.DVBService;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 

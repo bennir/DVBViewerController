@@ -13,7 +13,7 @@ import com.koushikdutta.async.future.FutureCallback;
 
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
-import de.bennir.DVBViewerController.util.DVBService;
+import de.bennir.DVBViewerController.service.DVBService;
 
 import java.util.ArrayList;
 

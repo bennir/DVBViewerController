@@ -1,9 +1,8 @@
-package de.bennir.DVBViewerController.util;
+package de.bennir.DVBViewerController.service;
 
 import android.content.Context;
 import android.util.Log;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

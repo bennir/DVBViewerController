@@ -23,8 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import de.bennir.DVBViewerController.util.DVBServer;
-import de.bennir.DVBViewerController.util.DVBService;
+import de.bennir.DVBViewerController.service.DVBServer;
+import de.bennir.DVBViewerController.service.DVBService;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class DVBViewerControllerActivity extends FragmentActivity {

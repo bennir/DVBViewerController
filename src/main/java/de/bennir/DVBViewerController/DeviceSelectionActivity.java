@@ -16,7 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import de.bennir.DVBViewerController.util.DVBService;
+import de.bennir.DVBViewerController.service.DVBService;
 import de.bennir.DVBViewerController.util.ThreadExecutor;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;

@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.Random;
 
 import de.bennir.DVBViewerController.R;
-import de.bennir.DVBViewerController.util.DVBService;
+import de.bennir.DVBViewerController.service.DVBService;
 
 public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
     private static final String TAG = DVBChannelAdapter.class.toString();

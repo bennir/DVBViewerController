@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import com.koushikdutta.async.future.FutureCallback;
 
-import de.bennir.DVBViewerController.util.DVBService;
+import de.bennir.DVBViewerController.service.DVBService;
 
 public class RemoteFragment extends Fragment {
     private static final String TAG = RemoteFragment.class.toString();

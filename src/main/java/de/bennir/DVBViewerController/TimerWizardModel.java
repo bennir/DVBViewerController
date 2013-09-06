@@ -2,7 +2,7 @@ package de.bennir.DVBViewerController;
 
 import android.content.Context;
 
-import de.bennir.DVBViewerController.util.DVBService;
+import de.bennir.DVBViewerController.service.DVBService;
 import de.bennir.DVBViewerController.wizard.model.*;
 
 public class TimerWizardModel extends AbstractWizardModel {

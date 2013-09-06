@@ -1,4 +1,4 @@
-package de.bennir.DVBViewerController.util;
+package de.bennir.DVBViewerController.service;
 
 public class DVBServer {
     public String host = "";

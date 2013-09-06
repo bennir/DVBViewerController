@@ -8,7 +8,7 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
-import de.bennir.DVBViewerController.util.DVBService;
+import de.bennir.DVBViewerController.service.DVBService;
 
 public class ChannelFragment extends ListFragment {
     private static final String TAG = ChannelFragment.class.toString();

@@ -18,7 +18,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Response;
 
 import de.bennir.DVBViewerController.timers.DVBTimer;
-import de.bennir.DVBViewerController.util.DVBService;
+import de.bennir.DVBViewerController.service.DVBService;
 import de.bennir.DVBViewerController.util.DateUtils;
 import de.bennir.DVBViewerController.wizard.model.*;
 import de.bennir.DVBViewerController.wizard.ui.PageFragmentCallbacks;
