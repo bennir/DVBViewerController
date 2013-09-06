@@ -34,17 +34,10 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class TimerFragment extends ListFragment {
     private static final String TAG = TimerFragment.class.toString();
-    private static TimerAdapter lvAdapter;
-    private static ListView lv;
+    private TimerAdapter lvAdapter;
+    private ListView lv;
     private Context mContext;
     private DVBService mDVBService;
-
-
-    public static void addTimersToListView() {
-        lvAdapter.notifyDataSetChanged();
-        lv.setAdapter(lvAdapter);
-        lv.invalidate();
-    }
 
     void deleteTimer(int position) {
         final DVBTimer timer = mDVBService.getDVBTimers().get(position);
@@ -92,17 +85,32 @@ public class TimerFragment extends ListFragment {
             }
         });
 
-        if (mDVBService.getRecordingService().ip.equals("") || mDVBService.getRecordingService().port.equals("")) {
-            Crouton.makeText(getActivity(), R.string.recservicefailed, Style.ALERT).show();
-        } else {
-            Log.d(TAG, "Recording Service IP:" + mDVBService.getRecordingService().ip);
-            Log.d(TAG, "Recording Service Port:" + mDVBService.getRecordingService().port);
+        lvAdapter = new TimerAdapter(mDVBService.getDVBTimers(), mContext);
+        lv.setAdapter(lvAdapter);
+
+        if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
+            if (mDVBService.getRecordingService().ip.equals("") || mDVBService.getRecordingService().port.equals("")) {
+                Crouton.makeText(getActivity(), R.string.recservicefailed, Style.ALERT).show();
+            } else {
+                Log.d(TAG, "Recording Service IP:" + mDVBService.getRecordingService().ip);
+                Log.d(TAG, "Recording Service Port:" + mDVBService.getRecordingService().port);
+            }
         }
 
-        lv = getListView();
-        lvAdapter = new TimerAdapter(mDVBService.getDVBTimers(), getActivity());
+        updateTimerList();
+    }
 
-        mDVBService.updateTimers();
+    private void updateTimerList() {
+        if (mDVBService.getDVBTimers().isEmpty()) {
+            Style st = new Style.Builder()
+                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
+                    .setBackgroundColorValue(Style.holoBlueLight)
+                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .build();
+            Crouton.makeText(getActivity(), mContext.getResources().getString(R.string.loadingTimers), st).show();
+
+            mDVBService.loadTimers(lvAdapter);
+        }
     }
 
     @Override
@@ -114,9 +122,7 @@ public class TimerFragment extends ListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mDVBService.updateTimers();
-                addTimersToListView();
-
+                mDVBService.loadTimers(lvAdapter);
                 return true;
             }
         });
@@ -137,7 +143,7 @@ public class TimerFragment extends ListFragment {
         });
     }
 
-    public class TimerAdapter extends ArrayAdapter<DVBTimer> {
+    final public class TimerAdapter extends ArrayAdapter<DVBTimer> {
         private final Context context;
         private List<DVBTimer> timers;
         private List<DVBTimer> deleteTimers;
@@ -230,7 +236,7 @@ public class TimerFragment extends ListFragment {
                         timers.remove(timer);
                         deleteTimers.remove(delete);
 
-                        addTimersToListView();
+                        lvAdapter.notifyDataSetChanged();
                     }
                 });
             }

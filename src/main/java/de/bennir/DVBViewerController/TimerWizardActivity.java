@@ -197,7 +197,6 @@ public class TimerWizardActivity extends FragmentActivity implements
                                                 timer.end = endtime;
 
                                                 mDVBService.getDVBTimers().add(timer);
-                                                TimerFragment.addTimersToListView();
 
                                                 setResult(0);
                                                 finish();

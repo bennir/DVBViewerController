@@ -12,32 +12,29 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
-import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
-import de.bennir.DVBViewerController.channels.DVBChannel;
-import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
-import de.bennir.DVBViewerController.epg.EPGInfo;
-import de.bennir.DVBViewerController.timers.DVBTimer;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
 import de.bennir.DVBViewerController.util.DVBServer;
 import de.bennir.DVBViewerController.util.DVBService;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DVBViewerControllerActivity extends FragmentActivity {
     private static final String TAG = DVBViewerControllerActivity.class.toString();
     private static final String OPENED_KEY = "OPENED_KEY";
-
-    public DVBService mDVBService;
-
     public static int currentGroup = -1;
+    public static de.keyboardsurfer.android.widget.crouton.Configuration croutonInfinite = new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+            .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
+            .build();
+    public DVBService mDVBService;
     public Typeface robotoThin;
     public Typeface robotoLight;
     public Typeface robotoCondensed;
@@ -49,22 +46,6 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private SharedPreferences prefs = null;
     private Boolean opened = null;
-
-    public static de.keyboardsurfer.android.widget.crouton.Configuration croutonInfinite = new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
-            .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
-            .build();
-
-    public static void clearChannelLists() {
-        if (ChannelFragment.lvAdapter != null) {
-            ChannelFragment.lvAdapter.clear();
-            ChannelFragment.lvAdapter.notifyDataSetChanged();
-        }
-
-        if (ChannelGroupFragment.lvAdapter != null) {
-            ChannelGroupFragment.lvAdapter.clear();
-            ChannelGroupFragment.lvAdapter.notifyDataSetChanged();
-        }
-    }
 
     @Override
     protected void onDestroy() {
@@ -165,7 +146,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         ) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
-                if(mTitle.equals(getString(R.string.epg))) {
+                if (mTitle.equals(getString(R.string.epg))) {
                     getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
                     getActionBar().setDisplayShowTitleEnabled(false);
                 }
@@ -183,7 +164,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                if(mTitle.equals(getString(R.string.epg))) {
+                if (mTitle.equals(getString(R.string.epg))) {
                     getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                     getActionBar().setDisplayShowTitleEnabled(true);
                 }
@@ -217,26 +198,32 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
                 mDVBService.destroy();
 
-//                dvbHost = "";
-//                dvbIp = "";
-//                dvbPort = "";
-//                recIp = "";
-//                recPort = "";
-//
-//                DVBChannels.clear();
-//                groupNames.clear();
-//                DVBTimers.clear();
-//                chanNames.clear();
-
                 DVBViewerControllerActivity.this.finish();
                 overridePendingTransition(R.anim.fadein, R.anim.slide_to_right);
             }
         });
 
+        addMenuItems(getApplicationContext());
+
         /**
-         * Menu Items
+         * Channel Loading
          */
-        MenuAdapter adapter = new MenuAdapter(this);
+        if (mDVBService.getDVBChannels().isEmpty()) {
+            Log.d(TAG, "DVBChannels empty");
+            mDVBService.loadChannels();
+        }
+        if (mDVBService.getDVBTimers().isEmpty()) {
+            Log.d(TAG, "DVBTimers empty");
+            mDVBService.loadTimers();
+        }
+    }
+
+    /**
+     * Adds Menu Items to NavDrawer
+     * @param context Application Context
+     */
+    private void addMenuItems(Context context) {
+        MenuAdapter adapter = new MenuAdapter(context);
 
         adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote));
         adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels));
@@ -297,17 +284,6 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                 mDrawerLayout.closeDrawer(mDrawer);
             }
         });
-
-
-
-        /**
-         * Channel Loading
-         */
-//        if (DVBChannels.isEmpty()) {
-//            Log.d(TAG, "DVBChannels empty");
-//            updateChannelList();
-//        }
-        mDVBService.updateChannelList();
     }
 
     @Override
@@ -326,12 +302,10 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         robotoCondensed = Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Bold.ttf");
     }
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == 1)
-            mDVBService.updateTimers();
+            mDVBService.loadTimers();
     }
 
     @Override
@@ -347,7 +321,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     }
 
     public void switchContent(Fragment fragment, String title, int icon) {
-        if(!title.equals(getString(R.string.epg)))
+        if (!title.equals(getString(R.string.epg)))
             getActionBar().setTitle(title);
         getActionBar().setIcon(icon);
         mContent = fragment;
@@ -384,7 +358,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         }
     }
 
-    public class MenuAdapter extends ArrayAdapter<DVBMenuItem> {
+    private class MenuAdapter extends ArrayAdapter<DVBMenuItem> {
 
         public MenuAdapter(Context context) {
             super(context, 0);

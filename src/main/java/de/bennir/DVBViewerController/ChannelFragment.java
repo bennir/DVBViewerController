@@ -73,7 +73,7 @@ public class ChannelFragment extends ListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mDVBService.updateChannelList();
+                mDVBService.loadChannels();
 
                 return true;
             }
