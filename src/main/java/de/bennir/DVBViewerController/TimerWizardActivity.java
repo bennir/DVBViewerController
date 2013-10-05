@@ -2,6 +2,7 @@ package de.bennir.DVBViewerController;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.*;
@@ -12,10 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
+
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Response;
+
 import de.bennir.DVBViewerController.timers.DVBTimer;
+import de.bennir.DVBViewerController.service.DVBService;
 import de.bennir.DVBViewerController.util.DateUtils;
 import de.bennir.DVBViewerController.wizard.model.*;
 import de.bennir.DVBViewerController.wizard.ui.PageFragmentCallbacks;
@@ -33,6 +36,8 @@ public class TimerWizardActivity extends FragmentActivity implements
         PageFragmentCallbacks,
         ReviewFragment.Callbacks,
         ModelCallbacks {
+    private static final String TAG = TimerWizardActivity.class.toString();
+
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
     private boolean mEditingAfterReview;
@@ -42,12 +47,19 @@ public class TimerWizardActivity extends FragmentActivity implements
     private Button mPrevButton;
     private List<Page> mCurrentPageSequence;
     private StepPagerStrip mStepPagerStrip;
+    private Context mContext;
+    private DVBService mDVBService;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timerwizard_main);
 
-        mWizardModel = new TimerWizardModel(this);
+        mContext = getApplicationContext();
+        mDVBService = DVBService.getInstance(mContext);
+
+        Log.d(TAG, "Context: " + mContext.toString());
+
+        mWizardModel = new TimerWizardModel(mContext);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.timer_add);
@@ -120,7 +132,7 @@ public class TimerWizardActivity extends FragmentActivity implements
                                             if (priority == null)
                                                 priority = "50";
 
-                                            if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
+                                            if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
                                                 try {
                                                     DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                                                     Date d1 = df.parse(date + " " + starttime);
@@ -134,42 +146,47 @@ public class TimerWizardActivity extends FragmentActivity implements
                                                     long startVal = Math.round((Double.valueOf(start) - dor) * 60 * 24);
                                                     long stopVal = Math.round((Double.valueOf(stop) - dor) * 60 * 24);
 
-                                                    String url = "http://";
-                                                    url += DVBViewerControllerActivity.recIp + ":";
-                                                    url += DVBViewerControllerActivity.recPort;
-                                                    url += "/api/timeradd.html?";
-                                                    url += (enabled ? "enable=1" : "enable=0");
-                                                    url += "&ch=" + URLEncoder.encode(DVBViewerControllerActivity.getChannelByName(channel).channelId, "UTF-8");
-                                                    url += "&title=" + URLEncoder.encode(name, "UTF-8");
-                                                    url += "&dor=" + start.split("\\.")[0];
-                                                    url += "&start=" + startVal;
-                                                    url += "&stop=" + stopVal;
-                                                    url += "&prio=" + priority;
+                                                    String command = "timeradd.html?";
+                                                    command += (enabled ? "enable=1" : "enable=0");
+                                                    command += "&ch=" + URLEncoder.encode(mDVBService.getChannelByName(channel).channelId, "UTF-8");
+                                                    command += "&title=" + URLEncoder.encode(name, "UTF-8");
+                                                    command += "&dor=" + start.split("\\.")[0];
+                                                    command += "&start=" + startVal;
+                                                    command += "&stop=" + stopVal;
+                                                    command += "&prio=" + priority;
                                                     if (action != null)
-                                                        url += (action.equals(getString(R.string.record))) ? "&action=0" : "&action=1";
+                                                        command += (action.equals(getString(R.string.record))) ? "&action=0" : "&action=1";
                                                     if (after != null) {
                                                         if (after.equals("Power Off"))
-                                                            url += "&endact=1";
+                                                            command += "&endact=1";
                                                         else if (after.equals("Standby"))
-                                                            url += "&endact=2";
+                                                            command += "&endact=2";
                                                         else
-                                                            url += "endact=3";
+                                                            command += "endact=3";
                                                     }
+
+                                                    String url = mDVBService.getRecordingService().createRequestString(command);
 
                                                     Log.d("TimerWizard", url);
 
-                                                    AQuery aq = new AQuery(getActivity());
-                                                    aq.ajax(url, String.class, new AjaxCallback<String>() {
+                                                    mDVBService.mIon.with(mContext)
+                                                            .load(url)
+                                                            .asString()
+                                                            .withResponse()
+                                                            .setCallback(new FutureCallback<Response<String>>() {
+                                                                @Override
+                                                                public void onCompleted(Exception e, Response<String> result) {
+                                                                    // print the response code, ie, 200
+                                                                    System.out.println(result.getHeaders().getResponseCode());
+                                                                    // print the String that was downloaded
+                                                                    System.out.println(result.getResult());
 
-                                                        @Override
-                                                        public void callback(String url, String html, AjaxStatus status) {
-                                                            // Status Ok
-                                                            if (status.getCode() == 200) {
-                                                                setResult(1);
-                                                                finish();
-                                                            }
-                                                        }
-                                                    });
+                                                                    if(result.getHeaders().getResponseCode() == 200) {
+                                                                        setResult(1);
+                                                                        finish();
+                                                                    }
+                                                                }
+                                                            });
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
@@ -183,8 +200,8 @@ public class TimerWizardActivity extends FragmentActivity implements
                                                 timer.start = starttime;
                                                 timer.end = endtime;
 
-                                                DVBViewerControllerActivity.DVBTimers.add(timer);
-                                                TimerFragment.addTimersToListView();
+                                                mDVBService.getDVBTimers().add(timer);
+                                                TimerFragment.lvAdapter.notifyDataSetChanged();
 
                                                 setResult(0);
                                                 finish();

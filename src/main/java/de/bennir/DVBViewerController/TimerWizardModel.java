@@ -1,6 +1,9 @@
 package de.bennir.DVBViewerController;
 
 import android.content.Context;
+import android.util.Log;
+
+import de.bennir.DVBViewerController.service.DVBService;
 import de.bennir.DVBViewerController.wizard.model.*;
 
 public class TimerWizardModel extends AbstractWizardModel {
@@ -13,7 +16,7 @@ public class TimerWizardModel extends AbstractWizardModel {
     protected PageList onNewRootPageList() {
         return new PageList(
                 new SingleFixedChoicePage(this, "channel")
-                        .setChoices(DVBViewerControllerActivity.chanNames)
+                        .setChoices(DVBService.getInstance(mContext).getChanNames())
                         .setRequired(true),
                 new TimerInfoPage(this, "timer_info", mContext)
                         .setRequired(true),

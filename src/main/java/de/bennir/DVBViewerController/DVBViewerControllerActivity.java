@@ -12,43 +12,32 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
-import com.androidquery.util.XmlDom;
-import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
-import de.bennir.DVBViewerController.channels.DVBChannel;
-import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
-import de.bennir.DVBViewerController.epg.EPGInfo;
-import de.bennir.DVBViewerController.timers.DVBTimer;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import de.bennir.DVBViewerController.service.DVBServer;
+import de.bennir.DVBViewerController.service.DVBService;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DVBViewerControllerActivity extends FragmentActivity {
     private static final String TAG = DVBViewerControllerActivity.class.toString();
     private static final String OPENED_KEY = "OPENED_KEY";
-    public static String dvbHost = "";
-    public static String dvbIp = "";
-    public static String dvbPort = "";
-    public static String recIp = "";
-    public static String recPort = "";
-    public static ArrayList<ArrayList<DVBChannel>> DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
-    public static ArrayList<String> groupNames = new ArrayList<String>();
-    public static ArrayList<String> chanNames = new ArrayList<String>();
-    public static ArrayList<DVBTimer> DVBTimers = new ArrayList<DVBTimer>();
     public static int currentGroup = -1;
-    public static int currentEPGItem = -1;
-    public AQuery aq;
+    public static de.keyboardsurfer.android.widget.crouton.Configuration croutonInfinite = new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+            .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
+            .build();
+    public DVBService mDVBService;
     public Typeface robotoThin;
-    public Typeface robotoLight;
+    public static Typeface robotoLight;
     public Typeface robotoCondensed;
     public Fragment mContent;
     private ListView mDrawerList;
@@ -59,132 +48,12 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     private SharedPreferences prefs = null;
     private Boolean opened = null;
 
-    public static de.keyboardsurfer.android.widget.crouton.Configuration croutonInfinite = new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
-            .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
-            .build();
-
-    public static DVBChannel getChannelByName(String name) {
-        DVBChannel ret = null;
-
-        for (ArrayList<DVBChannel> chans : DVBChannels) {
-            for (DVBChannel chan : chans) {
-                if (chan.name.toLowerCase().equals(name.toLowerCase())) {
-                    ret = chan;
-                    break;
-                }
-            }
-        }
-
-        return ret;
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public static void downloadTimerCallback(String url, XmlDom xml, AjaxStatus ajax) {
-        Log.d(TAG, "downloadTimerCallback");
-
-        List<XmlDom> entries = xml.tags("Timer");
-        DVBTimer timer;
-
-        for (XmlDom entry : entries) {
-            Log.d(TAG, "XmlDom entry: " + entry.text("Descr"));
-
-            timer = new DVBTimer();
-            timer.id = entry.text("ID");
-            timer.name = entry.text("Descr");
-            timer.channelId = entry.child("Channel").attr("ID");
-            timer.enabled = !entry.attr("Enabled").equals("0");
-            timer.date = entry.attr("Date");
-            timer.start = entry.attr("Start");
-            timer.duration = entry.attr("Dur");
-            timer.end = entry.attr("End");
-
-            DVBTimers.add(timer);
-        }
-        Crouton.cancelAllCroutons();
-        TimerFragment.addTimersToListView();
-    }
-
-    private static void clearChannelLists() {
-        if (ChannelFragment.lvAdapter != null) {
-            ChannelFragment.lvAdapter.clear();
-            ChannelFragment.lvAdapter.notifyDataSetChanged();
-        }
-
-        if (ChannelGroupFragment.lvAdapter != null) {
-            ChannelGroupFragment.lvAdapter.clear();
-            ChannelGroupFragment.lvAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public void downloadChannelCallback(String url, JSONObject json, AjaxStatus ajax) {
-        Log.d(TAG, "downloadChannelCallback");
-        clearChannelLists();
-
-        ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
-
-        try {
-            if (json != null) {
-                Log.d(TAG, "Received answer");
-                JSONArray channelsJSON = new JSONArray(
-                        json.getString("channels"));
-
-                String currentGroup = "";
-
-                for (int i = 0; i < channelsJSON.length(); i++) {
-                    JSONObject chan = channelsJSON.getJSONObject(i);
-
-                    DVBChannel dvbChannel = new DVBChannel();
-                    dvbChannel.name = chan.getString("name");
-                    dvbChannel.favoriteId = chan.getString("id");
-                    dvbChannel.channelId = chan.getString("channelid");
-                    dvbChannel.epgInfo.title = URLDecoder.decode(chan.getString("epgtitle"));
-                    dvbChannel.epgInfo.time = chan.getString("epgtime");
-                    dvbChannel.epgInfo.duration = chan.getString("epgduration");
-
-                    String group = chan.getString("group");
-                    if (!group.equals(currentGroup)) {
-                        if (i > 0) {
-                            DVBViewerControllerActivity.DVBChannels.add(dvbChans);
-                            dvbChans = new ArrayList<DVBChannel>();
-                        }
-                        DVBViewerControllerActivity.groupNames.add(group);
-                        currentGroup = group;
-                    }
-                    chanNames.add(dvbChannel.name);
-                    dvbChans.add(dvbChannel);
-                }
-                DVBViewerControllerActivity.DVBChannels.add(dvbChans);
-
-                ChannelFragment.lvAdapter = new ChanGroupAdapter(this, DVBViewerControllerActivity.groupNames);
-
-                try {
-                    ArrayList<DVBChannel> chans = DVBViewerControllerActivity.DVBChannels.get(DVBViewerControllerActivity.currentGroup);
-                    ChannelGroupFragment.lvAdapter = new DVBChannelAdapter(this, chans);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-                ChannelFragment.addChannelsToListView();
-                ChannelGroupFragment.addChannelsToListView();
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            System.out.println(e.toString());
-        } finally {
-            Crouton.cancelAllCroutons();
-        }
-    }
-
     @Override
     protected void onDestroy() {
         // Workaround until there's a way to detach the Activity from Crouton while
         // there are still some in the Queue.
         Crouton.clearCroutonsForActivity(this);
-        DVBChannels.clear();
-        DVBTimers.clear();
-        groupNames.clear();
-        chanNames.clear();
+        mDVBService.destroy();
         super.onDestroy();
     }
 
@@ -222,17 +91,26 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
         initFonts();
 
-        aq = new AQuery(this);
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            dvbHost = extras.getString("dvbHost");
-            dvbIp = extras.getString("dvbIp");
-            dvbPort = extras.getString("dvbPort");
+            DVBServer server = new DVBServer();
+            server.host = extras.getString(DVBService.DVBHOST_KEY);
+            server.ip = extras.getString(DVBService.DVBIP_KEY);
+            server.port = extras.getString(DVBService.DVBPORT_KEY);
+
+            mDVBService = DVBService.getInstance(getApplicationContext(), server);
+        } else {
+            try {
+                throw new Exception("No Bundle");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         mTitle = getString(R.string.remote);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.remote);
         getActionBar().setIcon(R.drawable.ic_action_remote);
         getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
@@ -269,7 +147,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         ) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
-                if(mTitle.equals(getString(R.string.epg))) {
+                if (mTitle.equals(getString(R.string.epg))) {
                     getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
                     getActionBar().setDisplayShowTitleEnabled(false);
                 }
@@ -287,7 +165,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                if(mTitle.equals(getString(R.string.epg))) {
+                if (mTitle.equals(getString(R.string.epg))) {
                     getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
                     getActionBar().setDisplayShowTitleEnabled(true);
                 }
@@ -310,8 +188,8 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
         TextView activeProfile = (TextView) findViewById(R.id.active_profile);
         activeProfile.setTypeface(robotoCondensed);
-        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            activeProfile.setText(dvbHost);
+        if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
+            activeProfile.setText(mDVBService.getDVBServer().host);
         }
         activeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -319,26 +197,36 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                 Intent mIntent = new Intent(getApplicationContext(), DeviceSelectionActivity.class);
                 startActivity(mIntent);
 
-                dvbHost = "";
-                dvbIp = "";
-                dvbPort = "";
-                recIp = "";
-                recPort = "";
-
-                DVBChannels.clear();
-                groupNames.clear();
-                DVBTimers.clear();
-                chanNames.clear();
+                mDVBService.destroy();
 
                 DVBViewerControllerActivity.this.finish();
                 overridePendingTransition(R.anim.fadein, R.anim.slide_to_right);
             }
         });
 
+        addMenuItems(getApplicationContext());
+
         /**
-         * Menu Items
+         * Channel Loading
          */
-        MenuAdapter adapter = new MenuAdapter(this);
+        if (mDVBService.getDVBChannels().isEmpty()) {
+            Log.d(TAG, "DVBChannels empty");
+            Style st = new Style.Builder()
+                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
+                    .setBackgroundColorValue(Style.holoBlueLight)
+                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .build();
+            Crouton.makeText(this, R.string.loadingChannels, st).show();
+            mDVBService.loadChannels();
+        }
+    }
+
+    /**
+     * Adds Menu Items to NavDrawer
+     * @param context Application Context
+     */
+    private void addMenuItems(Context context) {
+        MenuAdapter adapter = new MenuAdapter(context);
 
         adapter.add(new DVBMenuItem(getString(R.string.remote), R.drawable.ic_action_remote));
         adapter.add(new DVBMenuItem(getString(R.string.channels), R.drawable.ic_action_channels));
@@ -399,30 +287,6 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                 mDrawerLayout.closeDrawer(mDrawer);
             }
         });
-
-        /**
-         * Recording Service Loading
-         */
-        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            if (DVBViewerControllerActivity.recIp.equals("") || DVBViewerControllerActivity.recPort.equals("")) {
-                Log.d(TAG, "Getting Recording Service");
-
-                String url = "http://" +
-                        DVBViewerControllerActivity.dvbIp + ":" +
-                        DVBViewerControllerActivity.dvbPort +
-                        "/?getRecordingService";
-                Log.d(TAG, "URL=" + url);
-                aq.ajax(url, JSONObject.class, this, "getRecordingServiceCallback");
-            }
-        }
-
-        /**
-         * Channel Loading
-         */
-        if (DVBChannels.isEmpty()) {
-            Log.d(TAG, "DVBChannels empty");
-            updateChannelList();
-        }
     }
 
     @Override
@@ -441,151 +305,10 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         robotoCondensed = Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Bold.ttf");
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void getRecordingServiceCallback(String url, JSONObject json, AjaxStatus ajax) {
-        try {
-            if (json != null) {
-                JSONObject recordingService = json.getJSONObject("recordingService");
-
-                DVBViewerControllerActivity.recIp = recordingService.getString("ip");
-                DVBViewerControllerActivity.recPort = recordingService.getString("port");
-
-                Log.d(TAG, "RecordingService: " + DVBViewerControllerActivity.recIp + ":" + DVBViewerControllerActivity.recPort);
-            }
-        } catch (JSONException e) {
-            Crouton.makeText(this, R.string.recservicefailed, Style.ALERT).show();
-
-            e.printStackTrace();
-        }
-    }
-
-    public void updateTimers() {
-        Log.d(TAG, "updating channels");
-        DVBViewerControllerActivity.DVBTimers.clear();
-
-        if (DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            DVBTimer timer;
-            for (int i = 1; i <= 5; i++) {
-                timer = new DVBTimer();
-                timer.id = "Demo" + i;
-                timer.name = "Timer " + i;
-                timer.date = "11.11.2011";
-                timer.enabled = i % 2 == 0;
-                timer.start = "20:15";
-                timer.end = "22:00";
-                timer.channelId = "|" + timer.name;
-                DVBViewerControllerActivity.DVBTimers.add(timer);
-            }
-
-
-
-            TimerFragment.addTimersToListView();
-        } else {
-            Style st = new Style.Builder()
-                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
-                    .setBackgroundColorValue(Style.holoBlueLight)
-                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .build();
-            Crouton.makeText(this, getString(R.string.loadingTimers), st).show();
-
-            String url = "http://";
-            url += recIp + ":" + recPort;
-            url += "/api/timerlist.html?utf8=";
-            aq.ajax(url, XmlDom.class, this, "downloadTimerCallback");
-        }
-
-    }
-
-    public void updateChannelList() {
-        Log.d(TAG, "updating channels");
-        DVBViewerControllerActivity.groupNames.clear();
-        DVBViewerControllerActivity.DVBChannels.clear();
-
-        if (DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            clearChannelLists();
-
-            DVBViewerControllerActivity.groupNames.add("ARD");
-            ArrayList<DVBChannel> testChans = new ArrayList<DVBChannel>();
-
-            DVBChannel test = new DVBChannel();
-            test.name = "Das Erste HD";
-            EPGInfo epg = new EPGInfo();
-            epg.channel = test.name;
-            epg.desc = "Nachrichten";
-            epg.time = "20:15";
-            epg.title = "Nachrichten";
-            test.epgInfo = epg;
-            testChans.add(test);
-            chanNames.add(test.name);
-            for (int i = 0; i < 10; i++) {
-                test = new DVBChannel();
-                test.name = "NDR HD";
-                epg = new EPGInfo();
-                epg.channel = test.name;
-                epg.desc = "Nachrichten";
-                epg.time = "20:15";
-                epg.title = "Nachrichten";
-                test.epgInfo = epg;
-                testChans.add(test);
-                chanNames.add(test.name);
-            }
-            DVBViewerControllerActivity.DVBChannels.add(testChans);
-
-            DVBViewerControllerActivity.groupNames.add("ZDF");
-            testChans = new ArrayList<DVBChannel>();
-
-            test = new DVBChannel();
-            test.name = "ZDF HD";
-            epg = new EPGInfo();
-            epg.channel = test.name;
-            epg.desc = "Nachrichten";
-            epg.time = "20:15";
-            epg.title = "Nachrichten";
-            test.epgInfo = epg;
-            testChans.add(test);
-            chanNames.add(test.name);
-            for (int i = 0; i < 10; i++) {
-                test = new DVBChannel();
-                test.name = "ZDF Kultur";
-                epg = new EPGInfo();
-                epg.channel = test.name;
-                epg.desc = "Nachrichten";
-                epg.time = "20:15";
-                epg.title = "Nachrichten";
-                test.epgInfo = epg;
-                testChans.add(test);
-                chanNames.add(test.name);
-            }
-            DVBViewerControllerActivity.DVBChannels.add(testChans);
-
-
-            ChannelFragment.lvAdapter = new ChanGroupAdapter(this, DVBViewerControllerActivity.groupNames);
-        } else {
-            String url = "http://" +
-                    DVBViewerControllerActivity.dvbIp + ":" +
-                    DVBViewerControllerActivity.dvbPort +
-                    "/?getFavList";
-            Log.d(TAG, "URL=" + url);
-
-
-
-
-            Style st = new Style.Builder()
-                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
-                    .setBackgroundColorValue(Style.holoBlueLight)
-                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .build();
-
-            Crouton.makeText(this, R.string.loadingChannels, st).show();
-
-            aq.ajax(url, JSONObject.class, this, "downloadChannelCallback");
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == 1)
-            updateTimers();
+            mDVBService.loadTimers();
     }
 
     @Override
@@ -601,7 +324,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     }
 
     public void switchContent(Fragment fragment, String title, int icon) {
-        if(!title.equals(getString(R.string.epg)))
+        if (!title.equals(getString(R.string.epg)))
             getActionBar().setTitle(title);
         getActionBar().setIcon(icon);
         mContent = fragment;
@@ -638,7 +361,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         }
     }
 
-    public class MenuAdapter extends ArrayAdapter<DVBMenuItem> {
+    private class MenuAdapter extends ArrayAdapter<DVBMenuItem> {
 
         public MenuAdapter(Context context) {
             super(context, 0);

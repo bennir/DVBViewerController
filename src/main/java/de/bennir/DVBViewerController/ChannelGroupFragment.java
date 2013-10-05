@@ -8,27 +8,25 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
+
+import com.koushikdutta.async.future.FutureCallback;
+
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
+import de.bennir.DVBViewerController.service.DVBService;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 import java.util.ArrayList;
 
 public class ChannelGroupFragment extends ListFragment {
     private static final String TAG = ChannelGroupFragment.class.toString();
     public static DVBChannelAdapter lvAdapter;
-    private static ListView lv;
+    private ListView lv;
     private View activeView;
-    private AQuery aq;
+    private Context mContext;
 
-    public static void addChannelsToListView() {
-        Log.d(TAG, "addChannelsToListView");
-        lv.setAdapter(lvAdapter);
-        lvAdapter.notifyDataSetChanged();
-        lv.invalidate();
-    }
+    private DVBService mDVBService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,13 +49,15 @@ public class ChannelGroupFragment extends ListFragment {
             }
         });
 
-        aq = ((DVBViewerControllerActivity) getActivity()).aq;
+        mContext = getActivity().getApplicationContext();
+        mDVBService = DVBService.getInstance(mContext);
 
-        ArrayList<DVBChannel> chans = DVBViewerControllerActivity.DVBChannels.get(DVBViewerControllerActivity.currentGroup);
+        ArrayList<DVBChannel> chans = mDVBService.getDVBChannels().get(DVBViewerControllerActivity.currentGroup);
         ChannelGroupFragment.lvAdapter = new DVBChannelAdapter(
                 getActivity(),
                 chans
         );
+        lv.setAdapter(lvAdapter);
 
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -80,8 +80,19 @@ public class ChannelGroupFragment extends ListFragment {
 
             }
         });
+    }
 
-        addChannelsToListView();
+    public void updateChannelList() {
+        lv.invalidate();
+
+        Style st = new Style.Builder()
+                .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
+                .setBackgroundColorValue(Style.holoBlueLight)
+                .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .build();
+        Crouton.makeText(getActivity(), mContext.getResources().getString(R.string.loadingChannels), st).show();
+
+        mDVBService.loadChannels();
     }
 
     private void showChannelMenu(View view) {
@@ -115,7 +126,7 @@ public class ChannelGroupFragment extends ListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                ((DVBViewerControllerActivity) getActivity()).updateChannelList();
+                updateChannelList();
 
                 return true;
             }
@@ -135,22 +146,13 @@ public class ChannelGroupFragment extends ListFragment {
 
     void setChannel(String channelId) {
         ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
-        if (!DVBViewerControllerActivity.dvbHost.equals("Demo Device")) {
-            String url = "http://" +
-                    DVBViewerControllerActivity.dvbIp + ":" +
-                    DVBViewerControllerActivity.dvbPort +
-                    "?setChannel=" + channelId;
+        if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
+            String url = mDVBService.getDVBServer().createRequestString("setChannel=" + channelId);
 
             Log.d(TAG, "SetChannel " + url);
 
-            aq.ajax(url, String.class, new AjaxCallback<String>() {
-
-                @Override
-                public void callback(String url, String html, AjaxStatus status) {
-
-                }
-
-            });
+            mDVBService.mIon.with(mContext, url)
+                    .asString();
         }
     }
 }
