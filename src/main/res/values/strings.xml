@@ -111,4 +111,5 @@
 
     <!-- DO NOT TRANSLATE -->
     <string name="day_of_week_label_typeface">sans-serif</string>
+    <string name="recserviceConfigFail">Recording Service not configured correctly</string>
 </resources>

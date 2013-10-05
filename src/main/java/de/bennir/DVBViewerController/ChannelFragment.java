@@ -9,24 +9,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 import de.bennir.DVBViewerController.service.DVBService;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class ChannelFragment extends ListFragment {
     private static final String TAG = ChannelFragment.class.toString();
     public static ChanGroupAdapter lvAdapter;
-    private static ListView lv;
-    private static Context mContext;
+    private ListView lv;
+    private Context mContext;
     private DVBService mDVBService;
-
-//    public static void addChannelsToListView() {
-//        Log.d(TAG, "addChannelsToListView");
-//        if (lvAdapter == null) {
-//            ChannelFragment.lvAdapter = new ChanGroupAdapter(mContext, DVBViewerControllerActivity.groupNames);
-//        } else {
-//            lvAdapter.notifyDataSetChanged();
-//        }
-//        lv.setAdapter(lvAdapter);
-//        lv.invalidate();
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,8 +28,8 @@ public class ChannelFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        mContext = getActivity().getApplicationContext();
-        mDVBService = DVBService.getInstance(mContext);
+        mContext = getActivity();
+        mDVBService = DVBService.getInstance(mContext.getApplicationContext());
 
         Log.d(TAG, "onActivityCreated Size: " + mDVBService.getDVBChannels().size());
 
@@ -60,8 +51,21 @@ public class ChannelFragment extends ListFragment {
             }
         });
 
-        ChannelFragment.lvAdapter = new ChanGroupAdapter(mContext, mDVBService.getGroupNames());
-//        addChannelsToListView();
+        lvAdapter = new ChanGroupAdapter(mContext, mDVBService.getGroupNames());
+        lv.setAdapter(lvAdapter);
+    }
+
+    public void updateChannelList() {
+        lv.invalidate();
+
+        Style st = new Style.Builder()
+                .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
+                .setBackgroundColorValue(Style.holoBlueLight)
+                .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .build();
+        Crouton.makeText(getActivity(), mContext.getResources().getString(R.string.loadingChannels), st).show();
+
+        mDVBService.loadChannels();
     }
 
     @Override
@@ -73,7 +77,7 @@ public class ChannelFragment extends ListFragment {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mDVBService.loadChannels();
+                updateChannelList();
 
                 return true;
             }

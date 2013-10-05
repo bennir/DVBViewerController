@@ -36,6 +36,8 @@ public class TimerWizardActivity extends FragmentActivity implements
         PageFragmentCallbacks,
         ReviewFragment.Callbacks,
         ModelCallbacks {
+    private static final String TAG = TimerWizardActivity.class.toString();
+
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
     private boolean mEditingAfterReview;
@@ -55,7 +57,9 @@ public class TimerWizardActivity extends FragmentActivity implements
         mContext = getApplicationContext();
         mDVBService = DVBService.getInstance(mContext);
 
-        mWizardModel = new TimerWizardModel(this);
+        Log.d(TAG, "Context: " + mContext.toString());
+
+        mWizardModel = new TimerWizardModel(mContext);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.timer_add);
@@ -197,6 +201,7 @@ public class TimerWizardActivity extends FragmentActivity implements
                                                 timer.end = endtime;
 
                                                 mDVBService.getDVBTimers().add(timer);
+                                                TimerFragment.lvAdapter.notifyDataSetChanged();
 
                                                 setResult(0);
                                                 finish();

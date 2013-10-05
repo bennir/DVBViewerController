@@ -1,6 +1,7 @@
 package de.bennir.DVBViewerController.channels;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,14 +66,16 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
             Date durDate = new Date();
             long diff = 0;
 
-            try {
-                curDate = format.parse(curTime);
-                startDate = format.parse(startTime);
-                durDate = format.parse(duration);
+            if (!startTime.equals("")) {
+                try {
+                    curDate = format.parse(curTime);
+                    startDate = format.parse(startTime);
+                    durDate = format.parse(duration);
 
-                diff = curDate.getTime() - startDate.getTime();
-            } catch (ParseException ex) {
-                ex.printStackTrace();
+                    diff = curDate.getTime() - startDate.getTime();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
             }
 
             double elapsed = (diff / 1000 / 60);
@@ -89,12 +92,12 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
         if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
             String url = "";
             try {
-                url = mDVBService.getDVBServer().createRequestString("?getChannelLogo=" + URLEncoder.encode(chans.get(position).name, "UTF-8"));
+                url = mDVBService.getDVBServer().createRequestString("getChannelLogo=" + URLEncoder.encode(chans.get(position).name, "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
 
-//            aq.id(R.id.channel_item_logo).image(url, true, true, 0, 0, null, AQuery.FADE_IN_NETWORK);
+//            Log.d(TAG, "Image: " + url);
 
             ImageView logo = (ImageView) v.findViewById(R.id.channel_item_logo);
             mDVBService.mIon.with(mContext, url)

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import de.bennir.DVBViewerController.service.DVBServer;
 import de.bennir.DVBViewerController.service.DVBService;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class DVBViewerControllerActivity extends FragmentActivity {
     private static final String TAG = DVBViewerControllerActivity.class.toString();
@@ -36,7 +37,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
             .build();
     public DVBService mDVBService;
     public Typeface robotoThin;
-    public Typeface robotoLight;
+    public static Typeface robotoLight;
     public Typeface robotoCondensed;
     public Fragment mContent;
     private ListView mDrawerList;
@@ -210,11 +211,13 @@ public class DVBViewerControllerActivity extends FragmentActivity {
          */
         if (mDVBService.getDVBChannels().isEmpty()) {
             Log.d(TAG, "DVBChannels empty");
+            Style st = new Style.Builder()
+                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
+                    .setBackgroundColorValue(Style.holoBlueLight)
+                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .build();
+            Crouton.makeText(this, R.string.loadingChannels, st).show();
             mDVBService.loadChannels();
-        }
-        if (mDVBService.getDVBTimers().isEmpty()) {
-            Log.d(TAG, "DVBTimers empty");
-            mDVBService.loadTimers();
         }
     }
 

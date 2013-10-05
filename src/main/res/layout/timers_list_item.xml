@@ -23,7 +23,7 @@
         android:gravity="top"
         android:paddingLeft="10dp"
         android:textSize="20sp"
-        android:textAppearance="@android:style/TextAppearance.Holo.Widget.ActionBar.Title"
+        android:textAppearance="@android:style/TextAppearance.Holo.Medium.Inverse"
         android:text="@string/timer_name"
         android:maxLength="15"
         />

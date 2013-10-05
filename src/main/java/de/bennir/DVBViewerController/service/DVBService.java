@@ -2,24 +2,37 @@ package de.bennir.DVBViewerController.service;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.ViewGroup;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.StringReader;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import de.bennir.DVBViewerController.ChannelFragment;
-import de.bennir.DVBViewerController.DVBViewerControllerActivity;
+import de.bennir.DVBViewerController.ChannelGroupFragment;
 import de.bennir.DVBViewerController.TimerFragment;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.epg.EPGInfo;
 import de.bennir.DVBViewerController.timers.DVBTimer;
-import de.keyboardsurfer.android.widget.crouton.Style;
+import de.bennir.DVBViewerController.timers.TimerAdapter;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class DVBService {
     private static final String TAG = DVBService.class.toString();
@@ -29,6 +42,7 @@ public class DVBService {
     public static final String DVBPORT_KEY = "dvb_port";
 
     public Ion mIon;
+    private Object channelGroup = new Object();
 
     private Context mContext;
 
@@ -50,18 +64,15 @@ public class DVBService {
 
     /**
      * Load Recording Service Ip and Port
-     *
      */
     private void loadRecordingService() {
         mRecordingService = new RecordingService();
 
         if (!mDVBServer.host.equals(DVBService.DEMO_DEVICE)) {
             if (mRecordingService.ip.equals("") || mRecordingService.port.equals("")) {
-                Log.d(TAG, "Getting Recording Service");
-
                 String url = mDVBServer.createRequestString("getRecordingService");
-
-                mIon.with(mContext, url)
+                Log.d(TAG, "Load RecSrv: " + url);
+                Ion.with(mContext, url)
                         .asJsonObject()
                         .setCallback(new FutureCallback<JsonObject>() {
                             @Override
@@ -72,57 +83,165 @@ public class DVBService {
                                 mRecordingService.port = recordingService.get("port").getAsString();
 
                                 Log.d(TAG, "RecordingService: " + mRecordingService.ip + ":" + mRecordingService.port);
+
+                                if (!mRecordingService.ip.equals("0.0.0.0") && !mRecordingService.port.equals("0")) {
+                                    if (getDVBTimers().isEmpty()) {
+                                        Log.d(TAG, "DVBTimers empty");
+                                        loadTimers();
+                                    }
+                                }
                             }
                         });
             }
         }
     }
 
-
     /**
-     * Method to preload Timers
+     * Load Timers
      */
     public void loadTimers() {
-        Log.d(TAG, "Updating Timers");
-        DVBTimers.clear();
+        if (!mRecordingService.ip.equals("0.0.0.0") && !mRecordingService.port.equals("0")) {
+            Log.d(TAG, "Updating Timers");
+            DVBTimers.clear();
 
-        if (mDVBServer.host.equals(DVBService.DEMO_DEVICE)) {
-            createDemoTimers();
+            if (mDVBServer.host.equals(DVBService.DEMO_DEVICE)) {
+                Log.d(TAG, "Demo Timers!");
+                createDemoTimers();
+            } else {
+
+                String url = mRecordingService.createRequestString("timerlist.html?utf8=");
+                Log.d(TAG, "Loading Timers: " + url);
+                mIon.with(mContext, url)
+                        .asString()
+                        .setCallback(new FutureCallback<String>() {
+                            @Override
+                            public void onCompleted(Exception e, String s) {
+                                DVBTimer timer;
+
+                                try {
+                                    Document doc = getDomElement(s);
+                                    NodeList nl = doc.getElementsByTagName("Timer");
+
+                                    for (int i = 0; i < nl.getLength(); i++) {
+                                        Element element = (Element) nl.item(i);
+
+                                        timer = new DVBTimer();
+
+                                        // Attributes
+                                        timer.id = element.getAttribute("ID");
+                                        timer.enabled = !element.getAttribute("Enabled").equals("0");
+                                        timer.date = element.getAttribute("Date");
+                                        timer.start = element.getAttribute("Start");
+                                        timer.duration = element.getAttribute("Dur");
+                                        timer.end = element.getAttribute("End");
+
+                                        // Childs
+                                        timer.name = getElementValue(element.getElementsByTagName("Descr").item(0));
+
+                                        Element channel = (Element) element.getElementsByTagName("Channel").item(0);
+                                        timer.channelId = channel.getAttribute("ID");
+
+                                        DVBTimers.add(timer);
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+
+                                if (TimerFragment.lvAdapter == null)
+                                    TimerFragment.lvAdapter = new TimerAdapter(getDVBTimers(), mContext);
+                                else
+                                    TimerFragment.lvAdapter.notifyDataSetChanged();
+                            }
+                        });
+            }
         } else {
-
-            String url = mRecordingService.createRequestString("timerlist.html?utf8=");
-            mIon.with(mContext, url)
-                    .asString()
-                    .setCallback(new FutureCallback<String>() {
-                        @Override
-                        public void onCompleted(Exception e, String s) {
-                            Log.d(TAG, s);
-                        }
-                    });
+            Crouton.cancelAllCroutons();
+            Log.d(TAG, "Timer cannot be loaded, RecService config fail");
         }
-
     }
 
-    public void loadTimers(final TimerFragment.TimerAdapter lvAdapter) {
-        Log.d(TAG, "updating channels");
-        DVBTimers.clear();
+    /**
+     * Load Channels
+     */
+    public void loadChannels() {
+        Log.d(TAG, "Updating Channels");
+        groupNames.clear();
+        DVBChannels.clear();
+        DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
 
         if (mDVBServer.host.equals(DVBService.DEMO_DEVICE)) {
-            createDemoTimers();
-            lvAdapter.notifyDataSetChanged();
+            // Create Demo Content
+            createDemoChannels();
+            Crouton.cancelAllCroutons();
         } else {
+            String url = mDVBServer.createRequestString("getFavList");
+            Log.d(TAG, "URL=" + url);
 
-            String url = mRecordingService.createRequestString("timerlist.html?utf8=");
+            mIon.getDefault(mContext)
+                    .cancelAll(channelGroup);
+
             mIon.with(mContext, url)
-                    .asString()
-                    .setCallback(new FutureCallback<String>() {
+                    .setLogging("DVBService", Log.DEBUG)
+                    .group(channelGroup)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
                         @Override
-                        public void onCompleted(Exception e, String s) {
-                            Log.d(TAG, s);
+                        public void onCompleted(Exception e, JsonObject jsonObject) {
+                            ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
 
-                            //TODO: fetch XML Timers
+                            try {
+                                JsonArray channelsJSON = jsonObject.getAsJsonArray("channels");
+                                String currentGroup = "";
 
-                            lvAdapter.notifyDataSetChanged();
+                                for (int i = 0; i < channelsJSON.size(); i++) {
+                                    if (channelsJSON.get(i).isJsonObject()) {
+                                        JsonObject chan = (JsonObject) channelsJSON.get(i);
+
+                                        DVBChannel dvbChannel = new DVBChannel();
+                                        dvbChannel.name = chan.get("name").getAsString();
+                                        dvbChannel.favoriteId = chan.get("id").getAsString();
+                                        dvbChannel.channelId = chan.get("channelid").getAsString();
+                                        dvbChannel.epgInfo.title = URLDecoder.decode(chan.get("epgtitle").getAsString());
+                                        dvbChannel.epgInfo.time = chan.get("epgtime").getAsString();
+                                        dvbChannel.epgInfo.duration = chan.get("epgduration").getAsString();
+
+                                        String group = chan.get("group").getAsString();
+                                        if (!group.equals(currentGroup)) {
+                                            if (i > 0) {
+                                                DVBChannels.add(dvbChans);
+                                                dvbChans = new ArrayList<DVBChannel>();
+                                            }
+                                            groupNames.add(group);
+                                            currentGroup = group;
+                                        }
+                                        chanNames.add(dvbChannel.name);
+                                        dvbChans.add(dvbChannel);
+                                    } else {
+                                        Log.d(TAG, "No JsonObject: " + channelsJSON.get(i).toString());
+                                    }
+                                }
+
+                                DVBChannels.add(dvbChans);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+
+                            /**
+                             * ChannelFragment
+                             */
+                            if (ChannelFragment.lvAdapter == null) {
+                                ChannelFragment.lvAdapter = new ChanGroupAdapter(mContext, getGroupNames());
+                            } else {
+                                ChannelFragment.lvAdapter.notifyDataSetChanged();
+                            }
+
+                            /**
+                             * ChannelGroupFragment
+                             */
+                            if (ChannelGroupFragment.lvAdapter != null) {
+                                ChannelGroupFragment.lvAdapter.notifyDataSetChanged();
+                            }
+                            Crouton.cancelAllCroutons();
                         }
                     });
         }
@@ -141,70 +260,11 @@ public class DVBService {
             timer.channelId = "|" + timer.name;
             DVBTimers.add(timer);
         }
-    }
 
-    public void loadChannels() {
-        Log.d(TAG, "updating channels");
-        groupNames.clear();
-        DVBChannels.clear();
+        TimerFragment.lvAdapter = new TimerAdapter(getDVBTimers(), mContext);
+        TimerFragment.lvAdapter.notifyDataSetChanged();
 
-        if (mDVBServer.host.equals(DVBService.DEMO_DEVICE)) {
-            // Create Demo Content
-            createDemoChannels();
-        } else {
-            String url = mDVBServer.createRequestString("getFavList");
-            Log.d(TAG, "URL=" + url);
-
-            Style st = new Style.Builder()
-                    .setConfiguration(DVBViewerControllerActivity.croutonInfinite)
-                    .setBackgroundColorValue(Style.holoBlueLight)
-                    .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                    .build();
-
-//            Crouton.makeText(mContext, R.string.loadingChannels, st).show();
-
-            mIon.with(mContext, url)
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
-                        @Override
-                        public void onCompleted(Exception e, JsonObject jsonObject) {
-                            ArrayList<DVBChannel> dvbChans = new ArrayList<DVBChannel>();
-
-                            JsonArray channelsJSON = jsonObject.getAsJsonArray("channels");
-                            String currentGroup = "";
-
-                            for (int i = 0; i < channelsJSON.size(); i++) {
-                                if(channelsJSON.get(i).isJsonObject()) {
-                                    JsonObject chan = (JsonObject) channelsJSON.get(i);
-
-                                    DVBChannel dvbChannel = new DVBChannel();
-                                    dvbChannel.name = chan.get("name").getAsString();
-                                    dvbChannel.favoriteId = chan.get("id").getAsString();
-                                    dvbChannel.channelId = chan.get("channelid").getAsString();
-                                    dvbChannel.epgInfo.title = URLDecoder.decode(chan.get("epgtitle").getAsString());
-                                    dvbChannel.epgInfo.time = chan.get("epgtime").getAsString();
-                                    dvbChannel.epgInfo.duration = chan.get("epgduration").getAsString();
-
-                                    String group = chan.get("group").getAsString();
-                                    if (!group.equals(currentGroup)) {
-                                        if (i > 0) {
-                                            DVBChannels.add(dvbChans);
-                                            dvbChans = new ArrayList<DVBChannel>();
-                                        }
-                                        groupNames.add(group);
-                                        currentGroup = group;
-                                    }
-                                    chanNames.add(dvbChannel.name);
-                                    dvbChans.add(dvbChannel);
-                                } else {
-                                    Log.d(TAG, "No JsonObject: " + channelsJSON.get(i).toString());
-                                }
-                            }
-
-                            DVBChannels.add(dvbChans);
-                        }
-                    });
-        }
+        Crouton.cancelAllCroutons();
     }
 
     private void createDemoChannels() {
@@ -262,16 +322,72 @@ public class DVBService {
         }
         DVBChannels.add(testChans);
 
+        /**
+         * ChannelFragment
+         */
+        if (ChannelFragment.lvAdapter == null) {
+            ChannelFragment.lvAdapter = new ChanGroupAdapter(mContext, getGroupNames());
+        } else {
+            ChannelFragment.lvAdapter.notifyDataSetChanged();
+        }
 
-        ChannelFragment.lvAdapter = new ChanGroupAdapter(mContext, groupNames);
+        /**
+         * ChannelGroupFragment
+         */
+        if (ChannelGroupFragment.lvAdapter != null) {
+            ChannelGroupFragment.lvAdapter.notifyDataSetChanged();
+        }
     }
 
+    public Document getDomElement(String xml) {
+        Document doc = null;
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+
+            DocumentBuilder db = dbf.newDocumentBuilder();
+
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(xml));
+            doc = db.parse(is);
+
+        } catch (ParserConfigurationException e) {
+            Log.e("Error: ", e.getMessage());
+            return null;
+        } catch (SAXException e) {
+            Log.e("Error: ", e.getMessage());
+            return null;
+        } catch (IOException e) {
+            Log.e("Error: ", e.getMessage());
+            return null;
+        }
+        // return DOM
+        return doc;
+    }
+
+    public String getValue(Element item, String str) {
+        NodeList n = item.getElementsByTagName(str);
+        return this.getElementValue(n.item(0));
+    }
+
+    public final String getElementValue(Node elem) {
+        Node child;
+        if (elem != null) {
+            if (elem.hasChildNodes()) {
+                for (child = elem.getFirstChild(); child != null; child = child.getNextSibling()) {
+                    if (child.getNodeType() == Node.TEXT_NODE) {
+                        return child.getNodeValue();
+                    }
+                }
+            }
+        }
+        return "";
+    }
 
     /**
      * Returns or creates the current instance
      *
      * @param context Android Context
-     * @param server Server Data
+     * @param server  Server Data
      * @return DVBService instance
      */
     public static DVBService getInstance(Context context, DVBServer server) {
@@ -313,7 +429,6 @@ public class DVBService {
 
     /**
      * Destroys the current instance
-     *
      */
     public void destroy() {
         _instance = null;

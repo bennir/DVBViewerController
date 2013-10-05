@@ -1,17 +1,15 @@
 package de.bennir.DVBViewerController;
 
 import android.content.Context;
+import android.util.Log;
 
 import de.bennir.DVBViewerController.service.DVBService;
 import de.bennir.DVBViewerController.wizard.model.*;
 
 public class TimerWizardModel extends AbstractWizardModel {
-    private Context mContext;
 
     public TimerWizardModel(Context context) {
         super(context);
-
-        mContext = context;
     }
 
     @Override
