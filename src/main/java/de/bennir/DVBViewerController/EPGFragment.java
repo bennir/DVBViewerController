@@ -2,13 +2,11 @@ package de.bennir.DVBViewerController;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -75,12 +73,12 @@ public class EPGFragment extends Fragment {
         int pxHeight = Math.round(d * height);
         for (int i = 0; i < 20; i++) {
 
-            int top = (int) (d * (i * height)) + 5 + (i*10);
+            int top = (int) (d * (i * height)) + 5 + (i * 10);
             for (int j = 0; j < 10; j++) {
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(pxWidth, pxHeight);
                 TextView item = new TextView(getActivity().getApplicationContext());
 
-                int left = (int) (d * (j * width)) + 5 + (j*10);
+                int left = (int) (d * (j * width)) + 5 + (j * 10);
                 params.setMargins(left, top, 0, 0);
                 item.setLayoutParams(params);
 
