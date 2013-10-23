@@ -1,8 +1,5 @@
 package de.bennir.DVBViewerController.timers;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -14,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.bennir.DVBViewerController.DVBViewerControllerActivity;
@@ -23,15 +19,13 @@ import de.bennir.DVBViewerController.R;
 public class TimerAdapter extends ArrayAdapter<DVBTimer> {
     private static final String TAG = TimerAdapter.class.toString();
 
-    private final Context mContext;
+    private Context mContext;
     private List<DVBTimer> timers;
-    private List<DVBTimer> deleteTimers;
 
     public TimerAdapter(List<DVBTimer> timers, Context context) {
         super(context, R.layout.timers_list_item, timers);
         this.mContext = context;
         this.timers = timers;
-        this.deleteTimers = new ArrayList<DVBTimer>();
     }
 
     @Override
@@ -39,23 +33,27 @@ public class TimerAdapter extends ArrayAdapter<DVBTimer> {
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View v;
-
-        if (convertView != null)
-            v = convertView;
-        else
-            v = inflater.inflate(R.layout.timers_list_item, parent,
+        final View v = inflater.inflate(R.layout.timers_list_item, parent,
                     false);
 
-        DVBTimer timer = timers.get(position);
-
-        final int pos = position;
+        final DVBTimer timer = timers.get(position);
 
         ImageButton btn = (ImageButton) v.findViewById(R.id.timer_list_item_delete);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-//                deleteTimer(pos);
+            public void onClick(View button) {
+                v
+                        .animate()
+                        .setDuration(150)
+                        .translationX(1000)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                TimerAdapter.this.remove(timer);
+                                TimerAdapter.this.notifyDataSetChanged();
+                                v.setAlpha(1);
+                            }
+                        });
             }
         });
 
@@ -88,46 +86,7 @@ public class TimerAdapter extends ArrayAdapter<DVBTimer> {
         String channelId = timer.channelId;
         channel.setText(channelId.substring(channelId.indexOf('|') + 1));
 
-        checkIfTimerDelete(v, timer);
-
         return v;
-    }
-
-    public void delete(DVBTimer delete) {
-        Log.d(TAG, "Delete Timer " + delete.id);
-        deleteTimers.add(delete);
-        notifyDataSetChanged();
-    }
-
-    private void checkIfTimerDelete(View v, DVBTimer timer) {
-        for (DVBTimer delete : deleteTimers) {
-            Log.d(TAG, "checkIfTimerDelete");
-            deleteIfMarkedDeleteable(v, timer, delete);
-        }
-    }
-
-    private void deleteIfMarkedDeleteable(View v, final DVBTimer timer, final DVBTimer delete) {
-        if (timerIsDeleteable(timer, delete)) {
-            ObjectAnimator anim = ObjectAnimator.ofFloat(v, "translationX", 0f, 2500f);
-            anim.setDuration(400);
-            anim.start();
-            anim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    Log.d(TAG, "Delete onAnimationEnd");
-                    timers.remove(timer);
-                    deleteTimers.remove(delete);
-//                    lv.invalidate();
-//
-//                        lvAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-    }
-
-    private boolean timerIsDeleteable(DVBTimer timer, DVBTimer delete) {
-        Log.d(TAG, "timerIsDeleteAble " + timer.id.equals(delete.id));
-        return timer.id.equals(delete.id);
     }
 
     @Override

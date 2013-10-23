@@ -26,29 +26,6 @@ public class TimerFragment extends ListFragment {
     private Context mContext;
     private DVBService mDVBService;
 
-//    void deleteTimer(int position) {
-//        final DVBTimer timer = mDVBService.getDVBTimers().get(position);
-//
-//        if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
-//
-//            String url = mDVBService.getRecordingService().createRequestString("timerdelete.html?id=" + timer.id);
-//
-//            Log.d(TAG, "Deleting Timer: " + url);
-//
-//            mDVBService.mIon.with(mContext, url)
-//                    .asString()
-//                    .setCallback(new FutureCallback<String>() {
-//                        @Override
-//                        public void onCompleted(Exception e, String s) {
-//
-//                        }
-//                    });
-//        } else {
-//            lvAdapter.delete(timer);
-//        }
-//
-//    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -108,7 +108,6 @@ public class DVBService {
                 Log.d(TAG, "Demo Timers!");
                 createDemoTimers();
             } else {
-
                 String url = mRecordingService.createRequestString("timerlist.html?utf8=");
                 Log.d(TAG, "Loading Timers: " + url);
                 mIon.with(mContext, url)
@@ -261,8 +260,10 @@ public class DVBService {
             DVBTimers.add(timer);
         }
 
-        TimerFragment.lvAdapter = new TimerAdapter(getDVBTimers(), mContext);
-        TimerFragment.lvAdapter.notifyDataSetChanged();
+        if (TimerFragment.lvAdapter == null)
+            TimerFragment.lvAdapter = new TimerAdapter(getDVBTimers(), mContext);
+        else
+            TimerFragment.lvAdapter.notifyDataSetChanged();
 
         Crouton.cancelAllCroutons();
     }
