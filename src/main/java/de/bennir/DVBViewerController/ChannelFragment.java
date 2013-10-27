@@ -22,7 +22,6 @@ public class ChannelFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
         return inflater.inflate(R.layout.fragment_listview, container, false);
     }
 
@@ -30,8 +29,6 @@ public class ChannelFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         mContext = getActivity();
         mDVBService = DVBService.getInstance(mContext.getApplicationContext());
-
-        Log.d(TAG, "onActivityCreated Size: " + mDVBService.getDVBChannels().size());
 
         super.onActivityCreated(savedInstanceState);
         ((DVBViewerControllerActivity) getActivity()).mContent = this;

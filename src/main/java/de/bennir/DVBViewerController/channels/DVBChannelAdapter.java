@@ -1,7 +1,6 @@
 package de.bennir.DVBViewerController.channels;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,15 @@ import de.bennir.DVBViewerController.service.DVBService;
 
 public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
     private static final String TAG = DVBChannelAdapter.class.toString();
+
+    static class DVBChannelViewHolder {
+        TextView name;
+        TextView epg;
+        TextView favid;
+        ProgressBar progress;
+        ImageView logo;
+    }
+
     private ArrayList<DVBChannel> chans;
     private Context mContext;
     private DVBService mDVBService;
@@ -34,23 +42,31 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public View getView(int position, View view, ViewGroup parent) {
+        DVBChannelViewHolder viewHolder;
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View v;
+        if (view == null) {
+            view = inflater.inflate(R.layout.channels_channel_list_item, parent, false);
 
-        if (convertView != null)
-            v = convertView;
-        else
-            v = inflater.inflate(R.layout.channels_channel_list_item, parent,
-                    false);
+            viewHolder = new DVBChannelViewHolder();
+
+            viewHolder.name = (TextView) view.findViewById(R.id.channel_item_name);
+            viewHolder.epg = (TextView) view.findViewById(R.id.channel_item_current_epg);
+            viewHolder.favid = (TextView) view.findViewById(R.id.channel_item_favid);
+            viewHolder.progress = (ProgressBar) view.findViewById(R.id.channel_item_progress);
+            viewHolder.logo = (ImageView) view.findViewById(R.id.channel_item_logo);
+
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (DVBChannelViewHolder) view.getTag();
+        }
 
         mDVBService = DVBService.getInstance(mContext);
 
-        ((TextView) v.findViewById(R.id.channel_item_name)).setText(chans.get(position).name);
-        ((TextView) v.findViewById(R.id.channel_item_current_epg)).setText(chans.get(position).epgInfo.time + " - " + chans.get(position).epgInfo.title);
-        ((TextView) v.findViewById(R.id.channel_item_favid)).setText(chans.get(position).favoriteId);
+        viewHolder.name.setText(chans.get(position).name);
+        viewHolder.epg.setText(chans.get(position).epgInfo.time + " - " + chans.get(position).epgInfo.title);
+        viewHolder.favid.setText(chans.get(position).favoriteId);
 
         /**
          * Duration Progress
@@ -81,12 +97,9 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
             double elapsed = (diff / 1000 / 60);
             long durMinutes = (durDate.getHours() * 60 + durDate.getMinutes());
 
-            ProgressBar progress = (ProgressBar) v.findViewById(R.id.channel_item_progress);
-            progress.setProgress(Double.valueOf((elapsed / durMinutes * 100)).intValue());
+            viewHolder.progress.setProgress(Double.valueOf((elapsed / durMinutes * 100)).intValue());
         } else {
-            ProgressBar progress = (ProgressBar) v.findViewById(R.id.channel_item_progress);
-            progress.setProgress(Double.valueOf(new Random().nextInt(100)).intValue());
-
+            viewHolder.progress.setProgress(Double.valueOf(new Random().nextInt(100)).intValue());
         }
 
         if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
@@ -97,15 +110,13 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
                 e.printStackTrace();
             }
 
-//            Log.d(TAG, "Image: " + url);
-
-            ImageView logo = (ImageView) v.findViewById(R.id.channel_item_logo);
             mDVBService.mIon.with(mContext, url)
                     .withBitmap()
                     .animateIn(R.anim.fadein)
-                    .intoImageView(logo);
+                    .intoImageView(viewHolder.logo);
         }
-        return v;
+
+        return view;
     }
 
 

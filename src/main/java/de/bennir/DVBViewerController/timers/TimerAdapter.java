@@ -2,7 +2,6 @@ package de.bennir.DVBViewerController.timers;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,15 @@ import de.bennir.DVBViewerController.R;
 public class TimerAdapter extends ArrayAdapter<DVBTimer> {
     private static final String TAG = TimerAdapter.class.toString();
 
+    static class TimerViewHolder {
+        ImageButton btn;
+        TextView name;
+        ImageView indicator;
+        TextView date;
+        TextView time;
+        TextView channel;
+    }
+
     private Context mContext;
     private List<DVBTimer> timers;
 
@@ -29,17 +37,32 @@ public class TimerAdapter extends ArrayAdapter<DVBTimer> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        final View v = inflater.inflate(R.layout.timers_list_item, parent,
-                    false);
+        TimerViewHolder viewHolder;
+
+        if (view == null) {
+            view = inflater.inflate(R.layout.timers_list_item, parent, false);
+
+            viewHolder = new TimerViewHolder();
+            viewHolder.btn = (ImageButton) view.findViewById(R.id.timer_list_item_delete);
+            viewHolder.name = (TextView) view.findViewById(R.id.timer_list_item_name);
+            viewHolder.indicator = (ImageView) view.findViewById(R.id.timer_list_item_indicator);
+            viewHolder.date = (TextView) view.findViewById(R.id.timer_list_item_date);
+            viewHolder.time = (TextView) view.findViewById(R.id.timer_list_item_time);
+            viewHolder.channel = (TextView) view.findViewById(R.id.timer_list_item_channel);
+
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (TimerViewHolder) view.getTag();
+        }
+
 
         final DVBTimer timer = timers.get(position);
-
-        ImageButton btn = (ImageButton) v.findViewById(R.id.timer_list_item_delete);
-        btn.setOnClickListener(new View.OnClickListener() {
+        final View v = view;
+        viewHolder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
                 v
@@ -57,34 +80,29 @@ public class TimerAdapter extends ArrayAdapter<DVBTimer> {
             }
         });
 
-        TextView timerName = (TextView) v.findViewById(R.id.timer_list_item_name);
-        timerName.setTypeface(DVBViewerControllerActivity.robotoLight);
-        timerName.setText(timer.name);
+        viewHolder.name.setTypeface(DVBViewerControllerActivity.robotoLight);
+        viewHolder.name.setText(timer.name);
+
         Drawable img;
         if (timer.enabled)
             img = mContext.getResources().getDrawable(R.drawable.indicator_enabled);
         else
             img = mContext.getResources().getDrawable(R.drawable.indicator_disabled);
         img.setBounds(0, 2, 30, 30);
+        viewHolder.indicator.setImageDrawable(img);
 
-        ((ImageView) v.findViewById(R.id.timer_list_item_indicator)).setImageDrawable(img);
+        viewHolder.date.setTypeface(DVBViewerControllerActivity.robotoLight);
+        viewHolder.date.setText(timer.date);
 
-        TextView date = (TextView) v.findViewById(R.id.timer_list_item_date);
-        date.setTypeface(DVBViewerControllerActivity.robotoLight);
-        date.setText(timer.date);
-
-
-        TextView time = (TextView) v.findViewById(R.id.timer_list_item_time);
-        time.setTypeface(DVBViewerControllerActivity.robotoLight);
-        time.setText(timer.start.split(":")[0] +
+        viewHolder.time.setTypeface(DVBViewerControllerActivity.robotoLight);
+        viewHolder.time.setText(timer.start.split(":")[0] +
                 ":" + timer.start.split(":")[1] +
                 " - " + timer.end.split(":")[0] +
                 ":" + timer.end.split(":")[1]);
 
-        TextView channel = (TextView) v.findViewById(R.id.timer_list_item_channel);
-        channel.setTypeface(DVBViewerControllerActivity.robotoLight);
         String channelId = timer.channelId;
-        channel.setText(channelId.substring(channelId.indexOf('|') + 1));
+        viewHolder.channel.setTypeface(DVBViewerControllerActivity.robotoLight);
+        viewHolder.channel.setText(channelId.substring(channelId.indexOf('|') + 1));
 
         return v;
     }
