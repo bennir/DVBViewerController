@@ -5,16 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.koushikdutta.async.future.FutureCallback;
 
 import de.bennir.DVBViewerController.service.DVBService;
 
@@ -65,7 +61,7 @@ public class RemoteFragment extends Fragment {
                     int scaleX = (int) (x / scaleWidthRatio);
                     int scaleY = (int) (y / scaleHeightRatio);
 
-                    if(scaleX > bitmap.getWidth() || scaleY > bitmap.getHeight()) {
+                    if (scaleX > bitmap.getWidth() || scaleY > bitmap.getHeight()) {
                         return false;
                     }
 
@@ -81,47 +77,47 @@ public class RemoteFragment extends Fragment {
 
                     // Chan+
                     if (red == 119 && blue == 119 && green == 119) {
-                        DVBViewerControllerActivity.sendCommand("sendUp", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendUp");
                     }
                     // Chan-
                     if (red == 0 && blue == 0 && green == 0) {
-                        DVBViewerControllerActivity.sendCommand("sendDown", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendDown");
                     }
                     // Vol+
                     if (red == 49 && blue == 49 && green == 49) {
-                        DVBViewerControllerActivity.sendCommand("sendRight", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendRight");
                     }
                     // Vol-
                     if (red == 204 && blue == 204 && green == 204) {
-                        DVBViewerControllerActivity.sendCommand("sendLeft", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendLeft");
                     }
                     // Menu
                     if (red == 0 && blue == 255 && green == 255) {
-                        DVBViewerControllerActivity.sendCommand("sendMenu", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendMenu");
                     }
                     // Ok
                     if (red == 255 && blue == 255 && green == 0) {
-                        DVBViewerControllerActivity.sendCommand("sendOk", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendOk");
                     }
                     // Back
                     if (red == 255 && blue == 0 && green == 168) {
-                        DVBViewerControllerActivity.sendCommand("sendBack", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendBack");
                     }
                     // Red
                     if (red == 255 && blue == 0 && green == 0) {
-                        DVBViewerControllerActivity.sendCommand("sendRed", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendRed");
                     }
                     // Yellow
                     if (red == 255 && blue == 0 && green == 255) {
-                        DVBViewerControllerActivity.sendCommand("sendYellow", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendYellow");
                     }
                     // Green
                     if (red == 0 && blue == 0 && green == 255) {
-                        DVBViewerControllerActivity.sendCommand("sendGreen", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendGreen");
                     }
                     // Blue
                     if (red == 0 && blue == 255 && green == 0) {
-                        DVBViewerControllerActivity.sendCommand("sendBlue", getActivity(), mDVBService);
+                        mDVBService.sendCommand("sendBlue");
                     }
                 }
 

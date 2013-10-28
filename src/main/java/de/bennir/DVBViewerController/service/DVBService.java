@@ -1,6 +1,7 @@
 package de.bennir.DVBViewerController.service;
 
 import android.content.Context;
+import android.os.Vibrator;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
@@ -60,6 +61,27 @@ public class DVBService {
         mDVBServer = server;
 
         loadRecordingService();
+    }
+
+    /**
+     * Sends a simple actions.ini Command
+     */
+    public void sendCommand(String command) {
+        Log.d(TAG, "Remote Command: " + command);
+
+        ((Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
+        if (!getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
+            String url = getDVBServer().createRequestString(command);
+
+            Ion.with(mContext, url)
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String s) {
+
+                        }
+                    });
+        }
     }
 
     /**
