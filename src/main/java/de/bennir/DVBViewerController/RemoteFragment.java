@@ -81,47 +81,47 @@ public class RemoteFragment extends Fragment {
 
                     // Chan+
                     if (red == 119 && blue == 119 && green == 119) {
-                        sendCommand("sendUp");
+                        DVBViewerControllerActivity.sendCommand("sendUp", getActivity(), mDVBService);
                     }
                     // Chan-
                     if (red == 0 && blue == 0 && green == 0) {
-                        sendCommand("sendDown");
+                        DVBViewerControllerActivity.sendCommand("sendDown", getActivity(), mDVBService);
                     }
                     // Vol+
                     if (red == 49 && blue == 49 && green == 49) {
-                        sendCommand("sendRight");
+                        DVBViewerControllerActivity.sendCommand("sendRight", getActivity(), mDVBService);
                     }
                     // Vol-
                     if (red == 204 && blue == 204 && green == 204) {
-                        sendCommand("sendLeft");
+                        DVBViewerControllerActivity.sendCommand("sendLeft", getActivity(), mDVBService);
                     }
                     // Menu
                     if (red == 0 && blue == 255 && green == 255) {
-                        sendCommand("sendMenu");
+                        DVBViewerControllerActivity.sendCommand("sendMenu", getActivity(), mDVBService);
                     }
                     // Ok
                     if (red == 255 && blue == 255 && green == 0) {
-                        sendCommand("sendOk");
+                        DVBViewerControllerActivity.sendCommand("sendOk", getActivity(), mDVBService);
                     }
                     // Back
                     if (red == 255 && blue == 0 && green == 168) {
-                        sendCommand("sendBack");
+                        DVBViewerControllerActivity.sendCommand("sendBack", getActivity(), mDVBService);
                     }
                     // Red
                     if (red == 255 && blue == 0 && green == 0) {
-                        sendCommand("sendRed");
+                        DVBViewerControllerActivity.sendCommand("sendRed", getActivity(), mDVBService);
                     }
                     // Yellow
                     if (red == 255 && blue == 0 && green == 255) {
-                        sendCommand("sendYellow");
+                        DVBViewerControllerActivity.sendCommand("sendYellow", getActivity(), mDVBService);
                     }
                     // Green
                     if (red == 0 && blue == 0 && green == 255) {
-                        sendCommand("sendGreen");
+                        DVBViewerControllerActivity.sendCommand("sendGreen", getActivity(), mDVBService);
                     }
                     // Blue
                     if (red == 0 && blue == 255 && green == 0) {
-                        sendCommand("sendBlue");
+                        DVBViewerControllerActivity.sendCommand("sendBlue", getActivity(), mDVBService);
                     }
                 }
 
@@ -131,21 +131,4 @@ public class RemoteFragment extends Fragment {
 
     }
 
-    void sendCommand(String command) {
-        Log.d(TAG, "Remote Command: " + command);
-
-        ((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
-        if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
-            String url = mDVBService.getDVBServer().createRequestString(command);
-
-            mDVBService.mIon.with(mContext, url)
-                    .asString()
-                    .setCallback(new FutureCallback<String>() {
-                        @Override
-                        public void onCompleted(Exception e, String s) {
-
-                        }
-                    });
-        }
-    }
 }

@@ -1,17 +1,20 @@
 package de.bennir.DVBViewerController;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.koushikdutta.async.future.FutureCallback;
 
 import de.bennir.DVBViewerController.service.DVBServer;
 import de.bennir.DVBViewerController.service.DVBService;
@@ -47,6 +52,24 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private SharedPreferences prefs = null;
     private Boolean opened = null;
+
+    static void sendCommand(String command, Activity act, DVBService mDVBService) {
+        Log.d(TAG, "Remote Command: " + command);
+
+        ((Vibrator) act.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
+        if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
+            String url = mDVBService.getDVBServer().createRequestString(command);
+
+            mDVBService.mIon.with(act.getApplicationContext(), url)
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String s) {
+
+                        }
+                    });
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -317,6 +340,19 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         super.onSaveInstanceState(outState);
 
         getSupportFragmentManager().putFragment(outState, "mContent", mContent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            Log.d(TAG, "Volume Down");
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Log.d(TAG, "Volume Up");
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 
     public void switchContent(Fragment fragment, int titleRes, int icon) {
