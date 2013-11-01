@@ -340,7 +340,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
             return true;
         }
 
-        return super.onKeyDown(keyCode, event);
+        return super.onKeyUp(keyCode, event);
     }
 
     public void switchContent(Fragment fragment, int titleRes, int icon) {
