@@ -32,7 +32,7 @@
         android:textAppearance="@android:style/TextAppearance.Holo.Widget.ActionBar.Title"
         android:textSize="16sp"
         android:text="@string/skip_selection"
-        android:drawableRight="@drawable/ic_action_skip_dark"
+        android:drawableRight="@drawable/ic_action_skip"
         />
     </LinearLayout>
 

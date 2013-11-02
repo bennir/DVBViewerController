@@ -109,8 +109,6 @@ public class DeviceSelectionActivity extends ListActivity implements ServiceList
 
         setContentView(R.layout.activity_deviceselection);
 
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
-
         robotoThin = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Thin.ttf");
         robotoLight = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
         robotoCondensed = Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Bold.ttf");

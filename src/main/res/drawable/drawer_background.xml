@@ -3,10 +3,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true"
-          android:drawable="@color/black" />
+          android:drawable="@color/DVBBackgroundLight" />
 
     <item android:state_checked="true"
-          android:drawable="@color/holo_dark_red" />
+          android:drawable="@drawable/drawer_menu_background" />
 
     <item
           android:drawable="@android:color/transparent" />

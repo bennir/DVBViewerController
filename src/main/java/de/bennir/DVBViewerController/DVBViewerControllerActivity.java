@@ -108,13 +108,10 @@ public class DVBViewerControllerActivity extends FragmentActivity {
             }
         }
 
-
         mTitle = getString(R.string.remote);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.remote);
-        getActionBar().setIcon(R.drawable.ic_action_remote);
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
 
         /**
          * Above View
@@ -136,8 +133,6 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         mDrawerList = (ListView) findViewById(R.id.menu_list);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawer = (LinearLayout) findViewById(R.id.drawer);
-
-        mDrawer.setBackgroundResource(R.color.DVBActionBar);
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -282,7 +277,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                     getActionBar().setDisplayShowTitleEnabled(true);
                     getSupportFragmentManager().popBackStackImmediate();
                     mTitle = getString(titleRes);
-                    switchContent(newContent, titleRes, icon);
+                    switchContent(newContent, titleRes);
                 }
 
                 mDrawerList.setItemChecked(position, true);
@@ -343,14 +338,13 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         return super.onKeyUp(keyCode, event);
     }
 
-    public void switchContent(Fragment fragment, int titleRes, int icon) {
-        switchContent(fragment, getString(titleRes), icon);
+    public void switchContent(Fragment fragment, int titleRes) {
+        switchContent(fragment, getString(titleRes));
     }
 
-    public void switchContent(Fragment fragment, String title, int icon) {
+    public void switchContent(Fragment fragment, String title) {
         if (!title.equals(getString(R.string.epg)))
             getActionBar().setTitle(title);
-        getActionBar().setIcon(icon);
         mContent = fragment;
         getSupportFragmentManager()
                 .beginTransaction()
@@ -358,12 +352,10 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                 .commit();
     }
 
-    @SuppressWarnings("SameParameterValue")
-    public void switchContent(Fragment fragment, String title, int icon, boolean addToBackStack) {
+    public void switchContent(Fragment fragment, String title, boolean addToBackStack) {
         if (addToBackStack) {
             Log.d(TAG, "switchContent addToBackStack");
             getActionBar().setTitle(title);
-            getActionBar().setIcon(icon);
             mContent = fragment;
             getSupportFragmentManager()
                     .beginTransaction()
@@ -371,7 +363,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                     .addToBackStack(null)
                     .commit();
         } else {
-            switchContent(fragment, title, icon);
+            switchContent(fragment, title);
         }
     }
 

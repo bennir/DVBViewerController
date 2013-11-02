@@ -63,8 +63,6 @@ public class TimerWizardActivity extends FragmentActivity implements
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setTitle(R.string.timer_add);
-        getActionBar().setIcon(R.drawable.ic_action_timers);
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_background));
 
         if (savedInstanceState != null) {
             mWizardModel.load(savedInstanceState.getBundle("model"));

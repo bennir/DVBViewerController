@@ -7,5 +7,5 @@
                  android:padding="5dp"
                  android:paddingLeft="30dp"
                  android:textAppearance="@android:style/TextAppearance.Holo.Medium"
-                 android:textColor="@android:color/white"
+                 android:textColor="@android:color/black"
                  android:background="@drawable/drawer_background"/>

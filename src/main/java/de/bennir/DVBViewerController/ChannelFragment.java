@@ -3,7 +3,6 @@ package de.bennir.DVBViewerController;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -43,7 +42,7 @@ public class ChannelFragment extends ListFragment {
                 if (getActivity() instanceof DVBViewerControllerActivity) {
                     DVBViewerControllerActivity.currentGroup = i;
                     DVBViewerControllerActivity act = (DVBViewerControllerActivity) getActivity();
-                    act.switchContent(new ChannelGroupFragment(), mDVBService.getGroupNames().get(i), R.drawable.ic_action_channels, true);
+                    act.switchContent(new ChannelGroupFragment(), mDVBService.getGroupNames().get(i), true);
                 }
             }
         });

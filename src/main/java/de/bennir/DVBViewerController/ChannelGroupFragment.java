@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
-import com.koushikdutta.async.future.FutureCallback;
-
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
 import de.bennir.DVBViewerController.service.DVBService;

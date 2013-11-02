@@ -68,7 +68,7 @@
             android:id="@+id/channel_item_addtimer"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_timers_dark"
+            android:src="@drawable/ic_action_timers"
             android:focusable="false"
             android:focusableInTouchMode="false"
             />
@@ -78,7 +78,7 @@
             android:id="@+id/channel_item_epg"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_epg_dark"
+            android:src="@drawable/ic_action_epg"
             android:focusable="false"
             android:focusableInTouchMode="false"
             />
