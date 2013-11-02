@@ -143,10 +143,6 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         ) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
-                if (mTitle.equals(getString(R.string.epg))) {
-                    getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-                    getActionBar().setDisplayShowTitleEnabled(false);
-                }
                 getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu();
                 if (opened != null && opened == false) {
@@ -161,10 +157,6 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                if (mTitle.equals(getString(R.string.epg))) {
-                    getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-                    getActionBar().setDisplayShowTitleEnabled(true);
-                }
                 getActionBar().setTitle(R.string.app_name);
                 invalidateOptionsMenu();
             }
@@ -246,31 +238,26 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                         // Remote
                         newContent = new RemoteFragment();
                         titleRes = R.string.remote;
-                        icon = R.drawable.ic_action_remote;
                         break;
                     case 1:
                         // Channels
                         newContent = new ChannelFragment();
                         titleRes = R.string.channels;
-                        icon = R.drawable.ic_action_channels;
                         break;
                     case 2:
                         // EPG
                         newContent = new EPGFragment();
                         titleRes = R.string.epg;
-                        icon = R.drawable.ic_action_epg;
                         break;
                     case 3:
                         // Timers
                         newContent = new TimerFragment();
                         titleRes = R.string.timer;
-                        icon = R.drawable.ic_action_timers;
                         break;
                     case 4:
                         // Settings
                         newContent = new SettingsFragment();
                         titleRes = R.string.settings;
-                        icon = R.drawable.ic_action_settings;
                         break;
                 }
                 if (newContent != null) {
@@ -343,8 +330,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     }
 
     public void switchContent(Fragment fragment, String title) {
-        if (!title.equals(getString(R.string.epg)))
-            getActionBar().setTitle(title);
+        getActionBar().setTitle(title);
         mContent = fragment;
         getSupportFragmentManager()
                 .beginTransaction()
