@@ -6,8 +6,11 @@
     <color name="DVBCardHighlight">#85d3ef</color>
     <color name="DVBCardHighlightLight">#b4ebff</color>
     <color name="DVBCardHighlightShadow">#0099cc</color>
-
     <color name="DVBDrawerBorder">#bd2f1d</color>
+
+    <color name="sticky_item">#f44</color>
+    <color name="sticky_item_highlight">#a11</color>
+    <color name="sticky_item_text">#fff</color>
 
     <color name="step_pager_previous_tab_color">#4433b5e5</color>
     <color name="step_pager_selected_tab_color">#ff0099cc</color>

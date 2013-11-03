@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,6 +29,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import de.bennir.DVBViewerController.ChannelFragment;
 import de.bennir.DVBViewerController.ChannelGroupFragment;
+import de.bennir.DVBViewerController.EPGFragment;
 import de.bennir.DVBViewerController.TimerFragment;
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 import de.bennir.DVBViewerController.channels.DVBChannel;
@@ -51,6 +54,7 @@ public class DVBService {
     private ArrayList<String> groupNames = new ArrayList<String>();
     private ArrayList<String> chanNames = new ArrayList<String>();
     private ArrayList<DVBTimer> DVBTimers = new ArrayList<DVBTimer>();
+    private HashMap<String, List<String>> channelGroupMap = new HashMap<String, List<String>>();
 
     private DVBServer mDVBServer;
     private RecordingService mRecordingService;
@@ -190,6 +194,9 @@ public class DVBService {
         DVBChannels.clear();
         DVBChannels = new ArrayList<ArrayList<DVBChannel>>();
 
+        channelGroupMap.clear();
+        channelGroupMap = new HashMap<String, List<String>>();
+
         if (mDVBServer.host.equals(DVBService.DEMO_DEVICE)) {
             // Create Demo Content
             createDemoChannels();
@@ -213,6 +220,7 @@ public class DVBService {
                             try {
                                 JsonArray channelsJSON = jsonObject.getAsJsonArray("channels");
                                 String currentGroup = "";
+                                List<String> groupChans = new ArrayList<String>();
 
                                 for (int i = 0; i < channelsJSON.size(); i++) {
                                     if (channelsJSON.get(i).isJsonObject()) {
@@ -230,12 +238,15 @@ public class DVBService {
                                         if (!group.equals(currentGroup)) {
                                             if (i > 0) {
                                                 DVBChannels.add(dvbChans);
+                                                channelGroupMap.put(currentGroup, groupChans);
+                                                groupChans = new ArrayList<String>();
                                                 dvbChans = new ArrayList<DVBChannel>();
                                             }
                                             groupNames.add(group);
                                             currentGroup = group;
                                         }
                                         chanNames.add(dvbChannel.name);
+                                        groupChans.add(dvbChannel.name);
                                         dvbChans.add(dvbChannel);
                                     } else {
                                         Log.d(TAG, "No JsonObject: " + channelsJSON.get(i).toString());
@@ -293,6 +304,7 @@ public class DVBService {
     private void createDemoChannels() {
         groupNames.add("ARD");
         ArrayList<DVBChannel> testChans = new ArrayList<DVBChannel>();
+        List<String> groupChans = new ArrayList<String>();
 
         DVBChannel test = new DVBChannel();
         test.name = "Das Erste HD";
@@ -304,6 +316,7 @@ public class DVBService {
         test.epgInfo = epg;
         testChans.add(test);
         chanNames.add(test.name);
+        groupChans.add(test.name);
         for (int i = 0; i < 10; i++) {
             test = new DVBChannel();
             test.name = "NDR HD";
@@ -315,11 +328,14 @@ public class DVBService {
             test.epgInfo = epg;
             testChans.add(test);
             chanNames.add(test.name);
+            groupChans.add(test.name);
         }
         DVBChannels.add(testChans);
+        channelGroupMap.put("ARD", groupChans);
 
         groupNames.add("ZDF");
         testChans = new ArrayList<DVBChannel>();
+        groupChans = new ArrayList<String>();
 
         test = new DVBChannel();
         test.name = "ZDF HD";
@@ -331,6 +347,7 @@ public class DVBService {
         test.epgInfo = epg;
         testChans.add(test);
         chanNames.add(test.name);
+        groupChans.add(test.name);
         for (int i = 0; i < 10; i++) {
             test = new DVBChannel();
             test.name = "ZDF Kultur";
@@ -342,8 +359,10 @@ public class DVBService {
             test.epgInfo = epg;
             testChans.add(test);
             chanNames.add(test.name);
+            groupChans.add(test.name);
         }
         DVBChannels.add(testChans);
+        channelGroupMap.put("ZDF", groupChans);
 
         /**
          * ChannelFragment
@@ -471,6 +490,10 @@ public class DVBService {
 
     public ArrayList<String> getChanNames() {
         return chanNames;
+    }
+
+    public HashMap<String, List<String>> getChannelGroupMap() {
+        return channelGroupMap;
     }
 
     public ArrayList<DVBTimer> getDVBTimers() {

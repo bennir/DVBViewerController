@@ -44,13 +44,12 @@ public class DVBChannelAdapter extends ArrayAdapter<DVBChannel> {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         DVBChannelViewHolder viewHolder;
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (view == null) {
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.channels_channel_list_item, parent, false);
 
             viewHolder = new DVBChannelViewHolder();
-
             viewHolder.name = (TextView) view.findViewById(R.id.channel_item_name);
             viewHolder.epg = (TextView) view.findViewById(R.id.channel_item_current_epg);
             viewHolder.favid = (TextView) view.findViewById(R.id.channel_item_favid);

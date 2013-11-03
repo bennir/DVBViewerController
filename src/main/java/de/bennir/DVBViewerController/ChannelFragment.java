@@ -33,7 +33,6 @@ public class ChannelFragment extends ListFragment {
         ((DVBViewerControllerActivity) getActivity()).mContent = this;
 
         setHasOptionsMenu(true);
-        getActivity().getActionBar().setTitle(R.string.channels);
 
         lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

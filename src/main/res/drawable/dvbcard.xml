@@ -4,7 +4,7 @@
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/DVBShadow"/>
-            <corners android:radius="1dp"/>
+            <corners android:radius="2dp"/>
         </shape>
     </item>
     <item android:bottom="3px">
@@ -18,7 +18,7 @@
                 android:bottom="1dp"
                 />
 
-            <corners android:radius="1dp"/>
+            <corners android:radius="2dp"/>
         </shape>
     </item>
 </layer-list>

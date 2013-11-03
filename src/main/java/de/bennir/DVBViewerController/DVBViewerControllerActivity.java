@@ -1,6 +1,5 @@
 package de.bennir.DVBViewerController;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +48,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private SharedPreferences prefs = null;
     private Boolean opened = null;
+    private Boolean switchToEPG = false;
 
     @Override
     protected void onDestroy() {
@@ -143,6 +144,11 @@ public class DVBViewerControllerActivity extends FragmentActivity {
         ) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
+                if (view.getId() == mDrawer.getId() && switchToEPG) {
+                    // Left Drawer Closed
+                    switchToEPG = false;
+                    mDrawerLayout.openDrawer(Gravity.END);
+                }
                 getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu();
                 if (opened != null && opened == false) {
@@ -161,7 +167,9 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                 invalidateOptionsMenu();
             }
         };
+
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
 
         new Thread(new Runnable() {
             @Override
@@ -231,7 +239,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
             public void onItemClick(AdapterView adapterView, View view, int position, long id) {
                 Fragment newContent = null;
                 int titleRes = 0;
-                int icon = 0;
+                switchToEPG = false;
 
                 switch (position) {
                     case 0:
@@ -248,6 +256,7 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                         // EPG
                         newContent = new EPGFragment();
                         titleRes = R.string.epg;
+                        switchToEPG = true;
                         break;
                     case 3:
                         // Timers
@@ -267,6 +276,12 @@ public class DVBViewerControllerActivity extends FragmentActivity {
                     switchContent(newContent, titleRes);
                 }
 
+                if (position == 2) {
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
+                } else {
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+                }
+
                 mDrawerList.setItemChecked(position, true);
                 mDrawerLayout.closeDrawer(mDrawer);
             }
@@ -275,7 +290,9 @@ public class DVBViewerControllerActivity extends FragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (mDrawerLayout.isDrawerOpen(Gravity.END)) {
+            mDrawerLayout.closeDrawer(Gravity.END);
+        } else if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         // Handle your other action bar items...

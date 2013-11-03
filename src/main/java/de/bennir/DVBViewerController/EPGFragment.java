@@ -1,114 +1,276 @@
 package de.bennir.DVBViewerController;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
+import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import de.bennir.DVBViewerController.view.TwoDScrollView;
+import java.util.HashMap;
+import java.util.List;
+
+import de.bennir.DVBViewerController.channels.DVBChannel;
+import de.bennir.DVBViewerController.epg.EPGInfoAdapter;
+import de.bennir.DVBViewerController.service.DVBService;
+import de.bennir.DVBViewerController.view.QuickReturnListView;
 
 public class EPGFragment extends Fragment {
     private static final String TAG = EPGFragment.class.toString();
-    HorizontalScrollView header;
-    ScrollView side;
-    RelativeLayout content;
+    private static final int STATE_ONSCREEN = 0;
+    private static final int STATE_OFFSCREEN = 1;
+    private static final int STATE_RETURNING = 2;
+
+    private int mQuickReturnHeight;
+    private int mState = STATE_ONSCREEN;
+    private int mScrollY;
+    private int mMinRawY = 0;
+
+    public static EPGChannelAdapter drawerLvAdapter;
+    private ExpandableListView mDrawerListView;
+    private QuickReturnListView mListView;
+    private Context mContext;
+    private DVBService mDVBService;
+    private TextView mQuickReturnView;
+    private View mPlaceHolder;
+    private View mHeader;
+    private DrawerLayout mDrawerLayout;
+
+    public static EPGInfoAdapter lvAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.epg_fragment, container, false);
+        ViewGroup rootView = (ViewGroup) inflater
+                .inflate(R.layout.epg_fragment, container, false);
+
+        mListView = (QuickReturnListView) rootView.findViewById(R.id.epg_listview);
+        mQuickReturnView = (TextView) rootView.findViewById(R.id.sticky);
+
+        mHeader = inflater.inflate(R.layout.epg_fragment_header, null);
+        mPlaceHolder = mHeader.findViewById(R.id.placeholder);
+
+        return rootView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mContext = getActivity().getApplicationContext();
+        mDVBService = DVBService.getInstance(mContext);
+
         setHasOptionsMenu(true);
 
-        header = (HorizontalScrollView) getActivity().findViewById(R.id.epg_header);
-        side = (ScrollView) getActivity().findViewById(R.id.epg_side);
-        content = (RelativeLayout) getActivity().findViewById(R.id.epg_content);
+        mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
 
-        header.setOnTouchListener(new View.OnTouchListener() {
+        /**
+         * Right Drawer ListView
+         */
+        mDrawerListView = (ExpandableListView) getActivity().findViewById(R.id.epg_channel_list);
+        drawerLvAdapter = new EPGChannelAdapter(mContext, mDVBService.getGroupNames(), mDVBService.getChannelGroupMap());
+
+        mDrawerListView.setAdapter(drawerLvAdapter);
+        mDrawerListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                TextView mChannel = (TextView) v.findViewById(R.id.epg_channel_item);
+                String channelName = mChannel.getText().toString();
+                mQuickReturnView.setText(channelName);
+                mDrawerLayout.closeDrawer(Gravity.END);
+
+                DVBChannel channel = mDVBService.getChannelByName(channelName);
+                Log.d(TAG, "channelId: " + channel.channelId);
+
                 return true;
             }
         });
 
-        side.setOnTouchListener(new View.OnTouchListener() {
+        mQuickReturnView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return true;
+            public void onClick(View v) {
+                mDrawerLayout.openDrawer(Gravity.END);
             }
         });
 
-        TwoDScrollView container = (TwoDScrollView) getActivity().findViewById(R.id.epg_twodscroll);
-        container.setOnScrollChangedCallback(new TwoDScrollView.OnScrollChangedCallback() {
-            @Override
-            public void onScroll(int l, int t, int oldl, int oldt) {
-                header.scrollTo(l, 0);
-                side.scrollTo(0, t);
-            }
-        });
+        /**
+         * EPG ListView
+         */
 
-        // Fake Test Content
-        LinearLayout col = (LinearLayout) getActivity().findViewById(R.id.epg_side_col);
+        mQuickReturnView.setText("No Channel Selected");
+        mListView.addHeaderView(mHeader);
+        mListView.setAdapter(lvAdapter);
 
-
-        int width = 100;
-        int height = 50;
-        float d = getActivity().getResources().getDisplayMetrics().density;
-        int pxWidth = Math.round(d * width);
-        int pxHeight = Math.round(d * height);
-        for (int i = 0; i < 20; i++) {
-
-            int top = (int) (d * (i * height)) + 5 + (i * 10);
-            for (int j = 0; j < 10; j++) {
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(pxWidth, pxHeight);
-                TextView item = new TextView(getActivity().getApplicationContext());
-
-                int left = (int) (d * (j * width)) + 5 + (j * 10);
-                params.setMargins(left, top, 0, 0);
-                item.setLayoutParams(params);
-
-
-                item.setText("ARD" + i + "-" + j);
-                item.setGravity(Gravity.CENTER);
-                item.setBackgroundResource(R.drawable.list_selector);
-
-                item.setOnClickListener(new View.OnClickListener() {
+        mListView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
-                    public void onClick(View view) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Asd", Toast.LENGTH_SHORT).show();
+                    public void onGlobalLayout() {
+                        mQuickReturnHeight = mQuickReturnView.getHeight();
+                        mListView.computeScrollY();
                     }
                 });
 
-                content.addView(item);
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+
+                mScrollY = 0;
+                int translationY = 0;
+
+                if (mListView.scrollYIsComputed()) {
+                    mScrollY = mListView.getComputedScrollY();
+                }
+
+                int rawY = mPlaceHolder.getTop() - mScrollY;
+
+                switch (mState) {
+                    case STATE_OFFSCREEN:
+                        if (rawY <= mMinRawY) {
+                            mMinRawY = rawY;
+                        } else {
+                            mState = STATE_RETURNING;
+                        }
+                        translationY = rawY;
+                        break;
+
+                    case STATE_ONSCREEN:
+                        if (rawY < -mQuickReturnHeight) {
+                            mState = STATE_OFFSCREEN;
+                            mMinRawY = rawY;
+                        }
+                        translationY = rawY;
+                        break;
+
+                    case STATE_RETURNING:
+                        translationY = (rawY - mMinRawY) - mQuickReturnHeight;
+                        if (translationY > 0) {
+                            translationY = 0;
+                            mMinRawY = rawY - mQuickReturnHeight;
+                        }
+
+                        if (rawY > 0) {
+                            mState = STATE_ONSCREEN;
+                            translationY = rawY;
+                        }
+
+                        if (translationY < -mQuickReturnHeight) {
+                            mState = STATE_OFFSCREEN;
+                            mMinRawY = rawY;
+                        }
+                        break;
+                }
+
+                mQuickReturnView.animate().cancel();
+                mQuickReturnView.setTranslationY(translationY);
+
             }
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, pxHeight);
-            params.setMargins(0, 5, 0, 5);
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+        });
+    }
 
-            TextView chan = new TextView(getActivity().getApplicationContext());
-            chan.setLayoutParams(params);
-            chan.setText("ARD" + i);
-            chan.setHeight(pxHeight);
-            chan.setGravity(Gravity.CENTER);
-            col.addView(chan);
+    public class EPGChannelAdapter extends BaseExpandableListAdapter {
 
+        private Context mContext;
+        private List<String> mHeaders; // header titles
+        // child data in format of header title, child title
+        private HashMap<String, List<String>> mItems;
+
+        public EPGChannelAdapter(Context context, List<String> headers,
+                                 HashMap<String, List<String>> items) {
+            this.mContext = context;
+            this.mHeaders = headers;
+            this.mItems = items;
         }
 
+        @Override
+        public Object getChild(int groupPosition, int childPosititon) {
+            return this.mItems.get(this.mHeaders.get(groupPosition))
+                    .get(childPosititon);
+        }
 
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public View getChildView(int groupPosition, final int childPosition,
+                                 boolean isLastChild, View convertView, ViewGroup parent) {
+
+            final String childText = (String) getChild(groupPosition, childPosition);
+
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) this.mContext
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.epg_channel_list_item, null);
+            }
+
+            TextView chan = (TextView) convertView.findViewById(R.id.epg_channel_item);
+            chan.setText(childText);
+
+            return convertView;
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            return this.mItems.get(this.mHeaders.get(groupPosition))
+                    .size();
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return this.mHeaders.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return this.mHeaders.size();
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded,
+                                 View convertView, ViewGroup parent) {
+            String headerTitle = (String) getGroup(groupPosition);
+            if (convertView == null) {
+                LayoutInflater infalter = (LayoutInflater) this.mContext
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = infalter.inflate(R.layout.epg_channel_list_header, null);
+            }
+
+            TextView groupName = (TextView) convertView.findViewById(R.id.epg_channel_header);
+            groupName.setTypeface(null, Typeface.BOLD);
+            groupName.setText(headerTitle);
+
+            return convertView;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
     }
 }
