@@ -6,6 +6,9 @@ import android.support.v4.app.ListFragment;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+
 import de.bennir.DVBViewerController.channels.ChanGroupAdapter;
 import de.bennir.DVBViewerController.service.DVBService;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -47,7 +50,10 @@ public class ChannelFragment extends ListFragment {
         });
 
         lvAdapter = new ChanGroupAdapter(mContext, mDVBService.getGroupNames());
-        lv.setAdapter(lvAdapter);
+        SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(lvAdapter);
+        swingBottomInAnimationAdapter.setInitialDelayMillis(0);
+        swingBottomInAnimationAdapter.setAbsListView(lv);
+        lv.setAdapter(swingBottomInAnimationAdapter);
     }
 
     public void updateChannelList() {

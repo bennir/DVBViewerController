@@ -5,14 +5,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.haarman.listviewanimations.itemmanipulation.AnimateDismissAdapter;
+import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.bennir.DVBViewerController.service.DVBService;
 import de.bennir.DVBViewerController.timers.TimerAdapter;
@@ -25,6 +34,8 @@ public class TimerFragment extends ListFragment {
     private ListView lv;
     private Context mContext;
     private DVBService mDVBService;
+
+    private List<Integer> mSelectedItems;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +50,8 @@ public class TimerFragment extends ListFragment {
 
         mContext = getActivity().getApplicationContext();
         mDVBService = DVBService.getInstance(mContext);
+        mSelectedItems = new ArrayList<Integer>();
+
 
         setHasOptionsMenu(true);
         lv = getListView();
@@ -65,7 +78,83 @@ public class TimerFragment extends ListFragment {
             updateTimerList();
 
         lvAdapter = new TimerAdapter(mDVBService.getDVBTimers(), mContext);
-        lv.setAdapter(lvAdapter);
+        SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(lvAdapter);
+        swingBottomInAnimationAdapter.setInitialDelayMillis(0);
+        swingBottomInAnimationAdapter.setAbsListView(lv);
+        final AnimateDismissAdapter<String> animateDismissAdapter = new AnimateDismissAdapter<String>(swingBottomInAnimationAdapter, new MyOnDismissCallback());
+        animateDismissAdapter.setAbsListView(lv);
+        lv.setAdapter(animateDismissAdapter);
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+        lv.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position,
+                                                  long id, boolean checked) {
+                try {
+                    if (checked) {
+                        mSelectedItems.add(position);
+                    } else {
+                        mSelectedItems.remove(position);
+                    }
+
+                    mode.setTitle(mContext.getString(R.string.item_is_selected, mSelectedItems.size()));
+                } catch (IndexOutOfBoundsException ex) {
+                    Log.e(TAG, ex.getMessage());
+                }
+
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                // Respond to clicks on the actions in the CAB
+                switch (item.getItemId()) {
+                    case R.id.timers_menu_delete:
+                        animateDismissAdapter.animateDismiss(mSelectedItems);
+                        mSelectedItems.clear();
+
+                        mode.finish(); // Action picked, so close the CAB
+                        return true;
+                    default:
+                        return false;
+                }
+
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                // Inflate the menu for the CAB
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.timers_action_mode, menu);
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                // Here you can make any necessary updates to the activity when
+                // the CAB is removed. By default, selected items are deselected/unchecked.
+                mSelectedItems.clear();
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                // Here you can perform updates to the CAB due to
+                // an invalidate() request
+                return false;
+            }
+        });
+
+
+    }
+
+    private class MyOnDismissCallback implements OnDismissCallback {
+
+        @Override
+        public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
+            for (int position : reverseSortedPositions) {
+                lvAdapter.remove(lvAdapter.getItem(position));
+            }
+        }
     }
 
     private void updateTimerList() {

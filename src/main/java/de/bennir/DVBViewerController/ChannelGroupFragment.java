@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+
 import de.bennir.DVBViewerController.channels.DVBChannel;
 import de.bennir.DVBViewerController.channels.DVBChannelAdapter;
 import de.bennir.DVBViewerController.service.DVBService;
@@ -55,7 +57,11 @@ public class ChannelGroupFragment extends ListFragment {
                 getActivity(),
                 chans
         );
-        lv.setAdapter(lvAdapter);
+
+        SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(lvAdapter);
+        swingBottomInAnimationAdapter.setInitialDelayMillis(0);
+        swingBottomInAnimationAdapter.setAbsListView(lv);
+        lv.setAdapter(swingBottomInAnimationAdapter);
 
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override

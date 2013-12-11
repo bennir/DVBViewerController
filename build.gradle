@@ -22,6 +22,7 @@ dependencies {
 	compile 'com.viewpagerindicator:parent:2.4.+'
 	compile 'com.koushikdutta.ion:ion:1.1.5'
 	compile 'de.keyboardsurfer.android.widget:crouton:1.8.1'
+    compile 'com.nhaarman.listviewanimations:library:2.5.2'
 	compile files('libs/jmdns.jar')
 }
 

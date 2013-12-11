@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +18,6 @@ public class TimerAdapter extends ArrayAdapter<DVBTimer> {
     private static final String TAG = TimerAdapter.class.toString();
 
     static class TimerViewHolder {
-        ImageButton btn;
         TextView name;
         ImageView indicator;
         TextView date;
@@ -47,7 +45,6 @@ public class TimerAdapter extends ArrayAdapter<DVBTimer> {
             view = inflater.inflate(R.layout.timers_list_item, parent, false);
 
             viewHolder = new TimerViewHolder();
-            viewHolder.btn = (ImageButton) view.findViewById(R.id.timer_list_item_delete);
             viewHolder.name = (TextView) view.findViewById(R.id.timer_list_item_name);
             viewHolder.indicator = (ImageView) view.findViewById(R.id.timer_list_item_indicator);
             viewHolder.date = (TextView) view.findViewById(R.id.timer_list_item_date);
@@ -60,25 +57,7 @@ public class TimerAdapter extends ArrayAdapter<DVBTimer> {
         }
 
 
-        final DVBTimer timer = timers.get(position);
-        final View v = view;
-        viewHolder.btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View button) {
-                v
-                        .animate()
-                        .setDuration(150)
-                        .translationX(1000)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                TimerAdapter.this.remove(timer);
-                                TimerAdapter.this.notifyDataSetChanged();
-                                v.setAlpha(1);
-                            }
-                        });
-            }
-        });
+        DVBTimer timer = timers.get(position);
 
         viewHolder.name.setTypeface(DVBViewerControllerActivity.robotoLight);
         viewHolder.name.setText(timer.name);
@@ -104,7 +83,7 @@ public class TimerAdapter extends ArrayAdapter<DVBTimer> {
         viewHolder.channel.setTypeface(DVBViewerControllerActivity.robotoLight);
         viewHolder.channel.setText(channelId.substring(channelId.indexOf('|') + 1));
 
-        return v;
+        return view;
     }
 
     @Override
