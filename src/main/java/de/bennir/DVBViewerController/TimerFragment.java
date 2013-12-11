@@ -15,11 +15,15 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.haarman.listviewanimations.itemmanipulation.AnimateDismissAdapter;
 import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.koushikdutta.async.future.FutureCallback;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,6 +156,27 @@ public class TimerFragment extends ListFragment {
         @Override
         public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
             for (int position : reverseSortedPositions) {
+                if (!mDVBService.getDVBServer().host.equals(DVBService.DEMO_DEVICE)) {
+
+                    String url = null;
+                    try {
+                        url = mDVBService.getRecordingService().createRequestString("timerdelete.html?id=" + URLEncoder.encode(lvAdapter.getItem(position).id, "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d(TAG, "Deleting Timer: " + url);
+
+                    mDVBService.mIon.with(mContext, url)
+                            .asString()
+                            .setCallback(new FutureCallback<String>() {
+                                @Override
+                                public void onCompleted(Exception e, String s) {
+                                    Toast.makeText(mContext, "Timer deleted", Toast.LENGTH_SHORT);
+                                }
+                            });
+                }
+
                 lvAdapter.remove(lvAdapter.getItem(position));
             }
         }

@@ -153,7 +153,6 @@ public class DVBService {
                                         timer = new DVBTimer();
 
                                         // Attributes
-                                        timer.id = element.getAttribute("ID");
                                         timer.enabled = !element.getAttribute("Enabled").equals("0");
                                         timer.date = element.getAttribute("Date");
                                         timer.start = element.getAttribute("Start");
@@ -161,6 +160,7 @@ public class DVBService {
                                         timer.end = element.getAttribute("End");
 
                                         // Childs
+                                        timer.id = getElementValue(element.getElementsByTagName("ID").item(0));
                                         timer.name = getElementValue(element.getElementsByTagName("Descr").item(0));
 
                                         Element channel = (Element) element.getElementsByTagName("Channel").item(0);
@@ -176,6 +176,8 @@ public class DVBService {
                                     TimerFragment.lvAdapter = new TimerAdapter(getDVBTimers(), mContext);
                                 else
                                     TimerFragment.lvAdapter.notifyDataSetChanged();
+
+                                Crouton.cancelAllCroutons();
                             }
                         });
             }
