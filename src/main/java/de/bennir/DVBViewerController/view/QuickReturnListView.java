@@ -18,13 +18,17 @@
 package de.bennir.DVBViewerController.view;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import de.bennir.DVBViewerController.R;
 
 public class QuickReturnListView extends ListView {
+    private static final String TAG = QuickReturnListView.class.toString();
 
     private int mItemCount;
     private int mItemOffsetY[];
@@ -49,9 +53,8 @@ public class QuickReturnListView extends ListView {
     public void computeScrollY() {
         mHeight = 0;
         mItemCount = getAdapter().getCount();
-        if (mItemOffsetY == null) {
-            mItemOffsetY = new int[mItemCount];
-        }
+        mItemOffsetY = new int[mItemCount];
+
         for (int i = 0; i < mItemCount; ++i) {
             View view = getAdapter().getView(i, null, this);
             view.measure(
@@ -77,5 +80,24 @@ public class QuickReturnListView extends ListView {
         nItemY = view.getTop();
         nScrollY = mItemOffsetY[pos] - nItemY;
         return nScrollY;
+    }
+
+    public void reset() {
+        mItemCount = 0;
+        mItemOffsetY = null;
+        scrollIsComputed = false;
+        mHeight = 0;
+        computeScrollY();
+    }
+
+    @Override
+    public void setAdapter(ListAdapter adapter) {
+        super.setAdapter(adapter);
+        adapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                reset();
+            }
+        });
     }
 }

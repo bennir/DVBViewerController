@@ -12,14 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import de.bennir.DVBViewerController.channels.DVBChannel;
+import de.bennir.DVBViewerController.epg.EPGInfo;
 import de.bennir.DVBViewerController.epg.EPGInfoAdapter;
 import de.bennir.DVBViewerController.service.DVBService;
 import de.bennir.DVBViewerController.view.QuickReturnListView;
@@ -45,7 +50,8 @@ public class EPGFragment extends Fragment {
     private View mHeader;
     private DrawerLayout mDrawerLayout;
 
-    public static EPGInfoAdapter lvAdapter;
+    public EPGInfoAdapter lvAdapter;
+    public ArrayList<EPGInfo> epgInfos = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,6 +98,17 @@ public class EPGFragment extends Fragment {
                 DVBChannel channel = mDVBService.getChannelByName(channelName);
                 Log.d(TAG, "channelId: " + channel.channelId);
 
+                epgInfos.clear();
+                for(int i=0;i<30;i++) {
+                    EPGInfo info = new EPGInfo();
+                    info.title = channelName;
+                    epgInfos.add(info);
+                }
+
+                lvAdapter = new EPGInfoAdapter(mContext, epgInfos);
+                mListView.setAdapter(lvAdapter);
+
+
                 return true;
             }
         });
@@ -103,13 +120,12 @@ public class EPGFragment extends Fragment {
             }
         });
 
-        /**
-         * EPG ListView
-         */
+
+        lvAdapter = new EPGInfoAdapter(mContext, epgInfos);
+        mListView.setAdapter(lvAdapter);
 
         mQuickReturnView.setText("No Channel Selected");
         mListView.addHeaderView(mHeader);
-        mListView.setAdapter(lvAdapter);
 
         mListView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -171,7 +187,7 @@ public class EPGFragment extends Fragment {
                         break;
                 }
 
-                mQuickReturnView.animate().cancel();
+                //mQuickReturnView.animate().cancel();
                 mQuickReturnView.setTranslationY(translationY);
 
             }

@@ -1,6 +1,7 @@
 package de.bennir.DVBViewerController.epg;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import de.bennir.DVBViewerController.R;
 
 public class EPGInfoAdapter extends ArrayAdapter<EPGInfo> {
+    private static final String TAG = EPGInfoAdapter.class.toString();
+
     private Context mContext;
     private ArrayList<EPGInfo> mEPGInfo;
 
@@ -21,8 +24,8 @@ public class EPGInfoAdapter extends ArrayAdapter<EPGInfo> {
         TextView time;
     }
 
-    public EPGInfoAdapter(Context context, int resource, ArrayList<EPGInfo> epgInfo) {
-        super(context, resource);
+    public EPGInfoAdapter(Context context, ArrayList<EPGInfo> epgInfo) {
+        super(context, R.layout.epg_list_item, epgInfo);
 
         mContext = context;
         mEPGInfo = epgInfo;
